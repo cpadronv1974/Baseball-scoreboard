@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Baseball Scoreboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:transparent;overflow:hidden;width:100vw;height:100vh}
+#sb{position:absolute;top:16px;left:16px;font-family:'Oswald',sans-serif;filter:drop-shadow(0 4px 24px rgba(0,0,0,0.8));min-width:420px}
+.sb-top{display:flex;align-items:stretch;background:#1a1a2e;border-radius:8px 8px 0 0;overflow:hidden;border-bottom:3px solid #e8b84b}
+.sb-team{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 14px;position:relative}
+.sb-team.away{background:linear-gradient(135deg,#c0392b 0%,#922b21 100%)}
+.sb-team.home{background:linear-gradient(135deg,#1a3a6b 0%,#154360 100%)}
+.team-label{font-size:0.55rem;letter-spacing:4px;opacity:0.7;color:#fff;margin-bottom:2px}
+.team-name{font-size:1.2rem;font-weight:700;letter-spacing:2px;color:#fff;text-align:center;line-height:1}
+.team-score{font-size:2.8rem;font-weight:700;color:#fff;line-height:1;margin-top:2px}
+.team-score.leading{color:#e8b84b}
+.sb-center{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 12px;background:#0f0f1a;min-width:72px;position:relative}
+.inn-label{font-size:0.5rem;letter-spacing:3px;color:#6b7585;margin-bottom:2px}
+.inn-num{font-size:1.8rem;font-weight:700;color:#e8b84b;line-height:1}
+.inn-half{font-size:0.65rem;letter-spacing:2px;color:#e8b84b;margin-top:1px}
+.sb-status{position:absolute;top:-7px;left:50%;transform:translateX(-50%);background:#e8b84b;color:#000;font-size:0.5rem;font-weight:700;letter-spacing:3px;padding:2px 8px;border-radius:10px;white-space:nowrap;font-family:'Barlow Condensed',sans-serif}
+.sb-innings{background:#12121f;border-left:1px solid rgba(255,255,255,0.06);border-right:1px solid rgba(255,255,255,0.06)}
+.inn-table{width:100%;border-collapse:collapse;font-family:'Barlow Condensed',sans-serif}
+.inn-table th{font-size:0.6rem;letter-spacing:1px;color:#4a5568;padding:2px 4px;text-align:center;border-right:1px solid rgba(255,255,255,0.04);background:#0d0d1a}
+.inn-table td{font-size:0.8rem;color:#8892a4;padding:3px 4px;text-align:center;border-right:1px solid rgba(255,255,255,0.04)}
+.inn-table td:last-child,.inn-table th:last-child{border-right:none}
+.inn-table .tn{text-align:left;padding-left:8px;font-size:0.75rem;letter-spacing:1px;color:#cbd5e0;min-width:80px}
+.inn-table .ic.active{color:#e8b84b;font-weight:700}
+.inn-table .rh{font-size:0.85rem;font-weight:700}
+.inn-table .rh.r-away{color:#e74c3c}
+.inn-table .rh.r-home{color:#4b8fe8}
+.inn-table th.rhe{color:#e8b84b;background:#111127}
+.inn-table tr:first-child td{border-top:1px solid rgba(255,255,255,0.04)}
+.sb-count{display:flex;align-items:center;background:#0d0d1a;border-radius:0 0 8px 8px;padding:5px 10px;gap:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.cnt{display:flex;align-items:center;gap:4px}
+.cnt-label{font-size:0.5rem;letter-spacing:2px;color:#4a5568;font-family:'Barlow Condensed',sans-serif}
+.dots{display:flex;gap:3px}
+.dot{width:9px;height:9px;border-radius:50%;border:1.5px solid #2d3748;background:transparent;transition:all 0.15s}
+.dot.ball{background:#4b8fe8;border-color:#4b8fe8;box-shadow:0 0 5px rgba(75,143,232,0.6)}
+.dot.strike{background:#e8b84b;border-color:#e8b84b;box-shadow:0 0 5px rgba(232,184,75,0.6)}
+.dot.out{background:#e74c3c;border-color:#e74c3c;box-shadow:0 0 5px rgba(231,76,60,0.6)}
+.cnt-sep{width:1px;height:18px;background:rgba(255,255,255,0.06)}
+.diamond{width:38px;height:38px;position:relative}
+.base{width:12px;height:12px;border:2px solid #2d3748;background:transparent;position:absolute;transform:rotate(45deg);transition:all 0.15s}
+.base.occ{background:#e8b84b;border-color:#e8b84b;box-shadow:0 0 7px rgba(232,184,75,0.7)}
+.base-2{top:0;left:50%;transform:translateX(-50%) rotate(45deg)}
+.base-3{bottom:6px;left:2px;transform:rotate(45deg)}
+.base-1{bottom:6px;right:2px;transform:rotate(45deg)}
+#conn{position:fixed;bottom:5px;right:5px;width:6px;height:6px;border-radius:50%;background:#2ecc71;opacity:0.8}
+#conn.off{background:#e74c3c}
+</style>
+</head>
+<body>
+<div id="sb">
+  <div class="sb-top">
+    <div class="sb-team away">
+      <div class="team-label">VISITANTE</div>
+      <div class="team-name" id="away-name">VISITANTE</div>
+      <div class="team-score" id="away-score">0</div>
+    </div>
+    <div class="sb-center">
+      <div class="sb-status" id="sb-status">EN JUEGO</div>
+      <div class="inn-label">ENTRADA</div>
+      <div class="inn-num" id="inn-num">1</div>
+      <div class="inn-half" id="inn-half">▲ ALTA</div>
+    </div>
+    <div class="sb-team home">
+      <div class="team-label">LOCAL</div>
+      <div class="team-name" id="home-name">LOCAL</div>
+      <div class="team-score" id="home-score">0</div>
+    </div>
+  </div>
+  <div class="sb-innings">
+    <table class="inn-table">
+      <thead><tr>
+        <th class="tn"></th>
+        <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
+        <th>6</th><th>7</th><th>8</th><th>9</th>
+        <th class="rhe">R</th><th class="rhe">H</th><th class="rhe">E</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="tn" id="t-away">VISITANTE</td>
+          <td class="ic" id="a1">-</td><td class="ic" id="a2">-</td><td class="ic" id="a3">-</td>
+          <td class="ic" id="a4">-</td><td class="ic" id="a5">-</td><td class="ic" id="a6">-</td>
+          <td class="ic" id="a7">-</td><td class="ic" id="a8">-</td><td class="ic" id="a9">-</td>
+          <td class="rh r-away" id="a-r">0</td>
+          <td class="rh" style="color:#8892a4" id="a-h">0</td>
+          <td class="rh" style="color:#8892a4" id="a-e">0</td>
+        </tr>
+        <tr>
+          <td class="tn" id="t-home">LOCAL</td>
+          <td class="ic" id="b1">-</td><td class="ic" id="b2">-</td><td class="ic" id="b3">-</td>
+          <td class="ic" id="b4">-</td><td class="ic" id="b5">-</td><td class="ic" id="b6">-</td>
+          <td class="ic" id="b7">-</td><td class="ic" id="b8">-</td><td class="ic" id="b9">-</td>
+          <td class="rh r-home" id="b-r">0</td>
+          <td class="rh" style="color:#8892a4" id="b-h">0</td>
+          <td class="rh" style="color:#8892a4" id="b-e">0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="sb-count">
+    <div class="cnt"><span class="cnt-label">B</span><div class="dots"><div class="dot" id="b0"></div><div class="dot" id="b1"></div><div class="dot" id="b2"></div><div class="dot" id="b3"></div></div></div>
+    <div class="cnt-sep"></div>
+    <div class="cnt"><span class="cnt-label">S</span><div class="dots"><div class="dot" id="s0"></div><div class="dot" id="s1"></div></div></div>
+    <div class="cnt-sep"></div>
+    <div class="cnt"><span class="cnt-label">O</span><div class="dots"><div class="dot" id="o0"></div><div class="dot" id="o1"></div></div></div>
+    <div class="cnt-sep"></div>
+    <div style="display:flex;align-items:center;justify-content:center;padding:0 6px">
+      <div class="diamond">
+        <div class="base base-2" id="base-2"></div>
+        <div class="base base-3" id="base-3"></div>
+        <div class="base base-1" id="base-1"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="conn" class="off"></div>
+<script>
+const SERVER='https://192.168.16.223:3000';
+function render(s){
+  document.getElementById('away-name').textContent=s.away.name;
+  document.getElementById('home-name').textContent=s.home.name;
+  document.getElementById('t-away').textContent=s.away.name;
+  document.getElementById('t-home').textContent=s.home.name;
+  const ar=s.away.r,hr=s.home.r;
+  const as=document.getElementById('away-score'),hs=document.getElementById('home-score');
+  as.textContent=ar;hs.textContent=hr;
+  as.className='team-score'+(ar>hr?' leading':'');
+  hs.className='team-score'+(hr>ar?' leading':'');
+  document.getElementById('a-r').textContent=ar;
+  document.getElementById('b-r').textContent=hr;
+  document.getElementById('a-h').textContent=s.away.h;
+  document.getElementById('b-h').textContent=s.home.h;
+  document.getElementById('a-e').textContent=s.away.e;
+  document.getElementById('b-e').textContent=s.home.e;
+  document.getElementById('inn-num').textContent=s.inning;
+  document.getElementById('inn-half').textContent=s.half==='top'?'▲ ALTA':'▼ BAJA';
+  document.getElementById('sb-status').textContent=s.status||'EN JUEGO';
+  for(let i=1;i<=9;i++){
+    const ae=document.getElementById('a'+i),be=document.getElementById('b'+i);
+    const av=s.away.innings[i-1],hv=s.home.innings[i-1];
+    if(ae){ae.textContent=av==='-'?'-':av;ae.className='ic'+(i===s.inning?' active':'')}
+    if(be){be.textContent=hv==='-'?'-':hv;be.className='ic'+(i===s.inning?' active':'')}
+  }
+  ['b0','b1','b2','b3'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='dot'+(i<s.balls?' ball':'')});
+  ['s0','s1'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='dot'+(i<s.strikes?' strike':'')});
+  ['o0','o1'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='dot'+(i<s.outs?' out':'')});
+  [1,2,3].forEach(n=>{const el=document.getElementById('base-'+n);if(el)el.className='base base-'+['1','2','3'][n-1]+(s.bases[n-1]?' occ':'')});
+}
+async function poll(){
+  try{
+    const r=await fetch(SERVER+'/state',{mode:'cors'});
+    if(r.ok){render(await r.json());document.getElementById('conn').className='';}
+  }catch(e){document.getElementById('conn').className='off';}
+}
+setInterval(poll,1000);
+poll();
+</script>
+</body>
+</html>

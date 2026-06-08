@@ -1,0 +1,4100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scorebook · Anotador Oficial de Béisbol</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a0f08;
+  --ink-soft: #3d2818;
+  --ink-faded: #6b4423;
+  --paper: #f4e8d0;
+  --paper-bright: #faf2dc;
+  --paper-shadow: #d9c89a;
+  --field: #0d3320;
+  --field-deep: #051a10;
+  --field-line: #1a5938;
+  --chalk: #f4e8d0;
+  --crimson: #a4252b;
+  --crimson-deep: #7a1a1f;
+  --brass: #c89c3f;
+  --brass-deep: #8a6624;
+  --rule: #8a6624;
+  --rule-faint: rgba(138, 102, 36, 0.25);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Lora', Georgia, serif;
+  background: var(--field-deep);
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(26, 89, 56, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(164, 37, 43, 0.15) 0%, transparent 50%),
+    repeating-linear-gradient(135deg, transparent 0 40px, rgba(0,0,0,0.08) 40px 41px);
+  color: var(--paper);
+  min-height: 100vh;
+  padding: 16px;
+  line-height: 1.4;
+}
+
+.hidden { display: none !important; }
+
+/* ============ SETUP SCREEN ============ */
+.setup-screen {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.title-block {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 3px double var(--brass);
+}
+
+.title-block .kicker {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.4em;
+  font-size: 14px;
+  color: var(--brass);
+  margin-bottom: 8px;
+}
+
+.title-block h1 {
+  font-family: 'Special Elite', 'Courier New', monospace;
+  font-size: clamp(38px, 6vw, 72px);
+  font-weight: normal;
+  color: var(--paper-bright);
+  letter-spacing: 0.02em;
+  text-shadow: 3px 3px 0 var(--crimson-deep), 6px 6px 0 rgba(0,0,0,0.5);
+  line-height: 1;
+}
+
+.title-block .subtitle {
+  font-style: italic;
+  font-size: 16px;
+  color: var(--paper-shadow);
+  margin-top: 12px;
+  letter-spacing: 0.05em;
+}
+
+.team-setup-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 800px) {
+  .team-setup-grid { grid-template-columns: 1fr; }
+}
+
+.team-card {
+  background: var(--paper);
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0 27px, rgba(138, 102, 36, 0.15) 27px 28px);
+  color: var(--ink);
+  padding: 28px 24px 24px;
+  border-radius: 4px;
+  box-shadow:
+    0 2px 0 var(--paper-shadow),
+    0 12px 32px rgba(0,0,0,0.5),
+    inset 0 0 60px rgba(138, 102, 36, 0.08);
+  position: relative;
+  border-left: 6px solid var(--ink);
+}
+
+.team-card.away { border-left-color: var(--crimson); }
+.team-card.home { border-left-color: var(--ink); }
+
+.team-card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule-faint);
+  margin-bottom: 16px;
+}
+
+.team-card-header h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.15em;
+  font-size: 22px;
+  color: var(--ink);
+}
+
+.team-card-header .badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faded);
+}
+
+label.field-label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--ink-faded);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  margin-top: 12px;
+}
+
+.text-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--ink-soft);
+  padding: 8px 4px;
+  font-family: 'Lora', serif;
+  font-size: 18px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.text-input:focus { border-bottom-color: var(--crimson); }
+
+.team-input.team-name {
+  font-family: 'Special Elite', monospace;
+  font-size: 22px;
+  letter-spacing: 0.05em;
+}
+
+.lineup-list {
+  list-style: none;
+  margin-top: 8px;
+}
+
+.lineup-row {
+  display: grid;
+  grid-template-columns: 28px 1fr 80px 60px;
+  gap: 8px;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px dotted var(--rule-faint);
+}
+
+.lineup-row .order-num {
+  font-family: 'Special Elite', monospace;
+  font-size: 18px;
+  color: var(--crimson);
+  text-align: center;
+}
+
+.lineup-row input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid transparent;
+  padding: 6px 2px;
+  font-family: 'Lora', serif;
+  font-size: 15px;
+  color: var(--ink);
+  outline: none;
+  width: 100%;
+}
+
+.lineup-row input:focus { border-bottom-color: var(--rule); }
+
+.lineup-row .pos-select {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  text-align: center;
+  background: transparent;
+  border: 1px solid var(--rule-faint);
+  border-radius: 2px;
+  padding: 4px;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.lineup-row .num-input {
+  font-family: 'JetBrains Mono', monospace;
+  text-align: center;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.setup-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.18em;
+  font-size: 14px;
+  padding: 12px 28px;
+  border: 2px solid var(--paper);
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.btn:hover { background: var(--paper); color: var(--field-deep); }
+
+.btn.primary {
+  background: var(--crimson);
+  border-color: var(--crimson);
+  color: var(--paper);
+  font-size: 16px;
+  padding: 14px 36px;
+  box-shadow: 0 4px 16px rgba(164, 37, 43, 0.4);
+}
+
+.btn.primary:hover {
+  background: var(--crimson-deep);
+  border-color: var(--crimson-deep);
+}
+
+.btn.ghost {
+  border-color: var(--brass);
+  color: var(--brass);
+}
+
+.btn.ghost:hover { background: var(--brass); color: var(--field-deep); }
+
+.btn-small {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 4px 10px;
+  letter-spacing: 0.05em;
+  border: 1px solid var(--ink-soft);
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.btn-small:hover { background: var(--ink); color: var(--paper); }
+
+/* ============ INNINGS TOGGLE ============ */
+.settings-row {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 0 var(--paper-shadow), 0 8px 24px rgba(0,0,0,0.4);
+  margin-bottom: 24px;
+  text-align: center;
+  border-left: 6px solid var(--brass);
+}
+
+.innings-toggle {
+  display: inline-flex;
+  gap: 0;
+  margin-top: 8px;
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.innings-toggle label {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.2em;
+  font-size: 14px;
+  padding: 10px 28px;
+  cursor: pointer;
+  background: var(--paper-bright);
+  color: var(--ink);
+  transition: all 0.15s;
+  border-right: 2px solid var(--ink);
+  user-select: none;
+}
+
+.innings-toggle label:last-child { border-right: none; }
+
+.innings-toggle label.active {
+  background: var(--crimson);
+  color: var(--paper-bright);
+}
+
+.innings-toggle input[type="radio"] { display: none; }
+
+/* ============ SUB MODAL FIELDS ============ */
+.sub-form-row { margin-bottom: 14px; }
+
+.team-pick-row, .sub-type-row {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.btn-pick {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.15em;
+  font-size: 12px;
+  padding: 8px 14px;
+  background: var(--paper-bright);
+  border: 2px solid var(--ink-soft);
+  color: var(--ink);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.1s;
+  flex: 1 1 auto;
+  min-width: 100px;
+}
+
+.btn-pick:hover { border-color: var(--ink); }
+
+.btn-pick.active {
+  background: var(--ink);
+  color: var(--brass);
+  border-color: var(--ink);
+}
+
+.slot-select {
+  width: 100%;
+  padding: 10px 8px;
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  background: var(--paper-bright);
+  border: 1.5px solid var(--ink-soft);
+  border-radius: 3px;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.sub-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 110px 80px;
+  gap: 12px;
+}
+
+.sub-history {
+  background: var(--paper-bright);
+  border-left: 3px solid var(--brass);
+  padding: 8px 12px;
+  margin-top: 6px;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--ink-faded);
+}
+
+.sub-history strong { color: var(--ink); font-style: normal; }
+
+.sub-indicator {
+  display: inline-block;
+  font-size: 8px;
+  background: var(--brass);
+  color: var(--ink);
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  margin-left: 4px;
+  letter-spacing: 0.05em;
+}
+
+.subbed-out {
+  text-decoration: line-through;
+  opacity: 0.6;
+  font-size: 11px;
+}
+
+/* ============ MANUAL MODAL ============ */
+.manual-content {
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ink);
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.manual-content section { margin-bottom: 28px; scroll-margin-top: 20px; }
+
+.manual-content h3 {
+  font-family: 'Special Elite', monospace;
+  font-size: 20px;
+  color: var(--crimson);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--ink);
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.manual-content h3 .step-num {
+  font-family: 'Bebas Neue', sans-serif;
+  background: var(--ink);
+  color: var(--brass);
+  font-size: 13px;
+  padding: 0;
+  border-radius: 50%;
+  letter-spacing: 0;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.manual-content p { margin-bottom: 10px; }
+.manual-content ul { margin: 8px 0 12px 24px; }
+.manual-content li { margin-bottom: 4px; }
+
+.manual-content kbd {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--ink);
+  color: var(--brass);
+  padding: 1px 7px;
+  border-radius: 2px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.callout {
+  background: var(--paper-bright);
+  border-left: 4px solid var(--brass);
+  padding: 12px 16px;
+  margin: 12px 0;
+  font-size: 13px;
+  border-radius: 0 3px 3px 0;
+}
+
+.callout.warn { border-left-color: var(--crimson); }
+
+.callout strong {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.15em;
+  font-size: 11px;
+  color: var(--crimson);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.callout.warn strong { color: var(--crimson-deep); }
+
+.notation-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0;
+  font-size: 12px;
+}
+
+.notation-table td {
+  padding: 4px 8px;
+  border-bottom: 1px dotted var(--rule-faint);
+  vertical-align: top;
+}
+
+.notation-table td:first-child {
+  font-family: 'Special Elite', monospace;
+  font-weight: 700;
+  color: var(--crimson);
+  width: 90px;
+  white-space: nowrap;
+}
+
+.position-ref {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px 12px;
+  margin: 8px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+.position-ref div {
+  padding: 4px 8px;
+  background: var(--paper-bright);
+  border-radius: 2px;
+  border-left: 3px solid var(--brass);
+}
+
+.position-ref strong { color: var(--crimson); }
+
+.manual-toc {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 16px 20px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+}
+
+.manual-toc h4 {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.2em;
+  font-size: 12px;
+  color: var(--brass);
+  margin-bottom: 8px;
+}
+
+.manual-toc ol {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  list-style: none;
+  columns: 2;
+  column-gap: 24px;
+  counter-reset: item;
+}
+
+.manual-toc ol li {
+  padding: 2px 0;
+  cursor: pointer;
+  color: var(--paper);
+}
+
+.manual-toc ol li:hover {
+  color: var(--brass);
+  text-decoration: underline;
+}
+
+.manual-toc ol li::before {
+  content: counter(item) '. ';
+  counter-increment: item;
+  color: var(--brass);
+  font-weight: 700;
+}
+
+/* ============ GAME SCREEN ============ */
+.game-screen { max-width: 1600px; margin: 0 auto; }
+
+.top-bar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 24px;
+  align-items: center;
+  padding: 12px 20px;
+  background: var(--ink);
+  border-radius: 4px;
+  margin-bottom: 12px;
+  border: 1px solid var(--brass-deep);
+}
+
+.top-bar .game-title {
+  font-family: 'Special Elite', monospace;
+  font-size: 18px;
+  color: var(--brass);
+  letter-spacing: 0.05em;
+}
+
+.scoreboard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.scoreboard .innings-display {
+  display: grid;
+  grid-template-columns: 90px repeat(9, 32px) 36px 36px 36px;
+  gap: 1px;
+  background: var(--brass-deep);
+  border: 1px solid var(--brass-deep);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.scoreboard .innings-display .cell {
+  background: var(--field-deep);
+  padding: 4px 2px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--paper);
+  min-height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scoreboard .innings-display .cell.header {
+  background: var(--ink);
+  color: var(--brass);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+.scoreboard .innings-display .cell.team-name {
+  text-align: left;
+  padding-left: 8px;
+  font-family: 'Special Elite', monospace;
+  font-size: 12px;
+  color: var(--paper-bright);
+}
+
+.scoreboard .innings-display .cell.total {
+  background: var(--ink);
+  color: var(--brass);
+  font-weight: 700;
+}
+
+.scoreboard .innings-display .cell.current-inning {
+  background: var(--crimson);
+  color: var(--paper-bright);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: inset 0 0 0 rgba(255,255,255,0); }
+  50% { box-shadow: inset 0 0 0 2px rgba(255,255,255,0.3); }
+}
+
+.top-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ============ MAIN GRID ============ */
+.main-grid {
+  display: grid;
+  grid-template-columns: 260px 1fr 320px;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 1200px) {
+  .main-grid { grid-template-columns: 1fr; }
+}
+
+.panel {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 16px;
+  border-radius: 4px;
+  box-shadow:
+    0 2px 0 var(--paper-shadow),
+    0 8px 24px rgba(0,0,0,0.4);
+  position: relative;
+}
+
+.panel-title {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.2em;
+  font-size: 13px;
+  color: var(--crimson);
+  border-bottom: 1px solid var(--rule-faint);
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+}
+
+/* ============ SITUATION PANEL ============ */
+.situation-panel { text-align: center; }
+
+.diamond-svg {
+  width: 100%;
+  max-width: 220px;
+  margin: 8px auto 12px;
+  display: block;
+}
+
+.count-display {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.count-box {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 8px 4px;
+  border-radius: 2px;
+  text-align: center;
+}
+
+.count-box .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--brass);
+}
+
+.count-box .value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  color: var(--paper-bright);
+  line-height: 1;
+}
+
+.count-box.outs .value { color: var(--crimson); }
+
+.inning-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-family: 'Special Elite', monospace;
+  font-size: 16px;
+}
+
+.inning-info .arrow {
+  font-size: 18px;
+  color: var(--crimson);
+}
+
+.batting-now {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--ink-faded);
+  margin-bottom: 4px;
+}
+
+.current-batter-name {
+  font-family: 'Special Elite', monospace;
+  font-size: 20px;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+  margin-bottom: 4px;
+}
+
+.current-batter-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-faded);
+}
+
+.pitcher-info {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dotted var(--rule-faint);
+  font-size: 12px;
+  font-style: italic;
+  color: var(--ink-faded);
+}
+.pitcher-info .pitcher-line {
+  display: block;
+  margin-bottom: 6px;
+}
+.pitcher-info .pitch-count {
+  display: inline-block;
+  font-family: 'Bebas Neue', sans-serif;
+  font-style: normal;
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  color: var(--crimson);
+  background: var(--paper-bright, #f4e8d0);
+  border: 1px solid var(--rule-faint);
+  border-radius: 2px;
+  padding: 2px 10px;
+  line-height: 1.2;
+}
+.pitcher-info .pitch-count .pc-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--brass);
+  margin-left: 2px;
+}
+.pitcher-info .pitch-count .pc-sep {
+  color: var(--ink-faded);
+  font-size: 14px;
+  margin: 0 3px;
+}
+.pitcher-info .pitch-count .pc-sb {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+}
+
+/* ============ SCORECARD ============ */
+.scorecard-panel {
+  padding: 12px;
+  overflow-x: auto;
+}
+
+.scorecard-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.scorecard-tab {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.15em;
+  font-size: 13px;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--ink-faded);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+}
+
+.scorecard-tab.active {
+  color: var(--ink);
+  border-bottom-color: var(--crimson);
+}
+
+.scorecard-grid {
+  display: grid;
+  grid-template-columns: 36px 28px 160px repeat(9, 1fr) 38px 38px 38px 38px 38px;
+  gap: 0;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  min-width: 900px;
+}
+
+.sc-cell {
+  border: 1px solid var(--rule-faint);
+  padding: 4px 2px;
+  text-align: center;
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  position: relative;
+  background: var(--paper-bright);
+}
+
+.sc-cell.header {
+  background: var(--ink);
+  color: var(--brass);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  min-height: 28px;
+  padding: 4px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.sc-cell.name-cell {
+  text-align: left;
+  padding-left: 6px;
+  align-items: flex-start;
+  justify-content: center;
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--paper);
+  cursor: pointer;
+}
+
+.sc-cell.name-cell.active-batter {
+  background: linear-gradient(90deg, var(--brass) 0%, transparent 100%);
+  background-color: #fcefb8;
+}
+
+.sc-cell .player-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink-faded);
+}
+
+.sc-cell .player-pos {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--crimson);
+  letter-spacing: 0.1em;
+}
+
+.sc-cell.order-cell {
+  background: var(--ink);
+  color: var(--brass);
+  font-family: 'Special Elite', monospace;
+  font-size: 15px;
+}
+
+.sc-cell.num-cell {
+  background: var(--paper);
+  font-size: 10px;
+  color: var(--ink-faded);
+}
+
+.sc-cell.total-cell {
+  background: var(--paper);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+}
+
+/* ============ MINI DIAMOND IN SCORECARD CELL ============ */
+.atbat {
+  position: relative;
+  width: 100%;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.atbat-svg {
+  width: 50px;
+  height: 50px;
+  position: relative;
+}
+
+.atbat-notation {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Special Elite', monospace;
+  font-size: 12px;
+  color: var(--ink);
+  font-weight: 600;
+  z-index: 2;
+  text-align: center;
+  line-height: 1;
+}
+
+.atbat-notation.rbi-mark::after {
+  content: '·';
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  color: var(--crimson);
+  font-size: 18px;
+}
+
+.atbat-run {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  background: var(--crimson);
+  border-radius: 50%;
+  z-index: 3;
+}
+
+.atbat-details {
+  position: absolute;
+  bottom: 2px;
+  left: 4px;
+  font-size: 9px;
+  color: var(--ink-faded);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ============ ACTION PANEL ============ */
+.action-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.action-group {
+  border: 1px solid var(--rule-faint);
+  border-radius: 3px;
+  padding: 8px;
+  background: var(--paper-bright);
+}
+
+.action-group-title {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.18em;
+  font-size: 11px;
+  color: var(--crimson);
+  margin-bottom: 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px dotted var(--rule-faint);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.action-group-title .hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--ink-faded);
+  letter-spacing: 0.1em;
+  text-transform: none;
+}
+
+.action-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.action-btn {
+  position: relative;
+  background: var(--paper);
+  border: 1px solid var(--ink-soft);
+  border-radius: 3px;
+  padding: 8px 4px;
+  cursor: pointer;
+  transition: all 0.1s;
+  font-family: 'Special Elite', monospace;
+  color: var(--ink);
+  text-align: center;
+  min-height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.action-btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 0 var(--paper-shadow);
+}
+
+.action-btn:active { transform: translateY(0); box-shadow: none; }
+
+.action-btn.hit { border-color: var(--crimson); }
+.action-btn.hit:hover { background: var(--crimson); }
+.action-btn.out { border-color: var(--ink); }
+.action-btn.walk { border-color: var(--brass-deep); }
+.action-btn.walk:hover { background: var(--brass-deep); }
+.action-btn.special { border-color: var(--field); }
+.action-btn.special:hover { background: var(--field); }
+
+.action-btn .symbol {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.action-btn .label {
+  font-family: 'Lora', serif;
+  font-size: 9px;
+  color: inherit;
+  margin-top: 2px;
+  opacity: 0.7;
+}
+
+.action-btn .key {
+  position: absolute;
+  top: 1px;
+  right: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  color: var(--ink-faded);
+  background: rgba(0,0,0,0.05);
+  padding: 1px 3px;
+  border-radius: 2px;
+}
+
+.action-btn:hover .key { color: var(--paper); background: rgba(255,255,255,0.15); }
+
+/* ============ LOG / PLAY-BY-PLAY ============ */
+.log-panel {
+  margin-top: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.log-entries {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink);
+}
+
+.log-entry {
+  padding: 4px 8px;
+  border-bottom: 1px dotted var(--rule-faint);
+  display: grid;
+  grid-template-columns: 70px 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.log-entry .log-inning {
+  color: var(--crimson);
+  font-weight: 600;
+  font-size: 10px;
+}
+
+.log-entry .log-text { color: var(--ink); }
+
+.log-entry .log-undo {
+  font-size: 9px;
+  color: var(--ink-faded);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.log-entry .log-undo:hover { color: var(--crimson); }
+
+/* ============ MODAL ============ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal {
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 6px;
+  padding: 32px;
+  max-width: 1200px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  position: relative;
+  border-top: 6px solid var(--crimson);
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 32px;
+  color: var(--ink-faded);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-close:hover { color: var(--crimson); }
+
+.modal-title {
+  font-family: 'Special Elite', monospace;
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 4px;
+  color: var(--ink);
+}
+
+.modal-subtitle {
+  text-align: center;
+  font-style: italic;
+  color: var(--ink-faded);
+  margin-bottom: 24px;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+}
+
+/* ============ STATS TABLE ============ */
+.stats-section {
+  margin-bottom: 32px;
+}
+
+.stats-section h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.2em;
+  font-size: 16px;
+  color: var(--crimson);
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.stats-section h3 .team-score {
+  font-family: 'Special Elite', monospace;
+  color: var(--ink);
+  font-size: 18px;
+  letter-spacing: 0;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+.stats-table th {
+  background: var(--ink);
+  color: var(--brass);
+  padding: 6px 4px;
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  border: 1px solid var(--ink);
+}
+
+.stats-table td {
+  padding: 6px 4px;
+  text-align: center;
+  border: 1px solid var(--rule-faint);
+  background: var(--paper-bright);
+}
+
+.stats-table td.name {
+  text-align: left;
+  padding-left: 10px;
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.stats-table td.name .pos {
+  color: var(--crimson);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  margin-left: 6px;
+}
+
+.stats-table tfoot td {
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 700;
+}
+
+.team-totals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  margin: 16px 0 24px;
+}
+
+.team-totals .stat-card {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 12px;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.team-totals .stat-card .stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--brass);
+  text-transform: uppercase;
+}
+
+.team-totals .stat-card .stat-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  color: var(--paper-bright);
+  line-height: 1;
+  margin-top: 4px;
+}
+
+/* ============ POSITION PICKER MODAL ============ */
+.position-picker {
+  background: var(--paper);
+  border-radius: 6px;
+  padding: 24px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+}
+
+.position-picker h3 {
+  font-family: 'Special Elite', monospace;
+  font-size: 20px;
+  margin-bottom: 4px;
+  color: var(--ink);
+}
+
+.position-picker .hint {
+  font-style: italic;
+  color: var(--ink-faded);
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.position-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.pos-btn {
+  background: var(--paper-bright);
+  border: 2px solid var(--ink-soft);
+  padding: 12px 8px;
+  cursor: pointer;
+  font-family: 'Special Elite', monospace;
+  border-radius: 3px;
+  transition: all 0.1s;
+}
+
+.pos-btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+  transform: translateY(-1px);
+}
+
+.pos-btn .pos-num {
+  font-size: 22px;
+  color: var(--crimson);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.pos-btn:hover .pos-num { color: var(--brass); }
+
+.pos-btn .pos-name {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+  color: var(--ink);
+}
+
+.pos-btn:hover .pos-name { color: var(--paper); }
+
+.atbat-clickable { cursor: pointer; }
+.atbat-clickable:hover { background: rgba(164, 37, 43, 0.08); }
+
+/* ============ HELP / SHORTCUTS ============ */
+.shortcuts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+
+.shortcut {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px dotted var(--rule-faint);
+}
+
+.shortcut .key-combo {
+  background: var(--ink);
+  color: var(--brass);
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* ============ TOAST ============ */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-family: 'Special Elite', monospace;
+  font-size: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  border-left: 4px solid var(--crimson);
+  z-index: 100;
+  animation: slideUp 0.3s ease;
+  max-width: 90%;
+}
+
+@keyframes slideUp {
+  from { transform: translate(-50%, 20px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+/* ============ BASERUNNING / SPECIAL MODAL ============ */
+.runners-panel {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.runner-row {
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  gap: 8px;
+  padding: 6px 8px;
+  background: var(--paper-bright);
+  border: 1px solid var(--rule-faint);
+  border-radius: 3px;
+  align-items: center;
+  font-size: 12px;
+}
+
+.runner-row .base-label {
+  font-family: 'Bebas Neue', sans-serif;
+  color: var(--crimson);
+  letter-spacing: 0.1em;
+  font-size: 12px;
+}
+
+.runner-row .runner-name {
+  font-family: 'Lora', serif;
+  color: var(--ink);
+}
+
+.runner-row .runner-actions {
+  display: flex;
+  gap: 4px;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 900px) {
+  .top-bar { grid-template-columns: 1fr; }
+  .scoreboard .innings-display { font-size: 11px; }
+  .scoreboard .innings-display { grid-template-columns: 70px repeat(9, 26px) 30px 30px 30px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== SETUP SCREEN ===================== -->
+<div id="setup-screen" class="setup-screen">
+  <div class="title-block">
+    <div class="kicker">Anotador Oficial · Béisbol</div>
+    <h1>SCOREBOOK</h1>
+    <p class="subtitle">"Numbers never lie, but a scorecard tells the whole story."</p>
+  </div>
+
+  <div class="team-setup-grid">
+    <!-- AWAY TEAM -->
+    <div class="team-card away">
+      <div class="team-card-header">
+        <h2>Equipo Visitante</h2>
+        <span class="badge">AWAY · 9 BATEADORES</span>
+      </div>
+      <label class="field-label">Nombre del equipo</label>
+      <input type="text" class="text-input team-input team-name" data-team="away" value="Visitantes" placeholder="Nombre del equipo">
+      <label class="field-label">Lineup (Orden al bate · Nombre · Posición · #)</label>
+      <ul class="lineup-list" id="lineup-away"></ul>
+    </div>
+
+    <!-- HOME TEAM -->
+    <div class="team-card home">
+      <div class="team-card-header">
+        <h2>Equipo Local</h2>
+        <span class="badge">HOME · 9 BATEADORES</span>
+      </div>
+      <label class="field-label">Nombre del equipo</label>
+      <input type="text" class="text-input team-input team-name" data-team="home" value="Locales" placeholder="Nombre del equipo">
+      <label class="field-label">Lineup (Orden al bate · Nombre · Posición · #)</label>
+      <ul class="lineup-list" id="lineup-home"></ul>
+    </div>
+  </div>
+
+  <div class="settings-row">
+    <label class="field-label" style="font-size:13px;letter-spacing:0.25em;color:var(--brass);margin-bottom:4px">DURACIÓN DEL JUEGO</label>
+    <div class="innings-toggle" id="innings-toggle">
+      <label class="active"><input type="radio" name="innings" value="9" checked> 9 INNINGS</label>
+      <label><input type="radio" name="innings" value="7"> 7 INNINGS</label>
+    </div>
+    <p style="font-size:11px;font-style:italic;color:var(--ink-faded);margin-top:8px">9 entradas es estándar profesional; 7 se usa en doubleheaders, juveniles y softbol.</p>
+  </div>
+
+  <div class="setup-actions">
+    <button class="btn ghost" id="btn-load-game">Cargar partido</button>
+    <input type="file" id="file-input" accept="application/json" style="display:none">
+    <button class="btn ghost" id="btn-view-boxscore">📊 Ver box score</button>
+    <input type="file" id="boxscore-input" accept="application/json" style="display:none">
+    <button class="btn ghost" id="btn-load-sample">Cargar ejemplo</button>
+    <button class="btn primary" id="btn-start-game">▶ Comenzar Juego</button>
+  </div>
+</div>
+
+<!-- ===================== GAME SCREEN ===================== -->
+<div id="game-screen" class="game-screen hidden">
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="game-title" id="game-title">SCOREBOOK · GAME 1</div>
+    <div class="scoreboard">
+      <div class="innings-display" id="innings-display"></div>
+    </div>
+    <div class="top-actions">
+      <span id="sync-badge" style="font-family:monospace;font-size:10px;letter-spacing:0.1em;color:#e74c3c;align-self:center;padding:0 8px">○ Sin conexión</span>
+      <button class="btn ghost" id="btn-sub">🔄 Cambios</button>
+      <button class="btn ghost" id="btn-stats">📊 Stats</button>
+      <button class="btn ghost" id="btn-manual">📖 Manual</button>
+      <button class="btn ghost" id="btn-help">⌨ Atajos</button>
+      <button class="btn ghost" id="btn-save">💾 Guardar</button>
+      <button class="btn" id="btn-end">⏹ Fin</button>
+    </div>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- SITUATION PANEL -->
+    <div class="panel situation-panel">
+      <div class="panel-title">Situación</div>
+
+      <div class="inning-info">
+        <span class="arrow" id="half-arrow">▲</span>
+        <span id="inning-text">Inning 1</span>
+      </div>
+
+      <!-- Diamond SVG with bases -->
+      <svg class="diamond-svg" id="diamond-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Field area -->
+        <polygon points="100,30 170,100 100,170 30,100" fill="#0d3320" stroke="#1a5938" stroke-width="2"/>
+        <!-- Pitcher mound -->
+        <circle cx="100" cy="100" r="14" fill="#5e4023" stroke="#3d2818" stroke-width="1.5"/>
+        <text x="100" y="104" text-anchor="middle" fill="#f4e8d0" font-family="JetBrains Mono" font-size="10" font-weight="700">P</text>
+        <!-- Home plate -->
+        <polygon id="home-plate" points="100,170 92,162 92,156 108,156 108,162" fill="#f4e8d0" stroke="#1a0f08" stroke-width="1.5"/>
+        <!-- First base -->
+        <rect id="base-1" x="160" y="92" width="16" height="16" fill="#f4e8d0" stroke="#1a0f08" stroke-width="1.5" transform="rotate(45 168 100)"/>
+        <!-- Second base -->
+        <rect id="base-2" x="92" y="22" width="16" height="16" fill="#f4e8d0" stroke="#1a0f08" stroke-width="1.5" transform="rotate(45 100 30)"/>
+        <!-- Third base -->
+        <rect id="base-3" x="24" y="92" width="16" height="16" fill="#f4e8d0" stroke="#1a0f08" stroke-width="1.5" transform="rotate(45 32 100)"/>
+        <!-- Labels -->
+        <text x="180" y="104" text-anchor="middle" fill="#c89c3f" font-family="JetBrains Mono" font-size="8">1B</text>
+        <text x="100" y="14" text-anchor="middle" fill="#c89c3f" font-family="JetBrains Mono" font-size="8">2B</text>
+        <text x="20" y="104" text-anchor="middle" fill="#c89c3f" font-family="JetBrains Mono" font-size="8">3B</text>
+      </svg>
+
+      <div class="count-display">
+        <div class="count-box">
+          <div class="label">B</div>
+          <div class="value" id="balls-val">0</div>
+        </div>
+        <div class="count-box">
+          <div class="label">S</div>
+          <div class="value" id="strikes-val">0</div>
+        </div>
+        <div class="count-box outs">
+          <div class="label">OUTS</div>
+          <div class="value" id="outs-val">0</div>
+        </div>
+      </div>
+
+      <div class="batting-now">AL BATE</div>
+      <div class="current-batter-name" id="current-batter-name">—</div>
+      <div class="current-batter-meta" id="current-batter-meta">—</div>
+
+      <div class="pitcher-info" id="pitcher-info">Lanza: —</div>
+    </div>
+
+    <!-- SCORECARD GRID -->
+    <div class="panel scorecard-panel">
+      <div class="scorecard-tabs">
+        <button class="scorecard-tab active" data-team="away" id="tab-away">Visitante</button>
+        <button class="scorecard-tab" data-team="home" id="tab-home">Local</button>
+        <div style="flex:1"></div>
+        <button class="btn-small" id="btn-prev-batter">◀ Anterior</button>
+        <button class="btn-small" id="btn-next-batter">Siguiente ▶</button>
+      </div>
+      <div class="scorecard-grid" id="scorecard-grid"></div>
+
+      <div class="log-panel">
+        <div class="panel-title" style="margin-top:12px">Hoja de Anotaciones · Play-by-Play</div>
+        <div class="log-entries" id="log-entries"></div>
+      </div>
+    </div>
+
+    <!-- ACTION PANEL -->
+    <div class="panel action-panel" id="action-panel">
+
+      <div class="action-group">
+        <div class="action-group-title">
+          <span>Conteo y control</span>
+          <span class="hint">Espacio · ⌫</span>
+        </div>
+        <div class="action-buttons">
+          <button class="action-btn out" data-action="BALL" data-key=","><span class="key">,</span><span class="symbol">+B</span><span class="label">Bola</span></button>
+          <button class="action-btn out" data-action="STRIKE" data-key="."><span class="key">.</span><span class="symbol">+S</span><span class="label">Strike</span></button>
+          <button class="action-btn out" data-action="FOUL" data-key="/"><span class="key">/</span><span class="symbol">FL</span><span class="label">Foul</span></button>
+          <button class="action-btn special" data-action="NEXT" data-key=" "><span class="key">⎵</span><span class="symbol">▶</span><span class="label">Próximo</span></button>
+          <button class="action-btn special" data-action="UNDO" data-key="z"><span class="key">⌃Z</span><span class="symbol">⌫</span><span class="label">Deshacer</span></button>
+          <button class="action-btn special" data-action="STATS" data-key="?"><span class="key">?</span><span class="symbol">📊</span><span class="label">Stats</span></button>
+        </div>
+      </div>
+
+      <div class="action-group">
+        <div class="action-group-title">
+          <span>Hits</span>
+          <span class="hint">1·2·3·4·B·I·P</span>
+        </div>
+        <div class="action-buttons">
+          <button class="action-btn hit" data-action="1B" data-key="1"><span class="key">1</span><span class="symbol">1B</span><span class="label">Sencillo</span></button>
+          <button class="action-btn hit" data-action="2B" data-key="2"><span class="key">2</span><span class="symbol">2B</span><span class="label">Doble</span></button>
+          <button class="action-btn hit" data-action="3B" data-key="3"><span class="key">3</span><span class="symbol">3B</span><span class="label">Triple</span></button>
+          <button class="action-btn hit" data-action="HR" data-key="4"><span class="key">4</span><span class="symbol">HR</span><span class="label">Jonrón</span></button>
+          <button class="action-btn walk" data-action="BB" data-key="b"><span class="key">B</span><span class="symbol">BB</span><span class="label">Boleto</span></button>
+          <button class="action-btn walk" data-action="IBB" data-key="i"><span class="key">I</span><span class="symbol">IBB</span><span class="label">Intenc.</span></button>
+          <button class="action-btn walk" data-action="HBP" data-key="h"><span class="key">H</span><span class="symbol">HBP</span><span class="label">Golpeado</span></button>
+        </div>
+      </div>
+
+      <div class="action-group">
+        <div class="action-group-title">
+          <span>Outs</span>
+          <span class="hint">K·⇧K·F·L·G·O</span>
+        </div>
+        <div class="action-buttons">
+          <button class="action-btn out" data-action="K" data-key="k"><span class="key">K</span><span class="symbol">K</span><span class="label">Ponche</span></button>
+          <button class="action-btn out" data-action="K_SWING" data-key="K"><span class="key">⇧K</span><span class="symbol">ꓘ</span><span class="label">Abanicó</span></button>
+          <button class="action-btn out" data-action="F" data-key="f"><span class="key">F</span><span class="symbol">F</span><span class="label">Fly</span></button>
+          <button class="action-btn out" data-action="L" data-key="l"><span class="key">L</span><span class="symbol">L</span><span class="label">Línea</span></button>
+          <button class="action-btn out" data-action="G" data-key="g"><span class="key">G</span><span class="symbol">G</span><span class="label">Roleta</span></button>
+          <button class="action-btn out" data-action="P" data-key="o"><span class="key">O</span><span class="symbol">P</span><span class="label">Pop out</span></button>
+        </div>
+      </div>
+
+      <div class="action-group">
+        <div class="action-group-title">
+          <span>Corrido de bases</span>
+          <span class="hint">V·X·W·M·A·Y</span>
+        </div>
+        <div class="action-buttons">
+          <button class="action-btn special" data-action="SB" data-key="v"><span class="key">V</span><span class="symbol">SB</span><span class="label">Robo</span></button>
+          <button class="action-btn special" data-action="CS" data-key="x"><span class="key">X</span><span class="symbol">CS</span><span class="label">Atrap.</span></button>
+          <button class="action-btn special" data-action="WP" data-key="w"><span class="key">W</span><span class="symbol">WP</span><span class="label">Wild Pitch</span></button>
+          <button class="action-btn special" data-action="PB" data-key="m"><span class="key">M</span><span class="symbol">PB</span><span class="label">Passed Ball</span></button>
+          <button class="action-btn special" data-action="BK" data-key="a"><span class="key">A</span><span class="symbol">BK</span><span class="label">Balk</span></button>
+          <button class="action-btn special" data-action="DI" data-key="y"><span class="key">Y</span><span class="symbol">DI</span><span class="label">Indif.</span></button>
+        </div>
+      </div>
+
+      <div class="action-group">
+        <div class="action-group-title">
+          <span>Jugadas especiales</span>
+          <span class="hint">E·C·D·T·S·Q</span>
+        </div>
+        <div class="action-buttons">
+          <button class="action-btn special" data-action="E" data-key="e"><span class="key">E</span><span class="symbol">E</span><span class="label">Error</span></button>
+          <button class="action-btn special" data-action="FC" data-key="c"><span class="key">C</span><span class="symbol">FC</span><span class="label">Selección</span></button>
+          <button class="action-btn special" data-action="DP" data-key="d"><span class="key">D</span><span class="symbol">DP</span><span class="label">Doble M.</span></button>
+          <button class="action-btn special" data-action="TP" data-key="t"><span class="key">T</span><span class="symbol">TP</span><span class="label">Triple M.</span></button>
+          <button class="action-btn special" data-action="SF" data-key="s"><span class="key">S</span><span class="symbol">SF</span><span class="label">Fly sac.</span></button>
+          <button class="action-btn special" data-action="SH" data-key="q"><span class="key">Q</span><span class="symbol">SH</span><span class="label">Toque sac.</span></button>
+        </div>
+      </div>
+
+      <!-- BASE RUNNERS PANEL -->
+      <div class="action-group">
+        <div class="action-group-title">
+          <span>Corredores en base</span>
+          <span class="hint">Click para mover</span>
+        </div>
+        <div class="runners-panel" id="runners-panel"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===================== POSITION PICKER MODAL ===================== -->
+<div id="position-modal" class="modal-backdrop hidden">
+  <div class="position-picker">
+    <h3 id="pp-title">Posición del defensor</h3>
+    <div class="hint" id="pp-hint">Presiona 1-9 o haz clic</div>
+    <div class="position-grid">
+      <button class="pos-btn" data-pos="1"><div class="pos-num">1</div><div class="pos-name">Pitcher</div></button>
+      <button class="pos-btn" data-pos="2"><div class="pos-num">2</div><div class="pos-name">Catcher</div></button>
+      <button class="pos-btn" data-pos="3"><div class="pos-num">3</div><div class="pos-name">1ra Base</div></button>
+      <button class="pos-btn" data-pos="4"><div class="pos-num">4</div><div class="pos-name">2da Base</div></button>
+      <button class="pos-btn" data-pos="5"><div class="pos-num">5</div><div class="pos-name">3ra Base</div></button>
+      <button class="pos-btn" data-pos="6"><div class="pos-num">6</div><div class="pos-name">SS</div></button>
+      <button class="pos-btn" data-pos="7"><div class="pos-num">7</div><div class="pos-name">LF</div></button>
+      <button class="pos-btn" data-pos="8"><div class="pos-num">8</div><div class="pos-name">CF</div></button>
+      <button class="pos-btn" data-pos="9"><div class="pos-num">9</div><div class="pos-name">RF</div></button>
+    </div>
+    <div style="display:flex; gap:8px; justify-content:center;">
+      <button class="btn-small" id="pp-cancel">Cancelar (Esc)</button>
+      <button class="btn-small" id="pp-skip">Sin posición</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== STATS MODAL ===================== -->
+<div id="stats-modal" class="modal-backdrop hidden">
+  <div class="modal">
+    <button class="modal-close" data-close-modal="stats-modal">×</button>
+    <h2 class="modal-title">ESTADÍSTICAS</h2>
+    <div class="modal-subtitle">Box Score · Por jugador y por equipo</div>
+    <div id="stats-content"></div>
+    <div style="text-align:center; margin-top: 16px;">
+      <button class="btn ghost" id="btn-export-stats">📥 Exportar JSON</button>
+      <button class="btn ghost" id="btn-export-text">📄 Exportar Texto</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== HELP MODAL ===================== -->
+<div id="help-modal" class="modal-backdrop hidden">
+  <div class="modal" style="max-width:700px">
+    <button class="modal-close" data-close-modal="help-modal">×</button>
+    <h2 class="modal-title">ATAJOS</h2>
+    <div class="modal-subtitle">Para registrar jugadas a la velocidad del juego</div>
+
+    <h3 style="font-family:'Bebas Neue';letter-spacing:.15em;color:var(--crimson);font-size:14px;margin:16px 0 8px;">Hits & Boletos</h3>
+    <div class="shortcuts-grid">
+      <div class="shortcut"><span>Sencillo (1B)</span><span class="key-combo">1</span></div>
+      <div class="shortcut"><span>Doble (2B)</span><span class="key-combo">2</span></div>
+      <div class="shortcut"><span>Triple (3B)</span><span class="key-combo">3</span></div>
+      <div class="shortcut"><span>Jonrón (HR)</span><span class="key-combo">4</span></div>
+      <div class="shortcut"><span>Base por bolas (BB)</span><span class="key-combo">B</span></div>
+      <div class="shortcut"><span>BB intencional (IBB)</span><span class="key-combo">I</span></div>
+      <div class="shortcut"><span>Golpeado (HBP)</span><span class="key-combo">H</span></div>
+    </div>
+
+    <h3 style="font-family:'Bebas Neue';letter-spacing:.15em;color:var(--crimson);font-size:14px;margin:16px 0 8px;">Outs</h3>
+    <div class="shortcuts-grid">
+      <div class="shortcut"><span>Ponche cantado (K)</span><span class="key-combo">K</span></div>
+      <div class="shortcut"><span>Ponche abanicando (ꓘ)</span><span class="key-combo">⇧ + K</span></div>
+      <div class="shortcut"><span>Fly out (F)</span><span class="key-combo">F</span></div>
+      <div class="shortcut"><span>Línea out (L)</span><span class="key-combo">L</span></div>
+      <div class="shortcut"><span>Roleta out (G)</span><span class="key-combo">G</span></div>
+      <div class="shortcut"><span>Pop out (P)</span><span class="key-combo">O</span></div>
+    </div>
+
+    <h3 style="font-family:'Bebas Neue';letter-spacing:.15em;color:var(--crimson);font-size:14px;margin:16px 0 8px;">Jugadas Especiales</h3>
+    <div class="shortcuts-grid">
+      <div class="shortcut"><span>Error (E)</span><span class="key-combo">E</span></div>
+      <div class="shortcut"><span>Fielder's Choice</span><span class="key-combo">C</span></div>
+      <div class="shortcut"><span>Doble matanza (DP)</span><span class="key-combo">D</span></div>
+      <div class="shortcut"><span>Triple matanza (TP)</span><span class="key-combo">T</span></div>
+      <div class="shortcut"><span>Sacrifice fly (SF)</span><span class="key-combo">S</span></div>
+      <div class="shortcut"><span>Sacrifice bunt (SH)</span><span class="key-combo">Q</span></div>
+    </div>
+
+    <h3 style="font-family:'Bebas Neue';letter-spacing:.15em;color:var(--crimson);font-size:14px;margin:16px 0 8px;">Corrido de Bases</h3>
+    <div class="shortcuts-grid">
+      <div class="shortcut"><span>Base robada (SB)</span><span class="key-combo">V</span></div>
+      <div class="shortcut"><span>Atrapado robando (CS)</span><span class="key-combo">X</span></div>
+      <div class="shortcut"><span>Wild Pitch (WP)</span><span class="key-combo">W</span></div>
+      <div class="shortcut"><span>Passed Ball (PB)</span><span class="key-combo">M</span></div>
+      <div class="shortcut"><span>Balk (BK)</span><span class="key-combo">A</span></div>
+      <div class="shortcut"><span>Indif. defensiva (DI)</span><span class="key-combo">Y</span></div>
+    </div>
+
+    <h3 style="font-family:'Bebas Neue';letter-spacing:.15em;color:var(--crimson);font-size:14px;margin:16px 0 8px;">Conteo & Navegación</h3>
+    <div class="shortcuts-grid">
+      <div class="shortcut"><span>Bola</span><span class="key-combo">,</span></div>
+      <div class="shortcut"><span>Strike</span><span class="key-combo">.</span></div>
+      <div class="shortcut"><span>Foul</span><span class="key-combo">/</span></div>
+      <div class="shortcut"><span>Próximo bateador</span><span class="key-combo">Espacio</span></div>
+      <div class="shortcut"><span>Deshacer última</span><span class="key-combo">Ctrl + Z</span></div>
+      <div class="shortcut"><span>Posición defensiva</span><span class="key-combo">1 – 9</span></div>
+      <div class="shortcut"><span>Cerrar modal</span><span class="key-combo">Esc</span></div>
+      <div class="shortcut"><span>Ver stats</span><span class="key-combo">?</span></div>
+    </div>
+
+    <div style="text-align:center;margin-top:24px;padding-top:16px;border-top:1px dotted var(--rule-faint);font-size:12px;color:var(--ink-faded);font-style:italic">
+      Sugerencia: en outs de campo (F, L, G, P, E) se abre un selector de posición — presiona 1-9 directamente para fijar quién hizo la jugada.
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SUBSTITUTION MODAL ===================== -->
+<div id="sub-modal" class="modal-backdrop hidden">
+  <div class="modal" style="max-width:620px">
+    <button class="modal-close" data-close-modal="sub-modal">×</button>
+    <h2 class="modal-title">CAMBIO DE JUGADOR</h2>
+    <div class="modal-subtitle">Pinch hitters, pinch runners, cambios defensivos y de pitcher</div>
+
+    <div class="sub-form-row">
+      <label class="field-label">Equipo</label>
+      <div class="team-pick-row" id="sub-team-row">
+        <button class="btn-pick active" data-sub-team="away">Visitante</button>
+        <button class="btn-pick" data-sub-team="home">Local</button>
+      </div>
+    </div>
+
+    <div class="sub-form-row">
+      <label class="field-label">Tipo de cambio</label>
+      <div class="sub-type-row" id="sub-type-row">
+        <button class="btn-pick active" data-sub-type="PH">Pinch Hitter (PH)</button>
+        <button class="btn-pick" data-sub-type="PR">Pinch Runner (PR)</button>
+        <button class="btn-pick" data-sub-type="DEF">Defensivo</button>
+        <button class="btn-pick" data-sub-type="P">Cambio Pitcher</button>
+      </div>
+    </div>
+
+    <div class="sub-form-row">
+      <label class="field-label">Posición en el lineup (slot que reemplaza)</label>
+      <select id="sub-slot" class="slot-select"></select>
+      <div class="sub-history" id="sub-history">—</div>
+    </div>
+
+    <div class="sub-form-row">
+      <label class="field-label">Datos del nuevo jugador</label>
+      <div class="sub-fields-grid">
+        <input type="text" id="sub-name" class="text-input" placeholder="Nombre">
+        <select id="sub-pos" class="slot-select" style="padding:8px"></select>
+        <input type="text" id="sub-num" class="text-input" placeholder="#" maxlength="3">
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap">
+      <button class="btn ghost" data-close-modal="sub-modal">Cancelar</button>
+      <button class="btn primary" id="btn-confirm-sub">✓ Confirmar Cambio</button>
+    </div>
+
+    <div class="callout" style="margin-top:20px">
+      <strong>Cómo funciona</strong>
+      El nuevo jugador hereda el slot del lineup. Sus estadísticas se acumulan por separado del jugador reemplazado, pero el slot mantiene la suma total. Si el sustituido estaba en base, el nuevo jugador corre por él. El jugador reemplazado no puede regresar al juego.
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MANUAL MODAL ===================== -->
+<div id="manual-modal" class="modal-backdrop hidden">
+  <div class="modal" style="max-width:900px">
+    <button class="modal-close" data-close-modal="manual-modal">×</button>
+    <h2 class="modal-title">MANUAL DE USO</h2>
+    <div class="modal-subtitle">Cómo anotar un juego de béisbol con Scorebook</div>
+
+    <div class="manual-content">
+
+      <div class="manual-toc">
+        <h4>CONTENIDO</h4>
+        <ol>
+          <li data-jump="m-setup">Configuración inicial</li>
+          <li data-jump="m-screen">Pantalla de juego</li>
+          <li data-jump="m-record">Registrar jugadas</li>
+          <li data-jump="m-special">Jugadas especiales</li>
+          <li data-jump="m-bases">Corrido de bases</li>
+          <li data-jump="m-count">Conteo manual</li>
+          <li data-jump="m-subs">Cambios de jugador</li>
+          <li data-jump="m-control">Control del juego</li>
+          <li data-jump="m-stats">Estadísticas</li>
+          <li data-jump="m-save">Guardar y cargar</li>
+          <li data-jump="m-end">Fin del juego</li>
+          <li data-jump="m-notation">Notación oficial</li>
+        </ol>
+      </div>
+
+      <section id="m-setup">
+        <h3><span class="step-num">1</span> Configuración inicial</h3>
+        <p>Antes de iniciar el juego:</p>
+        <ul>
+          <li>Ingresa los nombres del equipo <strong>visitante</strong> y <strong>local</strong>.</li>
+          <li>Llena los 9 bateadores de cada lineup con <strong>nombre, posición y número</strong>.</li>
+          <li>Elige la <strong>duración del juego</strong>: 7 entradas (juveniles, doubleheaders, softbol) o 9 entradas (estándar profesional).</li>
+          <li>El botón <em>"Cargar ejemplo"</em> rellena lineups de prueba para empezar al instante.</li>
+          <li><em>"Cargar partido"</em> abre un archivo <kbd>.json</kbd> guardado previamente.</li>
+        </ul>
+        <div class="callout">
+          <strong>Tip</strong>
+          La posición de cada jugador (CF, SS, P, etc.) se usa para llenar automáticamente la notación de las jugadas defensivas. Si dejas algún campo vacío, el sistema generará un nombre genérico ("Bateador 1", etc.).
+        </div>
+      </section>
+
+      <section id="m-screen">
+        <h3><span class="step-num">2</span> Pantalla de juego</h3>
+        <p>La pantalla se divide en tres paneles principales más el marcador superior:</p>
+        <p><strong>Marcador superior:</strong> resultado inning-por-inning (R/H/E). El inning actual pulsa en rojo.</p>
+        <p><strong>Izquierda · Situación:</strong> diamante con corredores (rojo = base ocupada), conteo de bolas/strikes/outs, inning actual con flecha (▲ alta = batea visitante, ▼ baja = batea local), bateador al bate y pitcher actual.</p>
+        <p><strong>Centro · Hoja de anotaciones:</strong> grilla tradicional de scorebook, una fila por bateador y una columna por inning. Cada turno al bate dibuja un <em>mini-diamante</em> con las bases alcanzadas, la notación oficial (<kbd>1B</kbd>, <kbd>K</kbd>, <kbd>ꓘ</kbd>, <kbd>F8</kbd>, <kbd>6-3</kbd>, <kbd>E5</kbd>), un punto rojo si anotó carrera y los RBIs. Las pestañas alternan entre el lineup visitante y local. El play-by-play aparece debajo de la grilla.</p>
+        <p><strong>Derecha · Acciones:</strong> botones agrupados por categoría con el atajo de teclado visible en la esquina. Panel de corredores en base con controles individuales.</p>
+      </section>
+
+      <section id="m-record">
+        <h3><span class="step-num">3</span> Registrar jugadas</h3>
+        <p>Para cada turno al bate, presiona un botón o un atajo de teclado:</p>
+        <p><strong>Hits y embases:</strong></p>
+        <table class="notation-table">
+          <tr><td>1B · <kbd>1</kbd></td><td>Sencillo (una base)</td></tr>
+          <tr><td>2B · <kbd>2</kbd></td><td>Doble (dos bases)</td></tr>
+          <tr><td>3B · <kbd>3</kbd></td><td>Triple (tres bases)</td></tr>
+          <tr><td>HR · <kbd>4</kbd></td><td>Jonrón (Home Run)</td></tr>
+          <tr><td>BB · <kbd>B</kbd></td><td>Base por bolas (pasaporte)</td></tr>
+          <tr><td>IBB · <kbd>I</kbd></td><td>Base por bolas intencional</td></tr>
+          <tr><td>HBP · <kbd>H</kbd></td><td>Golpeado por el lanzador</td></tr>
+        </table>
+        <p><strong>Outs:</strong></p>
+        <table class="notation-table">
+          <tr><td>K · <kbd>K</kbd></td><td>Ponche cantado (sin abanicar)</td></tr>
+          <tr><td>ꓘ · <kbd>⇧+K</kbd></td><td>Ponche abanicando (K invertida)</td></tr>
+          <tr><td>F · <kbd>F</kbd></td><td>Fly out (elevado capturado)</td></tr>
+          <tr><td>L · <kbd>L</kbd></td><td>Línea out</td></tr>
+          <tr><td>G · <kbd>G</kbd></td><td>Roleta out</td></tr>
+          <tr><td>P · <kbd>O</kbd></td><td>Pop out</td></tr>
+        </table>
+        <div class="callout">
+          <strong>Selector de posición</strong>
+          Cuando registres un out de campo (F, L, G, P) o un error (E), aparecerá un selector de posición. Presiona <kbd>1</kbd>–<kbd>9</kbd> directamente para indicar qué jugador hizo la atrapada o cometió el error. La notación final queda como <kbd>F8</kbd> (fly al jardinero central), <kbd>6-3</kbd> (roleta del SS al primera base), <kbd>E5</kbd> (error del tercera base), etc.
+        </div>
+      </section>
+
+      <section id="m-special">
+        <h3><span class="step-num">4</span> Jugadas especiales</h3>
+        <table class="notation-table">
+          <tr><td>E · <kbd>E</kbd></td><td>Error (pide la posición del defensor responsable)</td></tr>
+          <tr><td>FC · <kbd>C</kbd></td><td>Fielder's Choice (jugada de selección)</td></tr>
+          <tr><td>DP · <kbd>D</kbd></td><td>Doble matanza — out al bateador y al corredor forzado</td></tr>
+          <tr><td>TP · <kbd>T</kbd></td><td>Triple matanza — tres outs en una jugada, limpia las bases</td></tr>
+          <tr><td>SF · <kbd>S</kbd></td><td>Fly de sacrificio — out, pero el corredor de 3ra anota</td></tr>
+          <tr><td>SH · <kbd>Q</kbd></td><td>Toque de sacrificio (bunt) — out, todos los corredores avanzan</td></tr>
+        </table>
+        <p>SF y SH <em>no</em> cuentan como turno al bate (AB), por lo tanto no afectan el promedio del bateador.</p>
+      </section>
+
+      <section id="m-bases">
+        <h3><span class="step-num">5</span> Corrido de bases</h3>
+        <table class="notation-table">
+          <tr><td>SB · <kbd>V</kbd></td><td>Base robada — pregunta qué corredor robó</td></tr>
+          <tr><td>CS · <kbd>X</kbd></td><td>Atrapado robando — pregunta qué corredor y suma un out</td></tr>
+          <tr><td>WP · <kbd>W</kbd></td><td>Wild Pitch — todos los corredores avanzan una base</td></tr>
+          <tr><td>PB · <kbd>M</kbd></td><td>Passed Ball — corredores avanzan</td></tr>
+          <tr><td>BK · <kbd>A</kbd></td><td>Balk — corredores avanzan por movimiento ilegal del pitcher</td></tr>
+          <tr><td>DI · <kbd>Y</kbd></td><td>Indiferencia defensiva — el corredor avanza sin intento de out</td></tr>
+        </table>
+        <p>El <strong>panel de corredores</strong> (derecha) permite operar a cada corredor individualmente:</p>
+        <ul>
+          <li><kbd>+1</kbd> — avanzar una base</li>
+          <li><kbd>⌂</kbd> — anotar carrera</li>
+          <li><kbd>×</kbd> — out en bases</li>
+        </ul>
+      </section>
+
+      <section id="m-count">
+        <h3><span class="step-num">6</span> Conteo manual</h3>
+        <p>Si quieres llevar el conteo de bolas y strikes pitch por pitch:</p>
+        <table class="notation-table">
+          <tr><td><kbd>,</kbd></td><td>Suma una bola</td></tr>
+          <tr><td><kbd>.</kbd></td><td>Suma un strike</td></tr>
+          <tr><td><kbd>/</kbd></td><td>Foul (suma strike hasta 2)</td></tr>
+        </table>
+        <p>A 4 bolas se registra automáticamente <kbd>BB</kbd>. A 3 strikes se registra automáticamente <kbd>K</kbd>. El conteo se reinicia al pasar al siguiente bateador.</p>
+        <p><em>Llevar el conteo es opcional</em> — puedes ir directo al resultado del turno con los botones de hits/outs sin preocuparte por bolas y strikes.</p>
+      </section>
+
+      <section id="m-subs">
+        <h3><span class="step-num">7</span> Cambios de jugador</h3>
+        <p>El botón <strong>🔄 Cambios</strong> en el top bar abre el modal de substituciones. Permite:</p>
+        <ul>
+          <li>Elegir <strong>equipo</strong> y <strong>slot del lineup</strong> (1 al 9) a sustituir</li>
+          <li>Especificar el <strong>tipo de cambio</strong>: Pinch Hitter (PH), Pinch Runner (PR), Defensivo, o Cambio de Pitcher</li>
+          <li>Ingresar <strong>nombre, posición y número</strong> del nuevo jugador</li>
+        </ul>
+        <p>El nuevo jugador hereda el slot del lineup. Si el sustituido estaba <em>en base</em>, el nuevo corre por él. Si era pitcher, el nuevo asume el montículo. <strong>El jugador reemplazado no puede regresar al juego.</strong></p>
+        <p>En la hoja de anotaciones, el slot muestra ambos jugadores con una flecha (<em>"García → Pérez"</em>). En las estadísticas finales, cada jugador aparece con sus números individuales pero agrupado bajo el mismo slot.</p>
+        <div class="callout warn">
+          <strong>Importante</strong>
+          Las jugadas previas al cambio mantienen su atribución al jugador original. Por ejemplo, si García conectó hits en innings 1-5 y Pérez entró como PH en el 6to, García conserva esos hits en sus estadísticas.
+        </div>
+      </section>
+
+      <section id="m-control">
+        <h3><span class="step-num">8</span> Control del juego</h3>
+        <table class="notation-table">
+          <tr><td><kbd>Espacio</kbd></td><td>Forzar siguiente bateador (sin registrar jugada)</td></tr>
+          <tr><td><kbd>Ctrl+Z</kbd></td><td>Deshacer la última acción</td></tr>
+          <tr><td>◀ / ▶</td><td>Botones <em>Anterior / Siguiente</em> en la barra del scorecard</td></tr>
+          <tr><td>Click</td><td>Click en el nombre de un bateador para saltar a su turno</td></tr>
+          <tr><td><kbd>?</kbd></td><td>Abrir la ventana de estadísticas</td></tr>
+          <tr><td><kbd>Esc</kbd></td><td>Cerrar el modal abierto</td></tr>
+        </table>
+        <p>Los outs y cambios de inning son <strong>automáticos</strong>: al llegar a 3 outs, el sistema cambia el lado del inning, limpia las bases, reinicia el conteo y avanza al siguiente.</p>
+      </section>
+
+      <section id="m-stats">
+        <h3><span class="step-num">9</span> Estadísticas</h3>
+        <p>El botón <strong>📊 Stats</strong> (o la tecla <kbd>?</kbd>) abre el <em>box score</em> completo:</p>
+        <ul>
+          <li><strong>Resultado final</strong> y línea de scoreo por inning</li>
+          <li><strong>Resumen por equipo:</strong> AVG, OBP, SLG, OPS, HR, RBI, BB, K</li>
+          <li><strong>Tabla detallada por bateador</strong> — si hubo sustituciones, cada jugador aparece en su propia fila bajo el slot</li>
+        </ul>
+        <p>Los promedios se calculan en <strong>tiempo real</strong>, no solo al final. Puedes consultar las estadísticas en cualquier momento del juego.</p>
+        <p>Botones de exportar dentro del modal:</p>
+        <ul>
+          <li><strong>📥 JSON</strong> — datos completos en formato máquina</li>
+          <li><strong>📄 Texto</strong> — box score legible para imprimir o compartir</li>
+        </ul>
+      </section>
+
+      <section id="m-save">
+        <h3><span class="step-num">10</span> Guardar y cargar</h3>
+        <p><strong>💾 Guardar</strong> descarga un archivo <kbd>.json</kbd> con todo el partido: lineups, todos los turnos al bate, jugadas, cambios y estado actual.</p>
+        <p>Desde la pantalla de setup, <strong>"Cargar partido"</strong> abre un <kbd>.json</kbd> previo y restaura el estado exacto. Útil para pausar y retomar, archivar partidos completos, o compartir registros.</p>
+      </section>
+
+      <section id="m-end">
+        <h3><span class="step-num">11</span> Fin del juego</h3>
+        <p>El botón <strong>⏹ Fin</strong> abre el modal de cierre con tres opciones:</p>
+        <ul>
+          <li><strong>Cancelar</strong> — volver al juego</li>
+          <li><strong>Ver Box Score</strong> — abrir las estadísticas finales</li>
+          <li><strong>Juego Nuevo</strong> — empezar de cero (pide confirmación)</li>
+        </ul>
+        <p>El sistema <em>no</em> termina automáticamente al llegar al inning final — esto permite entradas extra en caso de empate. Tú decides cuándo cerrar el juego.</p>
+      </section>
+
+      <section id="m-notation">
+        <h3><span class="step-num">12</span> Notación oficial</h3>
+        <p><strong>Posiciones defensivas numeradas:</strong></p>
+        <div class="position-ref">
+          <div><strong>1</strong> Pitcher (P)</div>
+          <div><strong>2</strong> Catcher (C)</div>
+          <div><strong>3</strong> 1ra Base (1B)</div>
+          <div><strong>4</strong> 2da Base (2B)</div>
+          <div><strong>5</strong> 3ra Base (3B)</div>
+          <div><strong>6</strong> Shortstop (SS)</div>
+          <div><strong>7</strong> Left Field (LF)</div>
+          <div><strong>8</strong> Center Field (CF)</div>
+          <div><strong>9</strong> Right Field (RF)</div>
+        </div>
+        <p><strong>Outs de roleta</strong> se anotan con la ruta del balón. Ejemplos:</p>
+        <table class="notation-table">
+          <tr><td>6-3</td><td>Roleta del SS, tira a 1ra base</td></tr>
+          <tr><td>4-3</td><td>Roleta a 2da, tira a 1ra</td></tr>
+          <tr><td>5-3</td><td>Roleta a 3ra, tira a 1ra</td></tr>
+          <tr><td>1-6-3</td><td>Doble matanza: pitcher a SS a 1ra</td></tr>
+          <tr><td>F8</td><td>Fly al jardinero central</td></tr>
+          <tr><td>L4</td><td>Línea al segunda base</td></tr>
+        </table>
+        <div class="callout">
+          <strong>Atribución de carreras</strong>
+          Todas las carreras anotadas en hits se cuentan como RBIs. Los errores generan carreras <em>no limpias</em> que se anotan al equipo pero no como RBI. La aplicación distingue automáticamente estos casos en las estadísticas.
+        </div>
+      </section>
+
+    </div>
+
+    <div style="text-align:center;margin-top:24px;padding-top:16px;border-top:2px solid var(--rule-faint);font-size:11px;font-style:italic;color:var(--ink-faded)">
+      "Numbers never lie, but a scorecard tells the whole story." · Scorebook v1
+    </div>
+  </div>
+</div>
+
+<!-- ===================== END GAME MODAL ===================== -->
+<div id="end-modal" class="modal-backdrop hidden">
+  <div class="modal" style="max-width:500px;text-align:center">
+    <h2 class="modal-title">¿Terminar el juego?</h2>
+    <p style="margin:16px 0;color:var(--ink-faded);font-style:italic">
+      Esto cerrará la sesión actual y mostrará el resumen final.
+    </p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:16px;flex-wrap:wrap">
+      <button class="btn ghost" data-close-modal="end-modal">Cancelar</button>
+      <button class="btn" id="btn-confirm-end">Ver Box Score</button>
+      <button class="btn primary" id="btn-new-game">Juego Nuevo</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   BASEBALL SCORECARD — Anotador Oficial
+   Sistema de anotación estandarizado en español
+   ================================================================ */
+
+const POSITIONS = {
+  1: { code: 'P',  name: 'Pitcher' },
+  2: { code: 'C',  name: 'Catcher' },
+  3: { code: '1B', name: '1ra Base' },
+  4: { code: '2B', name: '2da Base' },
+  5: { code: '3B', name: '3ra Base' },
+  6: { code: 'SS', name: 'Shortstop' },
+  7: { code: 'LF', name: 'Left Field' },
+  8: { code: 'CF', name: 'Center Field' },
+  9: { code: 'RF', name: 'Right Field' },
+  DH:{ code: 'DH', name: 'Bateador Designado' }
+};
+const POS_CODES = ['P','C','1B','2B','3B','SS','LF','CF','RF','DH'];
+
+const DEFAULT_LINEUP = [
+  { name: '', pos: 'CF', num: '' },
+  { name: '', pos: 'SS', num: '' },
+  { name: '', pos: '1B', num: '' },
+  { name: '', pos: 'RF', num: '' },
+  { name: '', pos: '3B', num: '' },
+  { name: '', pos: 'LF', num: '' },
+  { name: '', pos: '2B', num: '' },
+  { name: '', pos: 'C',  num: '' },
+  { name: '', pos: 'P',  num: '' }
+];
+
+const SAMPLE_AWAY = [
+  { name: 'R. García',  pos: 'CF', num: '7'  },
+  { name: 'J. Martínez',pos: 'SS', num: '3'  },
+  { name: 'M. López',   pos: '1B', num: '23' },
+  { name: 'A. Sánchez', pos: 'RF', num: '14' },
+  { name: 'C. Rodríguez',pos: '3B',num: '5'  },
+  { name: 'D. Hernández',pos: 'LF',num: '11' },
+  { name: 'F. Torres',  pos: '2B', num: '9'  },
+  { name: 'L. Ramírez', pos: 'C',  num: '21' },
+  { name: 'P. Vega',    pos: 'P',  num: '28' }
+];
+const SAMPLE_HOME = [
+  { name: 'E. Castillo',pos: 'CF', num: '22' },
+  { name: 'O. Rivera',  pos: '2B', num: '4'  },
+  { name: 'J. Morales', pos: 'RF', num: '17' },
+  { name: 'N. Vázquez', pos: '1B', num: '44' },
+  { name: 'G. Mendoza', pos: '3B', num: '6'  },
+  { name: 'R. Cruz',    pos: 'SS', num: '2'  },
+  { name: 'B. Ortiz',   pos: 'LF', num: '13' },
+  { name: 'S. Reyes',   pos: 'C',  num: '8'  },
+  { name: 'T. Aguilar', pos: 'P',  num: '31' }
+];
+
+/* ====================== STATE ====================== */
+let state = createBlankState();
+
+function createBlankState() {
+  return {
+    started: false,
+    totalInnings: 9,
+    teams: {
+      away: { name: 'Visitantes', players: [] },
+      home: { name: 'Locales',    players: [] }
+    },
+    currentInning: 1,
+    half: 'top',       // 'top' (away bats) | 'bottom' (home bats)
+    outs: 0,
+    balls: 0,
+    strikes: 0,
+    bases: [null, null, null],   // [1B, 2B, 3B] — { playerId, fromAtBatIdx }
+    currentBatterIdx: { away: 0, home: 0 },
+    atBatCount: { away: 0, home: 0 }, // total batters per team (for box score order)
+    innings: [], // [{ awayRuns, homeRuns, awayHits, homeHits, awayErrors, homeErrors }]
+    inningRuns: { away: [], home: [] }, // runs per inning index
+    inningHits: { away: [], home: [] },
+    inningErrors: { away: [], home: [] },
+    plays: [],   // chronological play log
+    atBats: { away: [], home: [] }, // atBats[team][orderIdx*999 + atbatIdxAtThatSpot]
+    pitcherStats: { away: {}, home: {} }, // per-pitcher stats, keyed by pitcher.id
+    history: [], // for undo
+    pendingPosition: null, // { type, callback }
+    viewTeam: 'away',
+    gameOver: false
+  };
+}
+
+function ensureInning(n) {
+  while (state.inningRuns.away.length < n) {
+    state.inningRuns.away.push(0); state.inningRuns.home.push(0);
+    state.inningHits.away.push(0); state.inningHits.home.push(0);
+    state.inningErrors.away.push(0); state.inningErrors.home.push(0);
+  }
+}
+
+/* ====================== SETUP RENDER ====================== */
+function renderLineupForm(teamKey) {
+  const ul = document.getElementById('lineup-' + teamKey);
+  ul.innerHTML = '';
+  DEFAULT_LINEUP.forEach((p, i) => {
+    const li = document.createElement('li');
+    li.className = 'lineup-row';
+    li.innerHTML = `
+      <div class="order-num">${i+1}</div>
+      <input type="text" class="lineup-name" data-team="${teamKey}" data-idx="${i}" placeholder="Nombre del jugador" value="${p.name||''}">
+      <select class="pos-select" data-team="${teamKey}" data-idx="${i}">
+        ${POS_CODES.map(c => `<option value="${c}" ${c===p.pos?'selected':''}>${c}</option>`).join('')}
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="${teamKey}" data-idx="${i}" placeholder="#" value="${p.num||''}" maxlength="3">
+    `;
+    ul.appendChild(li);
+  });
+}
+
+function loadSampleData() {
+  document.querySelector('input[data-team="away"]').value = 'Tigres';
+  document.querySelector('input[data-team="home"]').value = 'Águilas';
+  SAMPLE_AWAY.forEach((p, i) => {
+    document.querySelector(`.lineup-name[data-team="away"][data-idx="${i}"]`).value = p.name;
+    document.querySelector(`.pos-select[data-team="away"][data-idx="${i}"]`).value = p.pos;
+    document.querySelector(`.lineup-num[data-team="away"][data-idx="${i}"]`).value = p.num;
+  });
+  SAMPLE_HOME.forEach((p, i) => {
+    document.querySelector(`.lineup-name[data-team="home"][data-idx="${i}"]`).value = p.name;
+    document.querySelector(`.pos-select[data-team="home"][data-idx="${i}"]`).value = p.pos;
+    document.querySelector(`.lineup-num[data-team="home"][data-idx="${i}"]`).value = p.num;
+  });
+  toast('Lineup de ejemplo cargado');
+}
+
+function collectSetupData() {
+  ['away','home'].forEach(team => {
+    state.teams[team].name = document.querySelector(`input.team-name[data-team="${team}"]`).value.trim() || (team==='away'?'Visitantes':'Locales');
+    state.teams[team].players = DEFAULT_LINEUP.map((_, i) => {
+      const name = document.querySelector(`.lineup-name[data-team="${team}"][data-idx="${i}"]`).value.trim() || `Bateador ${i+1}`;
+      const pos = document.querySelector(`.pos-select[data-team="${team}"][data-idx="${i}"]`).value;
+      const num = document.querySelector(`.lineup-num[data-team="${team}"][data-idx="${i}"]`).value.trim();
+      return {
+        id: team+'-s'+i+'-0',
+        slotIdx: i,
+        order: i+1,
+        name, pos, num,
+        enteredInning: 1,
+        enteredHalf: 'top',
+        leftAfterInning: null,
+        leftAfterHalf: null,
+        replacesId: null,
+        subType: null
+      };
+    });
+  });
+  // Read innings choice
+  const r = document.querySelector('input[name="innings"]:checked');
+  state.totalInnings = r ? parseInt(r.value, 10) : 9;
+}
+
+function startGame() {
+  collectSetupData();
+  state.started = true;
+  ensureInning(state.totalInnings);
+  document.getElementById('setup-screen').classList.add('hidden');
+  document.getElementById('game-screen').classList.remove('hidden');
+  state.viewTeam = state.half === 'top' ? 'away' : 'home';
+  updateScorecardTabs();
+  render();
+  toast(`▶ ${state.teams.away.name} @ ${state.teams.home.name} · ${state.totalInnings} innings`);
+}
+
+/* ====================== HELPERS ====================== */
+function currentBattingTeam()    { return state.half === 'top' ? 'away' : 'home'; }
+function currentFieldingTeam()   { return state.half === 'top' ? 'home' : 'away'; }
+
+function currentPlayerInSlot(team, slotIdx) {
+  // Find the player currently active in that batting slot (not yet replaced)
+  const slotPlayers = state.teams[team].players.filter(p => p.slotIdx === slotIdx);
+  return slotPlayers.find(p => p.leftAfterInning == null) ||
+         slotPlayers[slotPlayers.length - 1] || null;
+}
+
+function slotPlayerHistory(team, slotIdx) {
+  return state.teams[team].players
+    .filter(p => p.slotIdx === slotIdx)
+    .sort((a, b) => (a.enteredInning - b.enteredInning) || a.id.localeCompare(b.id));
+}
+
+function currentBatter() {
+  const team = currentBattingTeam();
+  return currentPlayerInSlot(team, state.currentBatterIdx[team]);
+}
+
+function currentPitcher() {
+  const team = currentFieldingTeam();
+  // Most-recently-entered active player with position P
+  const pitchers = state.teams[team].players.filter(p => p.pos === 'P' && p.leftAfterInning == null);
+  return pitchers[pitchers.length - 1] || state.teams[team].players.find(p => p.pos === 'P');
+}
+
+/* ====================== PITCHER STATS HELPERS ====================== */
+function ensurePitcher(team, pitcherId) {
+  if (!state.pitcherStats) state.pitcherStats = { away:{}, home:{} };
+  if (!state.pitcherStats[team]) state.pitcherStats[team] = {};
+  if (!state.pitcherStats[team][pitcherId]) {
+    state.pitcherStats[team][pitcherId] = {
+      pitches:0, balls:0, strikes:0, outs:0, bf:0,
+      h:0, r:0, bb:0, k:0, hr:0, hbp:0, ibb:0
+    };
+  }
+  return state.pitcherStats[team][pitcherId];
+}
+function activePitcherStats() {
+  const p = currentPitcher();
+  if (!p) return null;
+  return ensurePitcher(currentFieldingTeam(), p.id);
+}
+function recordPitch(type) {
+  // type: 'B' = ball, 'S' = called/swinging/contact strike, 'F' = foul (strike), 'H' = HBP (pitch but neither)
+  const s = activePitcherStats();
+  if (!s) return;
+  s.pitches++;
+  if (type === 'B') s.balls++;
+  else if (type === 'S' || type === 'F') s.strikes++;
+  // 'H' counts as a pitch only
+}
+function pitcherAddOuts(n) {
+  const s = activePitcherStats();
+  if (s) s.outs += n;
+}
+function attributeAtBatToPitcher(ab) {
+  const fielding = currentFieldingTeam();
+  const pitcher = currentPitcher();
+  if (!pitcher) return;
+  const s = ensurePitcher(fielding, pitcher.id);
+  if (ab.countAsPA) s.bf++;
+  if (ab.isHit) { s.h++; if (ab.type === 'HR') s.hr++; }
+  if (ab.isWalk) { s.bb++; if (ab.type === 'IBB') s.ibb++; }
+  if (ab.isHBP) { s.hbp++; s.pitches++; }
+  if (ab.isStrikeout) s.k++;
+  // Contact pitch: ball put in play counts as 1 pitch + 1 strike
+  const contactTypes = ['1B','2B','3B','HR','F','L','G','P','E','FC','DP','TP','SF','SH'];
+  if (contactTypes.includes(ab.type)) {
+    s.pitches++;
+    s.strikes++;
+  }
+}
+function formatIP(outs) {
+  const whole = Math.floor(outs / 3);
+  const part = outs % 3;
+  return `${whole}.${part}`;
+}
+
+function teamPlayers(team) { return state.teams[team].players; }
+function atBatList(team, orderIdx) {
+  return state.atBats[team].filter(ab => ab.orderIdx === orderIdx);
+}
+
+/* ====================== EVENT LOG ====================== */
+function pushPlay(play) {
+  // snapshot for undo
+  state.history.push(JSON.parse(JSON.stringify({
+    currentInning: state.currentInning, half: state.half,
+    outs: state.outs, balls: state.balls, strikes: state.strikes,
+    bases: state.bases, currentBatterIdx: state.currentBatterIdx,
+    atBatCount: state.atBatCount,
+    inningRuns: state.inningRuns, inningHits: state.inningHits, inningErrors: state.inningErrors,
+    atBats: state.atBats, plays: state.plays,
+    pitcherStats: state.pitcherStats,
+    teams: state.teams
+  })));
+  state.plays.push({
+    ...play,
+    inning: state.currentInning,
+    half: state.half,
+    timestamp: Date.now()
+  });
+}
+
+function undo() {
+  if (state.history.length === 0) { toast('Nada que deshacer'); return; }
+  const snap = state.history.pop();
+  Object.assign(state, snap);
+  state.balls = 0; state.strikes = 0; // safe reset
+  render();
+  toast('↶ Acción deshecha');
+}
+
+/* ====================== ACTION HANDLERS ====================== */
+function recordAtBat(notation, opts={}) {
+  const team = currentBattingTeam();
+  const batter = currentBatter();
+  const orderIdx = state.currentBatterIdx[team];
+  const inning = state.currentInning;
+  const ab = {
+    team, orderIdx, batterId: batter.id, batterName: batter.name,
+    inning, half: state.half,
+    notation,                       // displayed code: 1B, 2B, K, ꓘ, F8, 6-3, etc
+    type: opts.type || notation,    // canonical type for stats
+    details: opts.details || '',    // e.g. "6-3" or "F8"
+    rbi: opts.rbi || 0,
+    runs: opts.runs || 0,           // 1 if batter scored
+    reached: opts.reached || null,  // 'first','second','third','home',null
+    out: opts.out || false,
+    isHit: opts.isHit || false,
+    isWalk: opts.isWalk || false,
+    isHBP: opts.isHBP || false,
+    isSac: opts.isSac || false,
+    isError: opts.isError || false,
+    isStrikeout: opts.isStrikeout || false,
+    countAsPA: opts.countAsPA !== false, // most events count as PA
+    countAsAB: opts.countAsAB || false   // hits, outs in field, K, FC count as AB; BB/HBP/SF/SH do not
+  };
+  state.atBats[team].push(ab);
+  state.atBatCount[team]++;
+  attributeAtBatToPitcher(ab);
+  return ab;
+}
+
+function advanceRunners(batterReaches, opts={}) {
+  // batterReaches: 0=stays (out/k), 1=1B, 2=2B, 3=3B, 4=HR
+  // opts.force: minimum advance for each runner already on base (single forces only when 1B occupied chain)
+  // opts.allRunnersAdvance: number of bases all runners advance (HR=4, 3B=3, 2B=2, 1B=1 typically; we use this as floor)
+  const advance = opts.advance != null ? opts.advance : batterReaches;
+  const newBases = [null, null, null];
+  let runsScored = 0;
+  let scoringRunners = [];
+
+  // process existing runners from 3B back to 1B
+  for (let i = 2; i >= 0; i--) {
+    const runner = state.bases[i];
+    if (!runner) continue;
+    const newPos = i + advance; // 0=1B, 1=2B, 2=3B → newPos>=3 scores
+    if (newPos >= 3) {
+      runsScored++;
+      scoringRunners.push(runner);
+    } else {
+      newBases[newPos] = runner;
+    }
+  }
+
+  // place batter
+  const batter = currentBatter();
+  const team = currentBattingTeam();
+  if (batterReaches === 4) {
+    runsScored++;
+    scoringRunners.push({ playerId: batter.id, fromAtBatIdx: state.atBats[team].length });
+  } else if (batterReaches >= 1) {
+    newBases[batterReaches - 1] = { playerId: batter.id, fromAtBatIdx: state.atBats[team].length };
+  }
+  state.bases = newBases;
+  return { runsScored, scoringRunners };
+}
+
+function addRuns(n) {
+  const team = currentBattingTeam();
+  const idx = state.currentInning - 1;
+  ensureInning(state.currentInning);
+  state.inningRuns[team][idx] = (state.inningRuns[team][idx] || 0) + n;
+  // Attribute runs allowed to current pitcher of fielding team
+  const pitcher = currentPitcher();
+  if (pitcher) {
+    const s = ensurePitcher(currentFieldingTeam(), pitcher.id);
+    s.r += n;
+  }
+}
+function addHit() {
+  const team = currentBattingTeam();
+  const idx = state.currentInning - 1;
+  ensureInning(state.currentInning);
+  state.inningHits[team][idx] = (state.inningHits[team][idx] || 0) + 1;
+}
+function addError() {
+  const team = currentFieldingTeam(); // error charged to fielders
+  const idx = state.currentInning - 1;
+  ensureInning(state.currentInning);
+  state.inningErrors[team][idx] = (state.inningErrors[team][idx] || 0) + 1;
+}
+
+function nextBatter() {
+  const team = currentBattingTeam();
+  state.currentBatterIdx[team] = (state.currentBatterIdx[team] + 1) % 9;
+  state.balls = 0; state.strikes = 0;
+}
+
+function checkInningEnd() {
+  if (state.outs >= 3) {
+    state.outs = 0;
+    state.bases = [null, null, null];
+    state.balls = 0; state.strikes = 0;
+    if (state.half === 'top') {
+      state.half = 'bottom';
+    } else {
+      state.half = 'top';
+      state.currentInning++;
+      ensureInning(state.currentInning);
+    }
+    state.viewTeam = currentBattingTeam();
+    updateScorecardTabs();
+    toast(`Cambio · ${state.half === 'top' ? '▲' : '▼'} Inning ${state.currentInning}`);
+    return true;
+  }
+  return false;
+}
+
+/* ====================== MAIN ACTION ROUTER ====================== */
+function handleAction(action) {
+  if (state.gameOver) return;
+
+  // Conteo
+  if (action === 'BALL') { recordPitch('B'); state.balls = Math.min(state.balls+1, 4); if (state.balls >= 4) handleAction('BB'); else render(); return; }
+  if (action === 'STRIKE') { recordPitch('S'); state.strikes = Math.min(state.strikes+1, 3); if (state.strikes >= 3) handleAction('K'); else render(); return; }
+  if (action === 'FOUL') { recordPitch('F'); if (state.strikes < 2) state.strikes++; render(); return; }
+  if (action === 'NEXT') { pushPlay({ action:'NEXT_BATTER', text:'Siguiente bateador' }); nextBatter(); render(); return; }
+  if (action === 'UNDO') { undo(); return; }
+  if (action === 'STATS') { showStats(); return; }
+
+  // HITS
+  if (['1B','2B','3B','HR'].includes(action)) {
+    const bases = action === '1B' ? 1 : action === '2B' ? 2 : action === '3B' ? 3 : 4;
+    const { runsScored } = advanceRunners(bases);
+    const rbi = runsScored; // simplification: all runs scored on a hit are RBIs (unless 2-out errors—omitted)
+    pushPlay({ action, text: `${batterLabel()} conecta ${nameOfHit(action)}${runsScored?` (${runsScored} carrera${runsScored>1?'s':''})`:''}` });
+    recordAtBat(action, { type:action, isHit:true, rbi, runs: bases===4?1:0, reached: ['first','second','third','home'][bases-1], countAsAB:true });
+    addHit();
+    if (runsScored > 0) addRuns(runsScored);
+    nextBatter();
+    render();
+    return;
+  }
+
+  // WALKS / HBP
+  if (action === 'BB' || action === 'IBB') {
+    // batter goes to 1B, force runners if needed
+    let runs = 0;
+    if (state.bases[0]) { // 1B occupied -> push chain
+      if (state.bases[1]) {
+        if (state.bases[2]) runs++; // forced home
+        state.bases[2] = state.bases[1];
+      }
+      state.bases[1] = state.bases[0];
+    }
+    state.bases[0] = { playerId: currentBatter().id };
+    if (runs > 0) addRuns(runs);
+    pushPlay({ action, text: `${batterLabel()} recibe ${action==='IBB'?'boleto intencional':'base por bolas'}${runs?` (carrera empujada)`:''}` });
+    recordAtBat(action, { type:action, isWalk:true, rbi: runs, reached:'first', countAsAB:false });
+    nextBatter();
+    render();
+    return;
+  }
+  if (action === 'HBP') {
+    let runs = 0;
+    if (state.bases[0]) {
+      if (state.bases[1]) {
+        if (state.bases[2]) runs++;
+        state.bases[2] = state.bases[1];
+      }
+      state.bases[1] = state.bases[0];
+    }
+    state.bases[0] = { playerId: currentBatter().id };
+    if (runs > 0) addRuns(runs);
+    pushPlay({ action, text: `${batterLabel()} golpeado por lanzamiento (HBP)${runs?` (carrera empujada)`:''}` });
+    recordAtBat(action, { type:'HBP', isHBP:true, rbi:runs, reached:'first', countAsAB:false });
+    nextBatter();
+    render();
+    return;
+  }
+
+  // STRIKEOUTS
+  if (action === 'K' || action === 'K_SWING') {
+    const notation = action === 'K' ? 'K' : 'ꓘ';
+    state.outs++;
+    pitcherAddOuts(1);
+    pushPlay({ action, text: `${batterLabel()} ponchado ${action==='K'?'cantado':'abanicando'}` });
+    recordAtBat(notation, { type:'K', isStrikeout:true, out:true, countAsAB:true });
+    nextBatter();
+    if (!checkInningEnd()) render(); else render();
+    return;
+  }
+
+  // FIELDING OUTS — need defender position
+  if (['F','L','G','P'].includes(action)) {
+    askPosition(action === 'F' ? 'Fly out: ¿quién atrapó?' :
+                action === 'L' ? 'Línea out: ¿quién atrapó?' :
+                action === 'G' ? 'Roleta: ¿quién hizo el out final?' :
+                                  'Pop out: ¿quién atrapó?',
+      (pos) => {
+        let notation, details;
+        if (action === 'G' && pos) {
+          // Ground out is typically a throw: usually "X-3" (fielder to 1B)
+          // We accept "pos" as the fielder; final out at 1B (3)
+          notation = pos + '-3';
+          details = notation;
+        } else {
+          notation = action + (pos || '');
+          details = notation;
+        }
+        state.outs++;
+        pitcherAddOuts(1);
+        pushPlay({ action, text: `${batterLabel()} out — ${notation}`, details });
+        recordAtBat(notation, { type:action, out:true, details, countAsAB:true });
+        nextBatter();
+        checkInningEnd();
+        render();
+      });
+    return;
+  }
+
+  // SPECIAL
+  if (action === 'E') {
+    askPosition('Error: ¿qué jugador?', (pos) => {
+      const notation = 'E' + (pos || '');
+      // Batter reaches first (default)
+      const { runsScored } = advanceRunners(1);
+      if (runsScored > 0) addRuns(runsScored); // unearned, but we just count runs
+      addError();
+      pushPlay({ action, text: `${batterLabel()} alcanza por error (${notation})${runsScored?` (${runsScored} carrera${runsScored>1?'s':''})`:''}`, details:notation });
+      recordAtBat(notation, { type:'E', isError:true, reached:'first', countAsAB:true });
+      nextBatter();
+      render();
+    });
+    return;
+  }
+  if (action === 'FC') {
+    // Fielder's choice: batter to 1st, lead runner usually out
+    // Simplification: batter to 1st; if runner on 1st, that runner is forced out
+    let outAdded = false;
+    if (state.bases[0]) { state.bases[0] = null; state.outs++; outAdded = true; }
+    else if (state.bases[1]) { state.bases[1] = null; state.outs++; outAdded = true; }
+    else if (state.bases[2]) { state.bases[2] = null; state.outs++; outAdded = true; }
+    if (outAdded) pitcherAddOuts(1);
+    state.bases[0] = { playerId: currentBatter().id };
+    pushPlay({ action, text: `${batterLabel()} alcanza por jugada de selección (FC)${outAdded?', corredor out':''}` });
+    recordAtBat('FC', { type:'FC', reached:'first', countAsAB:true });
+    nextBatter();
+    if (!checkInningEnd()) render(); else render();
+    return;
+  }
+  if (action === 'DP') {
+    // Batter out + a runner out (1B occupied is forced; otherwise lead runner)
+    state.outs++;
+    let runnerOut = false;
+    if (state.bases[0]) { state.bases[0] = null; state.outs++; runnerOut = true; }
+    else if (state.bases[1]) { state.bases[1] = null; state.outs++; runnerOut = true; }
+    else if (state.bases[2]) { state.bases[2] = null; state.outs++; runnerOut = true; }
+    pitcherAddOuts(runnerOut ? 2 : 1);
+    pushPlay({ action, text: `${batterLabel()} bateó en doble matanza (DP)` });
+    recordAtBat('DP', { type:'DP', out:true, countAsAB:true });
+    nextBatter();
+    if (!checkInningEnd()) render(); else render();
+    return;
+  }
+  if (action === 'TP') {
+    state.outs += 3;
+    pitcherAddOuts(3);
+    state.bases = [null,null,null];
+    pushPlay({ action, text: `${batterLabel()} bateó en triple matanza (TP)` });
+    recordAtBat('TP', { type:'TP', out:true, countAsAB:true });
+    nextBatter();
+    checkInningEnd();
+    render();
+    return;
+  }
+  if (action === 'SF') {
+    // Sacrifice fly: out + run scores from 3rd
+    state.outs++;
+    pitcherAddOuts(1);
+    let runs = 0;
+    if (state.bases[2]) { state.bases[2] = null; runs++; }
+    if (runs) addRuns(runs);
+    pushPlay({ action, text: `${batterLabel()} elevado de sacrificio (SF) ${runs?'— anota carrera':''}` });
+    recordAtBat('SF', { type:'SF', isSac:true, out:true, rbi:runs, countAsAB:false });
+    nextBatter();
+    if (!checkInningEnd()) render(); else render();
+    return;
+  }
+  if (action === 'SH') {
+    // Sacrifice bunt: batter out, runners advance one base
+    state.outs++;
+    pitcherAddOuts(1);
+    const adv = advanceRunnersOnly(1);
+    if (adv.runsScored) addRuns(adv.runsScored);
+    pushPlay({ action, text: `${batterLabel()} toque de sacrificio (SH)${adv.runsScored?' — anota carrera':''}` });
+    recordAtBat('SH', { type:'SH', isSac:true, out:true, rbi:adv.runsScored, countAsAB:false });
+    nextBatter();
+    if (!checkInningEnd()) render(); else render();
+    return;
+  }
+
+  // BASERUNNING
+  if (action === 'SB') {
+    // Stolen base — pick a runner
+    const runner = pickRunner('¿Qué corredor se robó la base?');
+    if (runner == null) return;
+    advanceRunner(runner.baseIdx, 1);
+    pushPlay({ action, text: `Base robada por ${runner.name}` });
+    return;
+  }
+  if (action === 'CS') {
+    const runner = pickRunner('¿Qué corredor fue atrapado robando?');
+    if (runner == null) return;
+    state.bases[runner.baseIdx] = null;
+    state.outs++;
+    pitcherAddOuts(1);
+    pushPlay({ action, text: `${runner.name} atrapado robando (CS)` });
+    if (!checkInningEnd()) render(); else render();
+    return;
+  }
+  if (action === 'WP') {
+    const adv = advanceRunnersOnly(1);
+    if (adv.runsScored) addRuns(adv.runsScored);
+    pushPlay({ action, text: `Lanzamiento salvaje (WP)${adv.runsScored?' — anota carrera':''}` });
+    render();
+    return;
+  }
+  if (action === 'PB') {
+    const adv = advanceRunnersOnly(1);
+    if (adv.runsScored) addRuns(adv.runsScored);
+    pushPlay({ action, text: `Passed Ball (PB)${adv.runsScored?' — anota carrera':''}` });
+    render();
+    return;
+  }
+  if (action === 'BK') {
+    const adv = advanceRunnersOnly(1);
+    if (adv.runsScored) addRuns(adv.runsScored);
+    pushPlay({ action, text: `Balk (BK)${adv.runsScored?' — anota carrera':''}` });
+    render();
+    return;
+  }
+  if (action === 'DI') {
+    const runner = pickRunner('Indiferencia defensiva — ¿qué corredor avanzó?');
+    if (runner == null) return;
+    advanceRunner(runner.baseIdx, 1);
+    pushPlay({ action, text: `Indiferencia defensiva — ${runner.name} avanza` });
+    return;
+  }
+}
+
+function advanceRunnersOnly(bases) {
+  // Move all baserunners forward N bases; no batter
+  const newBases = [null,null,null];
+  let runsScored = 0;
+  for (let i = 2; i >= 0; i--) {
+    const r = state.bases[i];
+    if (!r) continue;
+    const newPos = i + bases;
+    if (newPos >= 3) runsScored++;
+    else newBases[newPos] = r;
+  }
+  state.bases = newBases;
+  return { runsScored };
+}
+
+function advanceRunner(fromBaseIdx, bases) {
+  const runner = state.bases[fromBaseIdx];
+  if (!runner) return;
+  state.bases[fromBaseIdx] = null;
+  const newPos = fromBaseIdx + bases;
+  if (newPos >= 3) {
+    addRuns(1);
+  } else {
+    state.bases[newPos] = runner;
+  }
+  render();
+}
+
+function batterLabel() {
+  const b = currentBatter();
+  return `${b.name}`;
+}
+
+function nameOfHit(a) {
+  return a === '1B' ? 'sencillo' : a === '2B' ? 'doble' : a === '3B' ? 'triple' : 'JONRÓN';
+}
+
+/* ====================== POSITION PICKER ====================== */
+function askPosition(title, callback) {
+  const modal = document.getElementById('position-modal');
+  document.getElementById('pp-title').textContent = title;
+  state.pendingPosition = callback;
+  modal.classList.remove('hidden');
+}
+function closePositionModal(pos) {
+  document.getElementById('position-modal').classList.add('hidden');
+  const cb = state.pendingPosition;
+  state.pendingPosition = null;
+  if (cb) cb(pos);
+}
+
+/* ====================== RUNNER PICKER ====================== */
+function pickRunner(prompt) {
+  // Show prompt with available runners
+  const runners = [];
+  state.bases.forEach((r, i) => {
+    if (r) {
+      const p = findPlayerById(r.playerId);
+      runners.push({ baseIdx: i, name: p?p.name:'?', label:['1B','2B','3B'][i] });
+    }
+  });
+  if (runners.length === 0) {
+    toast('No hay corredores en base');
+    return null;
+  }
+  const text = runners.map((r,i)=>`${i+1}. ${r.label}: ${r.name}`).join('\n');
+  const choice = window.prompt(prompt + '\n\n' + text + '\n\nEscribe el número:');
+  const idx = parseInt(choice, 10) - 1;
+  if (isNaN(idx) || idx < 0 || idx >= runners.length) return null;
+  return runners[idx];
+}
+function findPlayerById(id) {
+  for (const t of ['away','home']) {
+    const p = state.teams[t].players.find(x=>x.id===id);
+    if (p) return p;
+  }
+  return null;
+}
+
+/* ====================== SYNC SCOREBOARD ====================== */
+(function(){
+  // IP del servidor — cambia esta línea con tu IP actual
+  const SERVER_IP = '192.168.16.230';
+  const SERVER_PORT = '3000';
+  const WS_URL = `wss://${SERVER_IP}:${SERVER_PORT}`;
+
+  let ws, reconnTimer, connected = false;
+
+  function wsConnect() {
+    try {
+      ws = new WebSocket(WS_URL);
+      ws.onopen  = () => { connected = true; updateBadge(); clearTimeout(reconnTimer); };
+      ws.onclose = ws.onerror = () => { connected = false; updateBadge(); reconnTimer = setTimeout(wsConnect, 3000); };
+    } catch(e) { reconnTimer = setTimeout(wsConnect, 3000); }
+  }
+
+  function updateBadge() {
+    const b = document.getElementById('sync-badge');
+    if (!b) return;
+    b.textContent = connected ? '● MARCADOR EN VIVO' : '○ Sin conexión';
+    b.style.color  = connected ? '#2ecc71' : '#e74c3c';
+  }
+
+  function syncState(s) {
+    if (!ws || ws.readyState !== 1) return;
+    // Construir innings array (9 entradas)
+    const toArr = (obj) => Array.from({length:9}, (_,i) => obj[i] !== undefined ? obj[i] : '-');
+    const payload = {
+      away: {
+        name:    s.teams.away.name,
+        r:       s.inningRuns.away.reduce((a,b)=>a+(b||0),0),
+        h:       s.inningHits.away.reduce((a,b)=>a+(b||0),0),
+        e:       s.inningErrors.away.reduce((a,b)=>a+(b||0),0),
+        innings: toArr(s.inningRuns.away)
+      },
+      home: {
+        name:    s.teams.home.name,
+        r:       s.inningRuns.home.reduce((a,b)=>a+(b||0),0),
+        h:       s.inningHits.home.reduce((a,b)=>a+(b||0),0),
+        e:       s.inningErrors.home.reduce((a,b)=>a+(b||0),0),
+        innings: toArr(s.inningRuns.home)
+      },
+      inning:  s.currentInning,
+      half:    s.half === 'top' ? 'top' : 'bottom',
+      balls:   s.balls,
+      strikes: s.strikes,
+      outs:    s.outs,
+      bases:   [!!s.bases[0], !!s.bases[1], !!s.bases[2]],
+      title:   `${s.teams.away.name} @ ${s.teams.home.name}`,
+      status:  s.gameOver ? 'FINAL' : 'EN JUEGO'
+    };
+    ws.send(JSON.stringify({ type: 'update', data: payload }));
+  }
+
+  // Exponer para uso global
+  window._scoreSync = { syncState, wsConnect, isConnected: () => connected };
+  wsConnect();
+})();
+
+/* ====================== RENDER ====================== */
+function render() {
+  if (!state.started) return;
+  renderSituation();
+  renderScoreboard();
+  renderScorecard();
+  renderLog();
+  renderRunners();
+  // Sincronizar con el marcador de transmisión
+  if (window._scoreSync) window._scoreSync.syncState(state);
+}
+
+function renderSituation() {
+  document.getElementById('game-title').textContent =
+    `${state.teams.away.name.toUpperCase()} @ ${state.teams.home.name.toUpperCase()}`;
+  document.getElementById('inning-text').textContent =
+    `${state.half === 'top' ? 'Alta del' : 'Baja del'} ${ordinal(state.currentInning)}`;
+  document.getElementById('half-arrow').textContent = state.half === 'top' ? '▲' : '▼';
+  document.getElementById('balls-val').textContent = state.balls;
+  document.getElementById('strikes-val').textContent = state.strikes;
+  document.getElementById('outs-val').textContent = state.outs;
+
+  const b = currentBatter();
+  if (b) {
+    document.getElementById('current-batter-name').textContent = b.name;
+    document.getElementById('current-batter-meta').textContent =
+      `#${b.num||'—'} · ${b.pos} · Orden ${b.order} · ${state.teams[currentBattingTeam()].name}`;
+  }
+  const pit = currentPitcher();
+  if (pit) {
+    const subbed = pit.replacesId ? ` (entró ${ordinalHalf(pit.enteredInning, pit.enteredHalf)})` : '';
+    const pStats = state.pitcherStats?.[currentFieldingTeam()]?.[pit.id];
+    const pCount = pStats ? `<span class="pitch-count">${pStats.pitches}<span class="pc-label">PIT</span><span class="pc-sep">·</span><span class="pc-sb">${pStats.strikes}S/${pStats.balls}B</span></span>` : '';
+    document.getElementById('pitcher-info').innerHTML =
+      `<span class="pitcher-line">Lanza: ${escape(pit.name)}${pit.num?' #'+escape(pit.num):''}${subbed}</span>${pCount}`;
+  } else {
+    document.getElementById('pitcher-info').textContent = 'Lanza: —';
+  }
+
+  // Update diamond bases
+  ['1','2','3'].forEach((b,i)=>{
+    const el = document.getElementById('base-'+b);
+    el.setAttribute('fill', state.bases[i] ? '#a4252b' : '#f4e8d0');
+  });
+}
+
+function ordinal(n) {
+  const s = ['Inning','1er','2do','3er','4to','5to','6to','7mo','8vo','9no','10mo','11vo','12vo'];
+  return s[n] || `${n}mo`;
+}
+function ordinalHalf(inning, half) {
+  return `${half==='top'?'alta':'baja'} del ${ordinal(inning)}`;
+}
+
+function renderScoreboard() {
+  const numInnings = Math.max(state.totalInnings || 9, state.currentInning);
+  const el = document.getElementById('innings-display');
+  el.style.gridTemplateColumns = `90px repeat(${numInnings}, 32px) 36px 36px 36px`;
+  let html = '';
+  // header
+  html += `<div class="cell header">TEAM</div>`;
+  for (let i=1;i<=numInnings;i++) html += `<div class="cell header">${i}</div>`;
+  html += `<div class="cell header">R</div><div class="cell header">H</div><div class="cell header">E</div>`;
+  // away
+  html += `<div class="cell team-name">${escape(state.teams.away.name)}</div>`;
+  for (let i=0;i<numInnings;i++) {
+    const isCurrent = (i+1)===state.currentInning && state.half==='top';
+    const showVal = (i+1) < state.currentInning || ((i+1)===state.currentInning && (state.half==='top' || state.half==='bottom'));
+    const runs = state.inningRuns.away[i] ?? '';
+    html += `<div class="cell ${isCurrent?'current-inning':''}">${runs!==''?runs:''}</div>`;
+  }
+  html += `<div class="cell total">${sum(state.inningRuns.away)}</div>`;
+  html += `<div class="cell total">${sum(state.inningHits.away)}</div>`;
+  html += `<div class="cell total">${sum(state.inningErrors.away)}</div>`;
+  // home
+  html += `<div class="cell team-name">${escape(state.teams.home.name)}</div>`;
+  for (let i=0;i<numInnings;i++) {
+    const isCurrent = (i+1)===state.currentInning && state.half==='bottom';
+    const showVal = (i+1) < state.currentInning || ((i+1)===state.currentInning && state.half==='bottom');
+    const runs = state.inningRuns.home[i] ?? '';
+    // Show only if we've reached bottom of inning i+1 OR past it
+    const visible = (i+1) < state.currentInning || ((i+1)===state.currentInning && state.half==='bottom');
+    html += `<div class="cell ${isCurrent?'current-inning':''}">${visible?(runs!==''?runs:'0'):''}</div>`;
+  }
+  html += `<div class="cell total">${sum(state.inningRuns.home)}</div>`;
+  html += `<div class="cell total">${sum(state.inningHits.home)}</div>`;
+  html += `<div class="cell total">${sum(state.inningErrors.home)}</div>`;
+  el.innerHTML = html;
+}
+
+function sum(arr) { return arr.reduce((a,b)=>a+(b||0),0); }
+function escape(s) { return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function updateScorecardTabs() {
+  document.getElementById('tab-away').classList.toggle('active', state.viewTeam==='away');
+  document.getElementById('tab-home').classList.toggle('active', state.viewTeam==='home');
+  document.getElementById('tab-away').textContent = state.teams.away.name + ' (Visit.)';
+  document.getElementById('tab-home').textContent = state.teams.home.name + ' (Local)';
+}
+
+function renderScorecard() {
+  const team = state.viewTeam;
+  const numInnings = Math.max(state.totalInnings || 9, state.currentInning);
+  const grid = document.getElementById('scorecard-grid');
+  grid.style.gridTemplateColumns = `36px 28px 160px repeat(${numInnings}, minmax(56px, 1fr)) 38px 38px 38px 38px 38px`;
+
+  let html = '';
+  // header row
+  html += `<div class="sc-cell header">#</div>`;
+  html += `<div class="sc-cell header">POS</div>`;
+  html += `<div class="sc-cell header">JUGADOR</div>`;
+  for (let i=1;i<=numInnings;i++) html += `<div class="sc-cell header">${i}</div>`;
+  html += `<div class="sc-cell header">AB</div>`;
+  html += `<div class="sc-cell header">H</div>`;
+  html += `<div class="sc-cell header">R</div>`;
+  html += `<div class="sc-cell header">RBI</div>`;
+  html += `<div class="sc-cell header">AVG</div>`;
+
+  // player rows (one per slot)
+  const activeIdx = state.currentBatterIdx[team];
+  const isBatting = currentBattingTeam() === team;
+  for (let i = 0; i < 9; i++) {
+    const slotHist = slotPlayerHistory(team, i);
+    const current = slotHist[slotHist.length - 1];
+    const isActive = isBatting && i === activeIdx;
+    html += `<div class="sc-cell order-cell">${i+1}</div>`;
+    html += `<div class="sc-cell num-cell">${current?.num || ''}</div>`;
+
+    // Name cell: show all players in slot (subs visible)
+    let nameHtml;
+    if (slotHist.length === 1) {
+      nameHtml = `<div>${escape(current.name)}</div><div class="player-pos">${current.pos}</div>`;
+    } else {
+      nameHtml = slotHist.map((p, ix) => {
+        const isCurrent = ix === slotHist.length - 1;
+        const subTag = p.replacesId ? ` <span class="sub-indicator" title="${escape(p.subType||'SUB')} · ${escape(ordinalHalf(p.enteredInning, p.enteredHalf))}">${escape(p.subType||'SUB')}</span>` : '';
+        return `<div style="${isCurrent?'':'opacity:.7;font-size:11px'}">${escape(p.name)}${subTag}<span style="color:var(--crimson);font-family:'JetBrains Mono';font-size:9px;margin-left:4px">${p.pos}</span></div>`;
+      }).join('');
+    }
+    html += `<div class="sc-cell name-cell ${isActive?'active-batter':''}" data-jump="${i}">${nameHtml}</div>`;
+
+    // For each inning, show that slot's at-bat in that inning
+    const slotABs = state.atBats[team].filter(ab => ab.orderIdx === i);
+    for (let inn=1; inn<=numInnings; inn++) {
+      const ab = slotABs.find(x => x.inning === inn);
+      html += `<div class="sc-cell">${ab ? renderAtBatDiamond(ab) : ''}</div>`;
+    }
+
+    // Slot totals (sum across all players in slot)
+    const stats = computeSlotStats(team, i);
+    html += `<div class="sc-cell num-cell">${stats.AB}</div>`;
+    html += `<div class="sc-cell num-cell">${stats.H}</div>`;
+    html += `<div class="sc-cell num-cell">${stats.R}</div>`;
+    html += `<div class="sc-cell num-cell">${stats.RBI}</div>`;
+    html += `<div class="sc-cell num-cell">${stats.AVG}</div>`;
+  }
+
+  // Totals row
+  const teamStats = computeTeamStats(team);
+  html += `<div class="sc-cell total-cell" style="grid-column: span 3; text-align:right; padding-right:8px">TOTALES</div>`;
+  for (let i=0;i<numInnings;i++) {
+    const r = state.inningRuns[team][i] || 0;
+    const h = state.inningHits[team][i] || 0;
+    html += `<div class="sc-cell total-cell" style="font-size:10px">${r}R/${h}H</div>`;
+  }
+  html += `<div class="sc-cell total-cell">${teamStats.AB}</div>`;
+  html += `<div class="sc-cell total-cell">${teamStats.H}</div>`;
+  html += `<div class="sc-cell total-cell">${teamStats.R}</div>`;
+  html += `<div class="sc-cell total-cell">${teamStats.RBI}</div>`;
+  html += `<div class="sc-cell total-cell">${teamStats.AVG}</div>`;
+
+  grid.innerHTML = html;
+
+  // Jump-to-batter handler
+  grid.querySelectorAll('[data-jump]').forEach(el => {
+    el.addEventListener('click', () => {
+      if (state.viewTeam === currentBattingTeam()) {
+        state.currentBatterIdx[currentBattingTeam()] = parseInt(el.dataset.jump, 10);
+        render();
+        toast('Bateador establecido');
+      }
+    });
+  });
+}
+
+function renderAtBatDiamond(ab) {
+  // Build a small SVG diamond showing what happened
+  // Bases reached are filled
+  let fill1=false, fill2=false, fill3=false, fill4=false;
+  if (ab.reached === 'first')   fill1 = true;
+  if (ab.reached === 'second')  { fill1=true; fill2=true; }
+  if (ab.reached === 'third')   { fill1=true; fill2=true; fill3=true; }
+  if (ab.reached === 'home' || ab.runs > 0) { fill1=true; fill2=true; fill3=true; fill4=true; }
+
+  const color = ab.isHit ? '#a4252b' : ab.out ? '#1a0f08' : '#8a6624';
+
+  const diamondSvg = `
+    <svg class="atbat-svg" viewBox="0 0 50 50">
+      <polygon points="25,5 45,25 25,45 5,25" fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+      ${fill1 ? `<line x1="25" y1="45" x2="45" y2="25" stroke="${color}" stroke-width="2.5"/>` : ''}
+      ${fill2 ? `<line x1="45" y1="25" x2="25" y2="5"  stroke="${color}" stroke-width="2.5"/>` : ''}
+      ${fill3 ? `<line x1="25" y1="5"  x2="5"  y2="25" stroke="${color}" stroke-width="2.5"/>` : ''}
+      ${fill4 ? `<line x1="5"  y1="25" x2="25" y2="45" stroke="${color}" stroke-width="2.5"/>` : ''}
+      ${ab.out ? `<line x1="10" y1="10" x2="40" y2="40" stroke="#1a0f08" stroke-width="1.5" opacity="0.4"/>` : ''}
+      ${ab.out ? `<line x1="40" y1="10" x2="10" y2="40" stroke="#1a0f08" stroke-width="1.5" opacity="0.4"/>` : ''}
+    </svg>
+  `;
+  return `
+    <div class="atbat">
+      ${diamondSvg}
+      <span class="atbat-notation">${escape(ab.notation)}</span>
+      ${ab.rbi > 0 ? `<span class="atbat-details">${ab.rbi}rbi</span>` : ''}
+      ${ab.runs > 0 ? `<span class="atbat-run" title="anotó carrera"></span>` : ''}
+    </div>
+  `;
+}
+
+function renderLog() {
+  const el = document.getElementById('log-entries');
+  const last20 = state.plays.slice(-30).reverse();
+  el.innerHTML = last20.map(p => `
+    <div class="log-entry">
+      <span class="log-inning">${p.half==='top'?'▲':'▼'} ${p.inning}ᵒ</span>
+      <span class="log-text">${escape(p.text)}</span>
+      <span></span>
+    </div>
+  `).join('') || '<div style="padding:8px;font-style:italic;color:var(--ink-faded);font-size:11px">Sin jugadas todavía…</div>';
+}
+
+function renderRunners() {
+  const el = document.getElementById('runners-panel');
+  const labels = ['1B','2B','3B'];
+  const html = state.bases.map((r,i) => {
+    if (!r) return `<div class="runner-row" style="opacity:.4">
+      <span class="base-label">${labels[i]}</span>
+      <span class="runner-name" style="font-style:italic">—</span>
+      <span></span>
+    </div>`;
+    const player = findPlayerById(r.playerId);
+    const name = player ? player.name : '?';
+    return `<div class="runner-row">
+      <span class="base-label">${labels[i]}</span>
+      <span class="runner-name">${escape(name)}</span>
+      <span class="runner-actions">
+        <button class="btn-small" data-runner-act="advance" data-base="${i}">+1</button>
+        <button class="btn-small" data-runner-act="score" data-base="${i}">⌂</button>
+        <button class="btn-small" data-runner-act="out" data-base="${i}">×</button>
+      </span>
+    </div>`;
+  }).join('');
+  el.innerHTML = html;
+  el.querySelectorAll('[data-runner-act]').forEach(b => {
+    b.addEventListener('click', () => {
+      const act = b.dataset.runnerAct;
+      const baseIdx = parseInt(b.dataset.base, 10);
+      const runner = state.bases[baseIdx];
+      if (!runner) return;
+      const player = findPlayerById(runner.playerId);
+      if (act === 'advance') { advanceRunner(baseIdx, 1); pushPlay({action:'ADV',text:`${player?.name||'Corredor'} avanza una base`}); }
+      else if (act === 'score') {
+        state.bases[baseIdx] = null;
+        addRuns(1);
+        pushPlay({action:'SCORE',text:`${player?.name||'Corredor'} anota`});
+        render();
+      }
+      else if (act === 'out') {
+        state.bases[baseIdx] = null;
+        state.outs++;
+        pushPlay({action:'RUNNER_OUT',text:`${player?.name||'Corredor'} out en bases`});
+        if (!checkInningEnd()) render(); else render();
+      }
+    });
+  });
+}
+
+/* ====================== STATS CALCULATIONS ====================== */
+function _statsFromAtBats(abs) {
+  let AB=0, H=0, _2B=0, _3B=0, HR=0, BB=0, K=0, R=0, RBI=0, HBP=0, SF=0, SH=0, PA=0;
+  abs.forEach(a => {
+    PA++;
+    if (a.countAsAB) AB++;
+    if (a.isHit) H++;
+    if (a.type === '2B') _2B++;
+    if (a.type === '3B') _3B++;
+    if (a.type === 'HR') HR++;
+    if (a.isWalk) BB++;
+    if (a.type === 'K') K++;
+    if (a.runs > 0) R++;
+    RBI += a.rbi || 0;
+    if (a.isHBP) HBP++;
+    if (a.type === 'SF') SF++;
+    if (a.type === 'SH') SH++;
+  });
+  const AVG = AB > 0 ? (H/AB).toFixed(3).replace(/^0/,'') : '.000';
+  const TB = (H - _2B - _3B - HR) + (2*_2B) + (3*_3B) + (4*HR);
+  const denomOBP = AB + BB + HBP + SF;
+  const OBP = denomOBP > 0 ? ((H + BB + HBP) / denomOBP).toFixed(3).replace(/^0/,'') : '.000';
+  const SLG = AB > 0 ? (TB / AB).toFixed(3).replace(/^0/,'') : '.000';
+  const OPS = (parseFloat(OBP) + parseFloat(SLG)).toFixed(3).replace(/^0/,'');
+  return { PA, AB, H, _2B, _3B, HR, BB, K, R, RBI, HBP, SF, SH, TB, AVG, OBP, SLG, OPS };
+}
+
+// Stats for a batting order slot (sum across all players who batted there)
+function computeSlotStats(team, slotIdx) {
+  const abs = state.atBats[team].filter(a => a.orderIdx === slotIdx);
+  return _statsFromAtBats(abs);
+}
+
+// Stats for an individual player (by playerId)
+function computePlayerStats(team, playerId) {
+  const abs = state.atBats[team].filter(a => a.batterId === playerId);
+  return _statsFromAtBats(abs);
+}
+
+function computeTeamStats(team) {
+  const abs = state.atBats[team];
+  return _statsFromAtBats(abs);
+}
+
+/* ====================== STATS MODAL ====================== */
+function showStats() {
+  const awayStats = computeTeamStats('away');
+  const homeStats = computeTeamStats('home');
+  const awayRuns = sum(state.inningRuns.away);
+  const homeRuns = sum(state.inningRuns.home);
+  const awayHits = sum(state.inningHits.away);
+  const homeHits = sum(state.inningHits.home);
+  const awayErrs = sum(state.inningErrors.away);
+  const homeErrs = sum(state.inningErrors.home);
+
+  let html = '';
+
+  // Final score banner
+  html += `<div style="text-align:center;margin-bottom:24px">
+    <div style="font-family:'Special Elite';font-size:24px">
+      <strong>${escape(state.teams.away.name)} ${awayRuns}</strong>
+      &nbsp;—&nbsp;
+      <strong>${homeRuns} ${escape(state.teams.home.name)}</strong>
+    </div>
+    <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--ink-faded);letter-spacing:.1em">
+      ${state.currentInning} INNINGS · ${awayHits + homeHits} HITS · ${awayErrs + homeErrs} ERRORES
+    </div>
+  </div>`;
+
+  // Team totals cards
+  html += `<div class="stats-section">
+    <h3>Resumen por equipo</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      ${teamStatBlock('Visitante · ' + state.teams.away.name, awayStats, awayRuns, awayHits, awayErrs)}
+      ${teamStatBlock('Local · ' + state.teams.home.name, homeStats, homeRuns, homeHits, homeErrs)}
+    </div>
+  </div>`;
+
+  // Batter tables
+  for (const team of ['away','home']) {
+    html += `<div class="stats-section">
+      <h3>${escape(state.teams[team].name)} — Bateadores
+        <span class="team-score">${sum(state.inningRuns[team])} R · ${sum(state.inningHits[team])} H · ${sum(state.inningErrors[team])} E</span>
+      </h3>
+      ${renderBatterTable(team)}
+    </div>`;
+  }
+
+  // Pitcher tables — each team's pitchers (they faced the OTHER team's batters)
+  for (const team of ['away','home']) {
+    const opp = team === 'away' ? 'home' : 'away';
+    html += `<div class="stats-section">
+      <h3>${escape(state.teams[team].name)} — Pitcheo
+        <span class="team-score">vs ${escape(state.teams[opp].name)}</span>
+      </h3>
+      ${renderPitcherTable(team)}
+    </div>`;
+  }
+
+  document.getElementById('stats-content').innerHTML = html;
+  document.getElementById('stats-modal').classList.remove('hidden');
+}
+
+function renderPitcherTable(team) {
+  const pitchers = state.teams[team].players.filter(p => p.pos === 'P');
+  const stats = (state.pitcherStats && state.pitcherStats[team]) || {};
+  let html = `<table class="stats-table">
+    <thead>
+      <tr>
+        <th style="text-align:left;padding-left:10px">PITCHER</th>
+        <th>IP</th><th>BF</th><th>P</th><th>S</th><th>B</th>
+        <th>H</th><th>R</th><th>HR</th>
+        <th>BB</th><th>K</th><th>HBP</th>
+        <th>WHIP</th>
+      </tr>
+    </thead><tbody>`;
+  let totOuts=0, totBF=0, totP=0, totS=0, totB=0, totH=0, totR=0, totHR=0, totBB=0, totK=0, totHBP=0;
+  pitchers.forEach((p, ix) => {
+    const s = stats[p.id] || { pitches:0,balls:0,strikes:0,outs:0,bf:0,h:0,r:0,bb:0,k:0,hr:0,hbp:0,ibb:0 };
+    const ip = formatIP(s.outs);
+    const ipDec = s.outs / 3;
+    const whip = ipDec > 0 ? ((s.bb + s.h) / ipDec).toFixed(2) : '—';
+    const tag = p.replacesId ? `<span class="sub-indicator">RELEVO</span>` : `<span class="sub-indicator">ABRE</span>`;
+    const prefix = ix === 0 ? '1.' : '↳';
+    html += `<tr>
+      <td class="name">
+        <span style="font-family:'JetBrains Mono';color:var(--brass);font-weight:700;margin-right:6px">${prefix}</span>
+        ${escape(p.name)} ${tag}
+        <span class="pos">${p.pos}${p.num?' · #'+escape(p.num):''}</span>
+        ${p.replacesId ? `<span style="display:block;font-size:10px;color:var(--ink-faded);font-style:italic;margin-top:2px;margin-left:18px">Entró ${escape(ordinalHalf(p.enteredInning, p.enteredHalf))}</span>` : ''}
+      </td>
+      <td>${ip}</td><td>${s.bf}</td><td>${s.pitches}</td><td>${s.strikes}</td><td>${s.balls}</td>
+      <td>${s.h}</td><td>${s.r}</td><td>${s.hr}</td>
+      <td>${s.bb}</td><td>${s.k}</td><td>${s.hbp}</td>
+      <td>${whip}</td>
+    </tr>`;
+    totOuts+=s.outs; totBF+=s.bf; totP+=s.pitches; totS+=s.strikes; totB+=s.balls;
+    totH+=s.h; totR+=s.r; totHR+=s.hr; totBB+=s.bb; totK+=s.k; totHBP+=s.hbp;
+  });
+  const totIP = formatIP(totOuts);
+  const totIPDec = totOuts / 3;
+  const totWhip = totIPDec > 0 ? ((totBB + totH) / totIPDec).toFixed(2) : '—';
+  html += `<tfoot><tr>
+    <td class="name" style="color:var(--brass)">TOTALES</td>
+    <td>${totIP}</td><td>${totBF}</td><td>${totP}</td><td>${totS}</td><td>${totB}</td>
+    <td>${totH}</td><td>${totR}</td><td>${totHR}</td>
+    <td>${totBB}</td><td>${totK}</td><td>${totHBP}</td>
+    <td>${totWhip}</td>
+  </tr></tfoot></tbody></table>`;
+  return html;
+}
+
+function teamStatBlock(title, s, R, H, E) {
+  return `<div>
+    <div style="font-family:'Bebas Neue';letter-spacing:.15em;font-size:13px;color:var(--crimson);margin-bottom:8px">${escape(title)}</div>
+    <div class="team-totals" style="margin:0">
+      <div class="stat-card"><div class="stat-label">R</div><div class="stat-value">${R}</div></div>
+      <div class="stat-card"><div class="stat-label">H</div><div class="stat-value">${H}</div></div>
+      <div class="stat-card"><div class="stat-label">E</div><div class="stat-value">${E}</div></div>
+      <div class="stat-card"><div class="stat-label">AVG</div><div class="stat-value" style="font-size:24px">${s.AVG}</div></div>
+      <div class="stat-card"><div class="stat-label">OBP</div><div class="stat-value" style="font-size:24px">${s.OBP}</div></div>
+      <div class="stat-card"><div class="stat-label">SLG</div><div class="stat-value" style="font-size:24px">${s.SLG}</div></div>
+      <div class="stat-card"><div class="stat-label">OPS</div><div class="stat-value" style="font-size:24px">${s.OPS}</div></div>
+      <div class="stat-card"><div class="stat-label">HR</div><div class="stat-value">${s.HR}</div></div>
+      <div class="stat-card"><div class="stat-label">RBI</div><div class="stat-value">${s.RBI}</div></div>
+      <div class="stat-card"><div class="stat-label">BB</div><div class="stat-value">${s.BB}</div></div>
+      <div class="stat-card"><div class="stat-label">K</div><div class="stat-value">${s.K}</div></div>
+    </div>
+  </div>`;
+}
+
+function renderBatterTable(team) {
+  const teamStats = computeTeamStats(team);
+  let html = `<table class="stats-table">
+    <thead>
+      <tr>
+        <th style="text-align:left;padding-left:10px">JUGADOR</th>
+        <th>PA</th><th>AB</th><th>R</th><th>H</th>
+        <th>2B</th><th>3B</th><th>HR</th><th>RBI</th>
+        <th>BB</th><th>K</th>
+        <th>AVG</th><th>OBP</th><th>SLG</th><th>OPS</th>
+      </tr>
+    </thead><tbody>`;
+  // For each slot, list all players who batted there
+  for (let i = 0; i < 9; i++) {
+    const slotHist = slotPlayerHistory(team, i);
+    slotHist.forEach((p, ix) => {
+      const s = computePlayerStats(team, p.id);
+      const isOriginal = ix === 0 && !p.replacesId;
+      const subTag = p.replacesId ? `<span class="sub-indicator">${escape(p.subType||'SUB')}</span>` : '';
+      const slotLabel = ix === 0 ? `${i+1}.` : '↳';
+      html += `<tr>
+        <td class="name">
+          <span style="font-family:'JetBrains Mono';color:var(--brass);font-weight:700;margin-right:6px">${slotLabel}</span>
+          ${escape(p.name)}${subTag}
+          <span class="pos">${p.pos}${p.num?' · #'+p.num:''}</span>
+          ${p.replacesId ? `<span style="display:block;font-size:10px;color:var(--ink-faded);font-style:italic;margin-top:2px;margin-left:18px">Entró ${escape(ordinalHalf(p.enteredInning, p.enteredHalf))}</span>` : ''}
+        </td>
+        <td>${s.PA}</td><td>${s.AB}</td><td>${s.R}</td><td>${s.H}</td>
+        <td>${s._2B}</td><td>${s._3B}</td><td>${s.HR}</td><td>${s.RBI}</td>
+        <td>${s.BB}</td><td>${s.K}</td>
+        <td>${s.AVG}</td><td>${s.OBP}</td><td>${s.SLG}</td><td>${s.OPS}</td>
+      </tr>`;
+    });
+  }
+  html += `<tfoot><tr>
+    <td class="name" style="color:var(--brass)">TOTALES DEL EQUIPO</td>
+    <td>${teamStats.PA}</td><td>${teamStats.AB}</td><td>${teamStats.R}</td><td>${teamStats.H}</td>
+    <td>${teamStats._2B}</td><td>${teamStats._3B}</td><td>${teamStats.HR}</td><td>${teamStats.RBI}</td>
+    <td>${teamStats.BB}</td><td>${teamStats.K}</td>
+    <td>${teamStats.AVG}</td><td>${teamStats.OBP}</td><td>${teamStats.SLG}</td><td>${teamStats.OPS}</td>
+  </tr></tfoot></tbody></table>`;
+  return html;
+}
+
+/* ====================== SAVE / LOAD ====================== */
+function saveGame() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const date = new Date().toISOString().slice(0,10);
+  a.download = `scorebook-${state.teams.away.name}-vs-${state.teams.home.name}-${date}.json`.replace(/\s+/g,'_');
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('💾 Partido guardado');
+}
+function loadGame() {
+  document.getElementById('file-input').click();
+}
+function handleFileLoad(evt) {
+  const f = evt.target.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      // Detect box-score export (read-only) vs scorebook savegame
+      const looksLikeBoxScore = data.finalScore !== undefined && data.teamStats !== undefined && data.playerStats !== undefined && data.started === undefined && data.currentInning === undefined;
+      if (looksLikeBoxScore) {
+        toast('⚠ Este es un box score (solo lectura). Usa "Ver box score" para visualizarlo.');
+        evt.target.value = '';
+        return;
+      }
+      if (!data.teams || !data.atBats) {
+        toast('⚠ Archivo no reconocido — falta estado del partido');
+        evt.target.value = '';
+        return;
+      }
+      state = data;
+      // Backwards compat: ensure pitcherStats exists on older savegames
+      if (!state.pitcherStats) state.pitcherStats = { away:{}, home:{} };
+      if (state.started) {
+        document.getElementById('setup-screen').classList.add('hidden');
+        document.getElementById('game-screen').classList.remove('hidden');
+        updateScorecardTabs();
+        render();
+      }
+      toast('📂 Partido cargado');
+    } catch (err) {
+      toast('⚠ Error al cargar el archivo');
+    }
+    evt.target.value = '';
+  };
+  reader.readAsText(f);
+}
+
+/* ====================== BOX-SCORE VIEWER (READ-ONLY) ====================== */
+let loadedBoxScore = null; // holds the most recent box-score viewed read-only
+
+function viewBoxScore() {
+  document.getElementById('boxscore-input').click();
+}
+
+function handleBoxScoreLoad(evt) {
+  const f = evt.target.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      // Validate box-score shape
+      if (!data.finalScore || !data.teams || !data.teamStats || !data.playerStats) {
+        toast('⚠ No parece un box-score válido');
+        evt.target.value = '';
+        return;
+      }
+      loadedBoxScore = data;
+      showStatsFromBoxScore(data);
+      toast('📊 Box score cargado');
+    } catch (err) {
+      toast('⚠ Error al leer el archivo');
+    }
+    evt.target.value = '';
+  };
+  reader.readAsText(f);
+}
+
+function showStatsFromBoxScore(data) {
+  const awayName = data.teams.away.name;
+  const homeName = data.teams.home.name;
+  const awayRuns = data.finalScore.away;
+  const homeRuns = data.finalScore.home;
+  const awayHits = sum(data.inningHits?.away || []);
+  const homeHits = sum(data.inningHits?.home || []);
+  const awayErrs = sum(data.inningErrors?.away || []);
+  const homeErrs = sum(data.inningErrors?.home || []);
+  const innings = data.totalInnings || (data.inningRuns?.away?.length || 9);
+
+  let html = '';
+
+  // Read-only banner
+  html += `<div style="background:var(--paper-bright,#f4e8d0);border:1px dashed var(--brass);border-radius:3px;padding:8px 14px;margin-bottom:18px;text-align:center;font-family:'JetBrains Mono';font-size:11px;letter-spacing:.15em;color:var(--brass-deep)">
+    SOLO LECTURA · BOX SCORE IMPORTADO
+  </div>`;
+
+  // Final score banner
+  html += `<div style="text-align:center;margin-bottom:24px">
+    <div style="font-family:'Special Elite';font-size:24px">
+      <strong>${escape(awayName)} ${awayRuns}</strong>
+      &nbsp;—&nbsp;
+      <strong>${homeRuns} ${escape(homeName)}</strong>
+    </div>
+    <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--ink-faded);letter-spacing:.1em">
+      ${innings} INNINGS · ${awayHits + homeHits} HITS · ${awayErrs + homeErrs} ERRORES
+    </div>
+  </div>`;
+
+  // Team totals
+  html += `<div class="stats-section">
+    <h3>Resumen por equipo</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      ${teamStatBlock('Visitante · ' + awayName, data.teamStats.away, awayRuns, awayHits, awayErrs)}
+      ${teamStatBlock('Local · ' + homeName, data.teamStats.home, homeRuns, homeHits, homeErrs)}
+    </div>
+  </div>`;
+
+  // Batter tables from pre-computed data
+  for (const team of ['away','home']) {
+    html += `<div class="stats-section">
+      <h3>${escape(data.teams[team].name)} — Bateadores
+        <span class="team-score">${sum(data.inningRuns[team])} R · ${sum(data.inningHits[team])} H · ${sum(data.inningErrors[team])} E</span>
+      </h3>
+      ${renderBatterTableFromData(data, team)}
+    </div>`;
+  }
+
+  // Pitcher tables — only if data has them
+  if (data.pitcherStats && (data.pitcherStats.away?.length || data.pitcherStats.home?.length)) {
+    for (const team of ['away','home']) {
+      const opp = team === 'away' ? 'home' : 'away';
+      html += `<div class="stats-section">
+        <h3>${escape(data.teams[team].name)} — Pitcheo
+          <span class="team-score">vs ${escape(data.teams[opp].name)}</span>
+        </h3>
+        ${renderPitcherTableFromData(data, team)}
+      </div>`;
+    }
+  }
+
+  document.getElementById('stats-content').innerHTML = html;
+  document.getElementById('stats-modal').classList.remove('hidden');
+}
+
+function renderBatterTableFromData(data, team) {
+  const ts = data.teamStats[team];
+  let html = `<table class="stats-table">
+    <thead>
+      <tr>
+        <th style="text-align:left;padding-left:10px">JUGADOR</th>
+        <th>PA</th><th>AB</th><th>R</th><th>H</th>
+        <th>2B</th><th>3B</th><th>HR</th><th>RBI</th>
+        <th>BB</th><th>K</th>
+        <th>AVG</th><th>OBP</th><th>SLG</th><th>OPS</th>
+      </tr>
+    </thead><tbody>`;
+  (data.playerStats[team] || []).forEach((row) => {
+    const p = row.player;
+    const s = row.stats;
+    const subTag = p.replacesId ? `<span class="sub-indicator">${escape(p.subType||'SUB')}</span>` : '';
+    const slotLabel = p.replacesId ? '↳' : `${row.slot}.`;
+    html += `<tr>
+      <td class="name">
+        <span style="font-family:'JetBrains Mono';color:var(--brass);font-weight:700;margin-right:6px">${slotLabel}</span>
+        ${escape(p.name)}${subTag}
+        <span class="pos">${p.pos}${p.num?' · #'+escape(p.num):''}</span>
+      </td>
+      <td>${s.PA}</td><td>${s.AB}</td><td>${s.R}</td><td>${s.H}</td>
+      <td>${s._2B}</td><td>${s._3B}</td><td>${s.HR}</td><td>${s.RBI}</td>
+      <td>${s.BB}</td><td>${s.K}</td>
+      <td>${s.AVG}</td><td>${s.OBP}</td><td>${s.SLG}</td><td>${s.OPS}</td>
+    </tr>`;
+  });
+  html += `<tfoot><tr>
+    <td class="name" style="color:var(--brass)">TOTALES DEL EQUIPO</td>
+    <td>${ts.PA}</td><td>${ts.AB}</td><td>${ts.R}</td><td>${ts.H}</td>
+    <td>${ts._2B}</td><td>${ts._3B}</td><td>${ts.HR}</td><td>${ts.RBI}</td>
+    <td>${ts.BB}</td><td>${ts.K}</td>
+    <td>${ts.AVG}</td><td>${ts.OBP}</td><td>${ts.SLG}</td><td>${ts.OPS}</td>
+  </tr></tfoot></tbody></table>`;
+  return html;
+}
+
+function renderPitcherTableFromData(data, team) {
+  const rows = data.pitcherStats[team] || [];
+  let html = `<table class="stats-table">
+    <thead>
+      <tr>
+        <th style="text-align:left;padding-left:10px">PITCHER</th>
+        <th>IP</th><th>BF</th><th>P</th><th>S</th><th>B</th>
+        <th>H</th><th>R</th><th>HR</th>
+        <th>BB</th><th>K</th><th>HBP</th>
+        <th>WHIP</th>
+      </tr>
+    </thead><tbody>`;
+  let totOuts=0,totBF=0,totP=0,totS=0,totB=0,totH=0,totR=0,totHR=0,totBB=0,totK=0,totHBP=0;
+  rows.forEach((row, ix) => {
+    const p = row.player;
+    const s = row.stats;
+    const ip = s.IP || formatIP(s.outs || 0);
+    const ipDec = (s.outs || 0) / 3;
+    const whip = (s.WHIP != null) ? s.WHIP : (ipDec > 0 ? ((s.bb + s.h) / ipDec).toFixed(2) : '—');
+    const tag = p.replacesId ? `<span class="sub-indicator">RELEVO</span>` : `<span class="sub-indicator">ABRE</span>`;
+    const prefix = ix === 0 ? '1.' : '↳';
+    html += `<tr>
+      <td class="name">
+        <span style="font-family:'JetBrains Mono';color:var(--brass);font-weight:700;margin-right:6px">${prefix}</span>
+        ${escape(p.name)} ${tag}
+        <span class="pos">${p.pos}${p.num?' · #'+escape(p.num):''}</span>
+      </td>
+      <td>${ip}</td><td>${s.bf||0}</td><td>${s.pitches||0}</td><td>${s.strikes||0}</td><td>${s.balls||0}</td>
+      <td>${s.h||0}</td><td>${s.r||0}</td><td>${s.hr||0}</td>
+      <td>${s.bb||0}</td><td>${s.k||0}</td><td>${s.hbp||0}</td>
+      <td>${whip}</td>
+    </tr>`;
+    totOuts+=(s.outs||0);totBF+=(s.bf||0);totP+=(s.pitches||0);totS+=(s.strikes||0);totB+=(s.balls||0);
+    totH+=(s.h||0);totR+=(s.r||0);totHR+=(s.hr||0);totBB+=(s.bb||0);totK+=(s.k||0);totHBP+=(s.hbp||0);
+  });
+  const totIP = formatIP(totOuts);
+  const totIPDec = totOuts / 3;
+  const totWhip = totIPDec > 0 ? ((totBB + totH) / totIPDec).toFixed(2) : '—';
+  html += `<tfoot><tr>
+    <td class="name" style="color:var(--brass)">TOTALES</td>
+    <td>${totIP}</td><td>${totBF}</td><td>${totP}</td><td>${totS}</td><td>${totB}</td>
+    <td>${totH}</td><td>${totR}</td><td>${totHR}</td>
+    <td>${totBB}</td><td>${totK}</td><td>${totHBP}</td>
+    <td>${totWhip}</td>
+  </tr></tfoot></tbody></table>`;
+  return html;
+}
+
+function exportStatsJSON() {
+  const buildTeamPlayerStats = (team) => {
+    const out = [];
+    for (let i = 0; i < 9; i++) {
+      slotPlayerHistory(team, i).forEach(p => {
+        out.push({ slot: i+1, player: p, stats: computePlayerStats(team, p.id) });
+      });
+    }
+    return out;
+  };
+  const buildTeamPitcherStats = (team) => {
+    const pitchers = state.teams[team].players.filter(p => p.pos === 'P');
+    return pitchers.map(p => {
+      const s = (state.pitcherStats?.[team]?.[p.id]) || { pitches:0,balls:0,strikes:0,outs:0,bf:0,h:0,r:0,bb:0,k:0,hr:0,hbp:0,ibb:0 };
+      const ipDec = s.outs / 3;
+      const whip = ipDec > 0 ? +((s.bb + s.h) / ipDec).toFixed(2) : null;
+      return { player: p, stats: { ...s, IP: formatIP(s.outs), WHIP: whip } };
+    });
+  };
+  const data = {
+    teams: state.teams,
+    totalInnings: state.totalInnings,
+    finalScore: {
+      away: sum(state.inningRuns.away),
+      home: sum(state.inningRuns.home)
+    },
+    inningRuns: state.inningRuns,
+    inningHits: state.inningHits,
+    inningErrors: state.inningErrors,
+    teamStats: {
+      away: computeTeamStats('away'),
+      home: computeTeamStats('home')
+    },
+    playerStats: {
+      away: buildTeamPlayerStats('away'),
+      home: buildTeamPlayerStats('home')
+    },
+    pitcherStats: {
+      away: buildTeamPitcherStats('away'),
+      home: buildTeamPitcherStats('home')
+    },
+    atBats: state.atBats,
+    plays: state.plays
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'box-score.json'; a.click();
+  URL.revokeObjectURL(url);
+  toast('📥 Stats exportadas (JSON)');
+}
+
+function exportStatsText() {
+  let txt = '';
+  txt += `${state.teams.away.name} @ ${state.teams.home.name}\n`;
+  txt += '═'.repeat(60) + '\n\n';
+  txt += `RESULTADO: ${state.teams.away.name} ${sum(state.inningRuns.away)}  —  ${sum(state.inningRuns.home)} ${state.teams.home.name}\n\n`;
+
+  // Line score
+  const innings = Math.max(state.totalInnings || 9, state.currentInning);
+  txt += 'LINE SCORE\n';
+  txt += '          ' + Array.from({length:innings},(_,i)=>String(i+1).padStart(3)).join('') + '   R   H   E\n';
+  txt += pad(state.teams.away.name, 10) + state.inningRuns.away.slice(0,innings).map(n=>String(n).padStart(3)).join('') + '  ' +
+         String(sum(state.inningRuns.away)).padStart(3) + ' ' + String(sum(state.inningHits.away)).padStart(3) + ' ' + String(sum(state.inningErrors.away)).padStart(3) + '\n';
+  txt += pad(state.teams.home.name, 10) + state.inningRuns.home.slice(0,innings).map(n=>String(n).padStart(3)).join('') + '  ' +
+         String(sum(state.inningRuns.home)).padStart(3) + ' ' + String(sum(state.inningHits.home)).padStart(3) + ' ' + String(sum(state.inningErrors.home)).padStart(3) + '\n\n';
+
+  for (const team of ['away','home']) {
+    txt += `\n${state.teams[team].name.toUpperCase()} — BATEADORES\n`;
+    txt += '─'.repeat(80) + '\n';
+    txt += pad('Jugador', 22) + ' PA AB  R  H 2B 3B HR RBI BB  K   AVG   OBP   SLG   OPS\n';
+    for (let i = 0; i < 9; i++) {
+      slotPlayerHistory(team, i).forEach((p, ix) => {
+        const s = computePlayerStats(team, p.id);
+        const prefix = ix === 0 ? `${i+1}.` : '  ↳';
+        const subTag = p.subType ? ` (${p.subType})` : '';
+        txt += pad(`${prefix} ${p.name} (${p.pos})${subTag}`, 22) +
+          String(s.PA).padStart(3) + String(s.AB).padStart(3) + String(s.R).padStart(3) +
+          String(s.H).padStart(3) + String(s._2B).padStart(3) + String(s._3B).padStart(3) +
+          String(s.HR).padStart(3) + String(s.RBI).padStart(4) + String(s.BB).padStart(3) +
+          String(s.K).padStart(3) + '  ' + s.AVG.padStart(5) + ' ' + s.OBP.padStart(5) + ' ' + s.SLG.padStart(5) + ' ' + s.OPS.padStart(5) + '\n';
+      });
+    }
+    const ts = computeTeamStats(team);
+    txt += '─'.repeat(80) + '\n';
+    txt += pad('TOTAL', 22) +
+      String(ts.PA).padStart(3) + String(ts.AB).padStart(3) + String(ts.R).padStart(3) +
+      String(ts.H).padStart(3) + String(ts._2B).padStart(3) + String(ts._3B).padStart(3) +
+      String(ts.HR).padStart(3) + String(ts.RBI).padStart(4) + String(ts.BB).padStart(3) +
+      String(ts.K).padStart(3) + '  ' + ts.AVG.padStart(5) + ' ' + ts.OBP.padStart(5) + ' ' + ts.SLG.padStart(5) + ' ' + ts.OPS.padStart(5) + '\n';
+  }
+
+  // PITCHING
+  for (const team of ['away','home']) {
+    const opp = team === 'away' ? 'home' : 'away';
+    txt += `\n${state.teams[team].name.toUpperCase()} — PITCHEO (vs ${state.teams[opp].name})\n`;
+    txt += '─'.repeat(80) + '\n';
+    txt += pad('Pitcher', 22) + '  IP  BF   P   S   B  H  R HR BB  K HBP  WHIP\n';
+    const pitchers = state.teams[team].players.filter(p => p.pos === 'P');
+    let totOuts=0,totBF=0,totP=0,totS=0,totB=0,totH=0,totR=0,totHR=0,totBB=0,totK=0,totHBP=0;
+    pitchers.forEach((p, ix) => {
+      const s = (state.pitcherStats?.[team]?.[p.id]) || { pitches:0,balls:0,strikes:0,outs:0,bf:0,h:0,r:0,bb:0,k:0,hr:0,hbp:0,ibb:0 };
+      const ip = formatIP(s.outs);
+      const ipDec = s.outs / 3;
+      const whip = ipDec > 0 ? ((s.bb + s.h) / ipDec).toFixed(2) : ' —  ';
+      const prefix = ix === 0 ? '1.' : ' ↳';
+      const tag = p.replacesId ? '(R)' : '(A)';
+      txt += pad(`${prefix} ${p.name} ${tag}`, 22) +
+        ip.padStart(4) + String(s.bf).padStart(4) + String(s.pitches).padStart(4) +
+        String(s.strikes).padStart(4) + String(s.balls).padStart(4) +
+        String(s.h).padStart(3) + String(s.r).padStart(3) + String(s.hr).padStart(3) +
+        String(s.bb).padStart(3) + String(s.k).padStart(3) + String(s.hbp).padStart(4) +
+        '  ' + String(whip).padStart(5) + '\n';
+      totOuts+=s.outs;totBF+=s.bf;totP+=s.pitches;totS+=s.strikes;totB+=s.balls;
+      totH+=s.h;totR+=s.r;totHR+=s.hr;totBB+=s.bb;totK+=s.k;totHBP+=s.hbp;
+    });
+    const totIP = formatIP(totOuts);
+    const totIPDec = totOuts / 3;
+    const totWhip = totIPDec > 0 ? ((totBB + totH) / totIPDec).toFixed(2) : ' —  ';
+    txt += '─'.repeat(80) + '\n';
+    txt += pad('TOTAL', 22) +
+      totIP.padStart(4) + String(totBF).padStart(4) + String(totP).padStart(4) +
+      String(totS).padStart(4) + String(totB).padStart(4) +
+      String(totH).padStart(3) + String(totR).padStart(3) + String(totHR).padStart(3) +
+      String(totBB).padStart(3) + String(totK).padStart(3) + String(totHBP).padStart(4) +
+      '  ' + String(totWhip).padStart(5) + '\n';
+  }
+
+  txt += '\n\nPLAY-BY-PLAY\n' + '─'.repeat(60) + '\n';
+  state.plays.forEach(p => {
+    txt += `${p.half==='top'?'▲':'▼'} ${p.inning}ᵒ — ${p.text}\n`;
+  });
+
+  const blob = new Blob([txt], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'box-score.txt'; a.click();
+  URL.revokeObjectURL(url);
+  toast('📄 Stats exportadas (Texto)');
+}
+
+function pad(s, n) { s = String(s); return s.length >= n ? s.slice(0,n) : s + ' '.repeat(n - s.length); }
+
+/* ====================== TOAST ====================== */
+let toastTimer;
+function toast(msg) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(),300); }, 2500);
+}
+
+/* ====================== SUBSTITUTIONS ====================== */
+let subPickedTeam = 'away';
+let subPickedType = 'PH';
+
+function openSubModal() {
+  // Default to the team currently fielding (if it's a defensive sub or pitch change)
+  // or batting team if it's a PH/PR
+  subPickedTeam = currentBattingTeam();
+  subPickedType = 'PH';
+  refreshSubModalUI();
+  document.getElementById('sub-modal').classList.remove('hidden');
+  setTimeout(() => document.getElementById('sub-name').focus(), 100);
+}
+
+function refreshSubModalUI() {
+  // Highlight team buttons
+  document.querySelectorAll('#sub-team-row .btn-pick').forEach(b => {
+    b.classList.toggle('active', b.dataset.subTeam === subPickedTeam);
+  });
+  // Highlight type buttons
+  document.querySelectorAll('#sub-type-row .btn-pick').forEach(b => {
+    b.classList.toggle('active', b.dataset.subType === subPickedType);
+  });
+  // Populate slot select with current players in that team
+  const slotSel = document.getElementById('sub-slot');
+  slotSel.innerHTML = '';
+  for (let i = 0; i < 9; i++) {
+    const cur = currentPlayerInSlot(subPickedTeam, i);
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `${i+1}. ${cur ? cur.name + ' (' + cur.pos + (cur.num?' #'+cur.num:'') + ')' : '—'}`;
+    slotSel.appendChild(opt);
+  }
+  // Default slot: if PH or PR, target current batter (or runner on base)
+  if (subPickedType === 'PH') {
+    slotSel.value = state.currentBatterIdx[subPickedTeam];
+  } else if (subPickedType === 'P') {
+    // Find slot of current pitcher
+    const pit = state.teams[subPickedTeam].players.find(p => p.pos === 'P' && p.leftAfterInning == null);
+    if (pit) slotSel.value = pit.slotIdx;
+  }
+  // Populate position select
+  const posSel = document.getElementById('sub-pos');
+  posSel.innerHTML = '';
+  POS_CODES.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    posSel.appendChild(opt);
+  });
+  // Default position based on sub type
+  if (subPickedType === 'P') posSel.value = 'P';
+  else {
+    const cur = currentPlayerInSlot(subPickedTeam, parseInt(slotSel.value, 10));
+    if (cur) posSel.value = cur.pos;
+  }
+  updateSubHistoryDisplay();
+}
+
+function updateSubHistoryDisplay() {
+  const slotIdx = parseInt(document.getElementById('sub-slot').value, 10);
+  if (isNaN(slotIdx)) return;
+  const hist = slotPlayerHistory(subPickedTeam, slotIdx);
+  const cur = hist[hist.length - 1];
+  const histEl = document.getElementById('sub-history');
+  if (!cur) { histEl.innerHTML = '—'; return; }
+  let html = `<strong>Actualmente en este slot:</strong> ${escape(cur.name)} (${cur.pos}${cur.num?' #'+cur.num:''})`;
+  if (hist.length > 1) {
+    const prev = hist.slice(0, -1).map(p => escape(p.name) + ' (' + ordinalHalf(p.enteredInning, p.enteredHalf) + ' → ' + (p.leftAfterInning ? ordinalHalf(p.leftAfterInning, p.leftAfterHalf) : '?') + ')').join(' · ');
+    html += `<br><span style="font-size:11px">Previos: ${prev}</span>`;
+  }
+  histEl.innerHTML = html;
+}
+
+function performSub() {
+  const team = subPickedTeam;
+  const slotIdx = parseInt(document.getElementById('sub-slot').value, 10);
+  const type = subPickedType;
+  const name = document.getElementById('sub-name').value.trim();
+  const pos = document.getElementById('sub-pos').value;
+  const num = document.getElementById('sub-num').value.trim();
+
+  if (!name) { toast('⚠ Falta el nombre del jugador'); return; }
+
+  // Take snapshot before mutation
+  pushPlay({
+    action: 'SUB_PENDING',
+    text: '' // will be replaced below
+  });
+  state.plays.pop(); // remove placeholder, we'll add real entry after mutation
+
+  // Mark current player as left
+  const slotPlayers = state.teams[team].players.filter(p => p.slotIdx === slotIdx);
+  const currentPlayer = slotPlayers.find(p => p.leftAfterInning == null);
+  if (currentPlayer) {
+    currentPlayer.leftAfterInning = state.currentInning;
+    currentPlayer.leftAfterHalf = state.half;
+  }
+
+  // Add new player
+  const existingCount = state.teams[team].players.length;
+  const newId = `${team}-s${slotIdx}-${existingCount}`;
+  const newPlayer = {
+    id: newId,
+    slotIdx,
+    order: slotIdx + 1,
+    name, pos, num,
+    enteredInning: state.currentInning,
+    enteredHalf: state.half,
+    leftAfterInning: null,
+    leftAfterHalf: null,
+    replacesId: currentPlayer ? currentPlayer.id : null,
+    subType: type
+  };
+  state.teams[team].players.push(newPlayer);
+
+  // If the player being replaced is on base, update the base reference
+  if (currentPlayer) {
+    for (let i = 0; i < 3; i++) {
+      if (state.bases[i] && state.bases[i].playerId === currentPlayer.id) {
+        state.bases[i].playerId = newId;
+      }
+    }
+  }
+
+  // Log
+  const typeLabels = {
+    PH: 'Pinch hitter',
+    PR: 'Pinch runner',
+    DEF: 'Cambio defensivo',
+    P:  'Cambio de pitcher'
+  };
+  const replacedText = currentPlayer ? ` por ${currentPlayer.name}` : '';
+  state.plays.push({
+    action: 'SUB',
+    text: `${typeLabels[type]}: ${name} entra${replacedText} (slot ${slotIdx+1}, ${pos})`,
+    inning: state.currentInning,
+    half: state.half,
+    timestamp: Date.now()
+  });
+
+  document.getElementById('sub-modal').classList.add('hidden');
+  document.getElementById('sub-name').value = '';
+  document.getElementById('sub-num').value = '';
+  render();
+  toast(`✓ ${name} entra al juego (${typeLabels[type]})`);
+}
+
+/* ====================== EVENT WIRING ====================== */
+function init() {
+  // Lineup forms
+  renderLineupForm('away');
+  renderLineupForm('home');
+
+  document.getElementById('btn-start-game').addEventListener('click', startGame);
+  document.getElementById('btn-load-sample').addEventListener('click', loadSampleData);
+  document.getElementById('btn-load-game').addEventListener('click', loadGame);
+  document.getElementById('file-input').addEventListener('change', handleFileLoad);
+  document.getElementById('btn-view-boxscore').addEventListener('click', viewBoxScore);
+  document.getElementById('boxscore-input').addEventListener('change', handleBoxScoreLoad);
+
+  // Action buttons (game)
+  document.querySelectorAll('.action-btn').forEach(btn => {
+    btn.addEventListener('click', () => handleAction(btn.dataset.action));
+  });
+
+  // Top bar buttons
+  document.getElementById('btn-stats').addEventListener('click', showStats);
+  document.getElementById('btn-help').addEventListener('click', () => {
+    document.getElementById('help-modal').classList.remove('hidden');
+  });
+  document.getElementById('btn-manual').addEventListener('click', () => {
+    document.getElementById('manual-modal').classList.remove('hidden');
+  });
+  document.getElementById('btn-sub').addEventListener('click', openSubModal);
+  document.getElementById('btn-save').addEventListener('click', saveGame);
+  document.getElementById('btn-end').addEventListener('click', () => {
+    document.getElementById('end-modal').classList.remove('hidden');
+  });
+
+  // Innings toggle (setup screen)
+  document.querySelectorAll('#innings-toggle label').forEach(lab => {
+    lab.addEventListener('click', () => {
+      document.querySelectorAll('#innings-toggle label').forEach(l => l.classList.remove('active'));
+      lab.classList.add('active');
+      lab.querySelector('input').checked = true;
+    });
+  });
+
+  // Sub modal: team picker
+  document.querySelectorAll('#sub-team-row .btn-pick').forEach(b => {
+    b.addEventListener('click', () => {
+      subPickedTeam = b.dataset.subTeam;
+      refreshSubModalUI();
+    });
+  });
+  // Sub modal: type picker
+  document.querySelectorAll('#sub-type-row .btn-pick').forEach(b => {
+    b.addEventListener('click', () => {
+      subPickedType = b.dataset.subType;
+      refreshSubModalUI();
+    });
+  });
+  // Sub modal: slot change
+  document.getElementById('sub-slot').addEventListener('change', updateSubHistoryDisplay);
+  // Sub modal: confirm
+  document.getElementById('btn-confirm-sub').addEventListener('click', performSub);
+
+  // Manual modal: TOC links
+  document.querySelectorAll('#manual-modal .manual-toc li').forEach(li => {
+    li.addEventListener('click', () => {
+      const target = document.getElementById(li.dataset.jump);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+  document.getElementById('btn-confirm-end').addEventListener('click', () => {
+    document.getElementById('end-modal').classList.add('hidden');
+    state.gameOver = true;
+    showStats();
+  });
+  document.getElementById('btn-new-game').addEventListener('click', () => {
+    if (confirm('¿Iniciar un partido nuevo? Se perderá el actual a menos que lo hayas guardado.')) {
+      state = createBlankState();
+      document.getElementById('end-modal').classList.add('hidden');
+      document.getElementById('game-screen').classList.add('hidden');
+      document.getElementById('setup-screen').classList.remove('hidden');
+      renderLineupForm('away'); renderLineupForm('home');
+    }
+  });
+
+  // Modal close buttons
+  document.querySelectorAll('[data-close-modal]').forEach(b => {
+    b.addEventListener('click', () => {
+      document.getElementById(b.dataset.closeModal).classList.add('hidden');
+    });
+  });
+  document.querySelectorAll('.modal-backdrop').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) m.classList.add('hidden'); });
+  });
+
+  // Stats export buttons — when viewing a loaded box-score, re-export the loaded data
+  document.getElementById('btn-export-stats').addEventListener('click', () => {
+    if (loadedBoxScore) {
+      const blob = new Blob([JSON.stringify(loadedBoxScore, null, 2)], { type:'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'box-score.json'; a.click();
+      URL.revokeObjectURL(url);
+      toast('📥 Box score reexportado');
+    } else {
+      exportStatsJSON();
+    }
+  });
+  document.getElementById('btn-export-text').addEventListener('click', () => {
+    if (loadedBoxScore) {
+      toast('Exportar texto disponible solo en partido activo');
+    } else {
+      exportStatsText();
+    }
+  });
+
+  // Clear loaded box-score when the stats modal closes
+  document.querySelector('[data-close-modal="stats-modal"]').addEventListener('click', () => {
+    loadedBoxScore = null;
+  });
+  document.getElementById('stats-modal').addEventListener('click', e => {
+    if (e.target.id === 'stats-modal') loadedBoxScore = null;
+  });
+
+  // Tabs
+  document.querySelectorAll('.scorecard-tab').forEach(t => {
+    t.addEventListener('click', () => {
+      state.viewTeam = t.dataset.team;
+      updateScorecardTabs();
+      renderScorecard();
+    });
+  });
+
+  // Next/prev batter
+  document.getElementById('btn-next-batter').addEventListener('click', () => {
+    nextBatter(); render();
+  });
+  document.getElementById('btn-prev-batter').addEventListener('click', () => {
+    const team = currentBattingTeam();
+    state.currentBatterIdx[team] = (state.currentBatterIdx[team] + 8) % 9;
+    render();
+  });
+
+  // Position picker
+  document.querySelectorAll('.pos-btn').forEach(b => {
+    b.addEventListener('click', () => closePositionModal(b.dataset.pos));
+  });
+  document.getElementById('pp-cancel').addEventListener('click', () => closePositionModal(null));
+  document.getElementById('pp-skip').addEventListener('click', () => closePositionModal(''));
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', handleKey);
+}
+
+function handleKey(e) {
+  // ignore typing in inputs/textareas/selects
+  const t = e.target;
+  if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT') return;
+  if (!state.started) return;
+
+  // ESC closes any open modal
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-backdrop:not(.hidden)').forEach(m => m.classList.add('hidden'));
+    if (state.pendingPosition) closePositionModal(null);
+    return;
+  }
+
+  // Position picker is open?
+  if (!document.getElementById('position-modal').classList.contains('hidden')) {
+    if (/^[1-9]$/.test(e.key)) { e.preventDefault(); closePositionModal(e.key); return; }
+    return;
+  }
+
+  // Undo
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); undo(); return; }
+
+  // Match a button by data-key
+  // Special: ⇧K for swinging strikeout (capital K)
+  const isShift = e.shiftKey;
+  const key = e.key;
+
+  // Try exact match first (case sensitive — for capital K)
+  let btn = document.querySelector(`.action-btn[data-key="${cssEscape(key)}"]`);
+  if (!btn) {
+    btn = document.querySelector(`.action-btn[data-key="${cssEscape(key.toLowerCase())}"]`);
+  }
+  if (btn) {
+    e.preventDefault();
+    handleAction(btn.dataset.action);
+    // visual feedback
+    btn.style.transform = 'translateY(2px)';
+    setTimeout(()=>btn.style.transform='', 100);
+  }
+}
+
+function cssEscape(s) {
+  return s.replace(/["\\]/g, '\\$&');
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

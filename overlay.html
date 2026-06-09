@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Scoreboard Overlay</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:transparent;overflow:hidden;width:100vw;height:100vh}
+  :root{
+    --accent:#e8b84b;--accent2:#4b8fe8;--text:#f0f2f5;--muted:#6b7585;
+    --border:rgba(255,255,255,0.08);--shadow:0 4px 24px rgba(0,0,0,0.7);
+  }
+  #scoreboard{
+    position:absolute;top:16px;left:16px;
+    background:linear-gradient(135deg,rgba(10,12,16,0.97) 0%,rgba(18,22,30,0.97) 100%);
+    border:1px solid var(--border);border-radius:12px;overflow:hidden;
+    box-shadow:var(--shadow),0 0 0 1px rgba(232,184,75,0.15);
+    min-width:520px;font-family:'Bebas Neue',sans-serif;
+    transition:opacity 0.3s;
+  }
+  #scoreboard.hidden{opacity:0;}
+  .sb-header{
+    background:rgba(232,184,75,0.12);border-bottom:1px solid var(--border);
+    padding:5px 14px;display:flex;align-items:center;justify-content:space-between;
+  }
+  .sb-header .game-title{font-size:0.82rem;letter-spacing:3px;color:var(--accent)}
+  .sb-header .game-status{font-family:'Rajdhani',sans-serif;font-size:0.72rem;color:var(--muted);letter-spacing:1px}
+  .sb-table{width:100%;border-collapse:collapse}
+  .sb-table th,.sb-table td{text-align:center;padding:3px 5px;border-right:1px solid var(--border);font-size:0.85rem;letter-spacing:1px}
+  .sb-table th{color:var(--muted);font-size:0.68rem;background:rgba(255,255,255,0.03);padding:4px 5px}
+  .sb-table .team-name{text-align:left;padding-left:12px;font-size:1.05rem;letter-spacing:2px;min-width:100px}
+  .sb-table .score-cell{font-size:1.5rem;color:var(--accent);min-width:38px}
+  .sb-table .inning-cell{min-width:26px;color:#aab;font-size:0.9rem}
+  .sb-table .inning-cell.active{color:var(--accent)}
+  .sb-table td:last-child,.sb-table th:last-child{border-right:none}
+  .rhe-th{background:rgba(232,184,75,0.1)!important;color:var(--accent)!important}
+  .rhe-td{background:rgba(232,184,75,0.05);color:var(--text)!important;font-size:1.05rem!important}
+  .sb-count{display:flex;align-items:stretch;border-top:1px solid var(--border);background:rgba(255,255,255,0.02)}
+  .count-block{flex:1;display:flex;flex-direction:column;align-items:center;padding:6px 4px;border-right:1px solid var(--border)}
+  .count-block:last-child{border-right:none}
+  .count-label{font-family:'Rajdhani',sans-serif;font-size:0.6rem;color:var(--muted);letter-spacing:2px;margin-bottom:3px}
+  .indicators{display:flex;gap:4px;align-items:center}
+  .dot{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--muted);background:transparent;transition:background 0.12s}
+  .dot.on-ball{background:#4b8fe8;border-color:#4b8fe8}
+  .dot.on-strike{background:#e8b84b;border-color:#e8b84b}
+  .dot.on-out{background:#c0392b;border-color:#c0392b}
+  .diamond{width:48px;height:48px;position:relative;flex-shrink:0}
+  .base{width:14px;height:14px;border:2px solid var(--muted);background:transparent;position:absolute;transform:rotate(45deg);transition:background 0.12s,border-color 0.12s}
+  .base.occupied{background:var(--accent);border-color:var(--accent)}
+  .base-2nd{top:0;left:50%;transform:translateX(-50%) rotate(45deg)}
+  .base-3rd{bottom:9px;left:3px;transform:rotate(45deg)}
+  .base-1st{bottom:9px;right:3px;transform:rotate(45deg)}
+  .inning-num{font-size:1.7rem;letter-spacing:2px;line-height:1}
+  .inning-half{font-family:'Rajdhani',sans-serif;font-size:0.65rem;letter-spacing:3px;color:var(--accent);margin-top:1px}
+  /* Reconnect overlay */
+  #conn-badge{
+    position:fixed;bottom:8px;right:8px;
+    background:rgba(192,57,43,0.9);color:#fff;
+    font-family:'Rajdhani',sans-serif;font-size:0.75rem;letter-spacing:1px;
+    padding:4px 10px;border-radius:6px;display:none;
+  }
+</style>
+</head>
+<body>
+
+<div id="scoreboard">
+  <div class="sb-header">
+    <span class="game-title" id="sb-game-title">BÉISBOL EN VIVO</span>
+    <span class="game-status" id="sb-game-status">EN JUEGO</span>
+  </div>
+  <div style="overflow-x:auto">
+    <table class="sb-table">
+      <thead>
+        <tr>
+          <th class="team-name">EQUIPO</th>
+          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
+          <th>6</th><th>7</th><th>8</th><th>9</th>
+          <th class="rhe-th">R</th><th class="rhe-th">H</th><th class="rhe-th">E</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="team-name" id="sb-away-name">VISITANTE</td>
+          <td class="inning-cell" id="a1">-</td><td class="inning-cell" id="a2">-</td>
+          <td class="inning-cell" id="a3">-</td><td class="inning-cell" id="a4">-</td>
+          <td class="inning-cell" id="a5">-</td><td class="inning-cell" id="a6">-</td>
+          <td class="inning-cell" id="a7">-</td><td class="inning-cell" id="a8">-</td>
+          <td class="inning-cell" id="a9">-</td>
+          <td class="score-cell rhe-td" id="sb-away-r">0</td>
+          <td class="inning-cell rhe-td" id="sb-away-h">0</td>
+          <td class="inning-cell rhe-td" id="sb-away-e">0</td>
+        </tr>
+        <tr>
+          <td class="team-name" id="sb-home-name">LOCAL</td>
+          <td class="inning-cell" id="b1">-</td><td class="inning-cell" id="b2">-</td>
+          <td class="inning-cell" id="b3">-</td><td class="inning-cell" id="b4">-</td>
+          <td class="inning-cell" id="b5">-</td><td class="inning-cell" id="b6">-</td>
+          <td class="inning-cell" id="b7">-</td><td class="inning-cell" id="b8">-</td>
+          <td class="inning-cell" id="b9">-</td>
+          <td class="score-cell rhe-td" id="sb-home-r">0</td>
+          <td class="inning-cell rhe-td" id="sb-home-h">0</td>
+          <td class="inning-cell rhe-td" id="sb-home-e">0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="sb-count">
+    <div class="count-block">
+      <div class="count-label">BOLAS</div>
+      <div class="indicators">
+        <div class="dot" id="b-0"></div><div class="dot" id="b-1"></div>
+        <div class="dot" id="b-2"></div><div class="dot" id="b-3"></div>
+      </div>
+    </div>
+    <div class="count-block">
+      <div class="count-label">STRIKES</div>
+      <div class="indicators">
+        <div class="dot" id="s-0"></div><div class="dot" id="s-1"></div>
+      </div>
+    </div>
+    <div class="count-block">
+      <div class="count-label">OUTS</div>
+      <div class="indicators">
+        <div class="dot" id="o-0"></div><div class="dot" id="o-1"></div>
+      </div>
+    </div>
+    <div class="count-block" style="flex:1.3">
+      <div class="count-label">BASES</div>
+      <div style="display:flex;align-items:center;justify-content:center;padding:2px 10px">
+        <div class="diamond">
+          <div class="base base-2nd" id="base-2"></div>
+          <div class="base base-3rd" id="base-3"></div>
+          <div class="base base-1st" id="base-1"></div>
+        </div>
+      </div>
+    </div>
+    <div class="count-block" style="flex:0.7">
+      <div class="count-label">ENTRADA</div>
+      <div class="inning-num" id="sb-inning-num">1</div>
+      <div class="inning-half" id="sb-inning-half">▲ ALTA</div>
+    </div>
+  </div>
+</div>
+
+<div id="conn-badge">⚡ Reconectando...</div>
+
+<script>
+const WS_URL = `ws://${location.host}`;
+let ws, reconnectTimer;
+
+function connect() {
+  ws = new WebSocket(WS_URL);
+  ws.onopen = () => {
+    document.getElementById('conn-badge').style.display = 'none';
+    clearTimeout(reconnectTimer);
+  };
+  ws.onmessage = (e) => {
+    const msg = JSON.parse(e.data);
+    if (msg.type === 'state') render(msg.data);
+  };
+  ws.onclose = ws.onerror = () => {
+    document.getElementById('conn-badge').style.display = 'block';
+    reconnectTimer = setTimeout(connect, 2000);
+  };
+}
+connect();
+
+function render(s) {
+  document.getElementById('sb-away-name').textContent = s.away.name;
+  document.getElementById('sb-home-name').textContent = s.home.name;
+  document.getElementById('sb-away-r').textContent = s.away.r;
+  document.getElementById('sb-home-r').textContent = s.home.r;
+  document.getElementById('sb-away-h').textContent = s.away.h;
+  document.getElementById('sb-home-h').textContent = s.home.h;
+  document.getElementById('sb-away-e').textContent = s.away.e;
+  document.getElementById('sb-home-e').textContent = s.home.e;
+  document.getElementById('sb-game-title').textContent = s.title;
+  document.getElementById('sb-game-status').textContent = s.status;
+  document.getElementById('sb-inning-num').textContent = s.inning;
+  document.getElementById('sb-inning-half').textContent = s.half === 'top' ? '▲ ALTA' : '▼ BAJA';
+  for(let i=1;i<=9;i++){
+    const ae = document.getElementById('a'+i);
+    const be = document.getElementById('b'+i);
+    const av = s.away.innings[i-1]; const hv = s.home.innings[i-1];
+    if(ae){ae.textContent=(av==='-'?'-':av);ae.className='inning-cell'+(i===s.inning?' active':'')}
+    if(be){be.textContent=(hv==='-'?'-':hv);be.className='inning-cell'+(i===s.inning?' active':'')}
+  }
+  ['b-0','b-1','b-2','b-3'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(el)el.className='dot'+(i<s.balls?' on-ball':'');
+  });
+  ['s-0','s-1'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(el)el.className='dot'+(i<s.strikes?' on-strike':'');
+  });
+  ['o-0','o-1'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(el)el.className='dot'+(i<s.outs?' on-out':'');
+  });
+  [1,2,3].forEach(n=>{
+    const el=document.getElementById('base-'+n);
+    const cls=['1st','2nd','3rd'][n-1];
+    if(el)el.className='base base-'+cls+(s.bases[n-1]?' occupied':'');
+  });
+}
+</script>
+</body>
+</html>

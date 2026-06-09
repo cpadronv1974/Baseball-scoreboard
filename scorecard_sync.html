@@ -2812,9 +2812,9 @@ function findPlayerById(id) {
 /* ====================== SYNC SCOREBOARD ====================== */
 (function(){
   // IP del servidor — cambia esta línea con tu IP actual
-  const SERVER_IP = '192.168.16.230';
-  const SERVER_PORT = '3000';
-  const WS_URL = `wss://${SERVER_IP}:${SERVER_PORT}`;
+  const SERVER_IP = 'baseball-scoreboard.onrender.com';
+const SERVER_PORT = '';
+const WS_URL = `wss://${SERVER_IP}`;
 
   let ws, reconnTimer, connected = false;
 

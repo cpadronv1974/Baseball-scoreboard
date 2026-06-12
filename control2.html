@@ -337,8 +337,21 @@ function addStrike(){
   addActivePitch();
   state.strikes=Math.min(3,state.strikes+1);
   if(state.strikes>=3){
-    autoAlert('STRIKE OUT');
-    setTimeout(()=>{state.balls=0;state.strikes=0;send()},800);
+    state.balls=0;state.strikes=0;
+    state.outs=Math.min(3,state.outs+1);
+    if(state.outs>=3){
+      autoAlert('STRIKE OUT — 3 OUTS → CAMBIO DE ENTRADA');
+      setTimeout(()=>{
+        state.outs=0;state.bases=[false,false,false];
+        state.activePitcher=state.activePitcher===1?2:1;
+        if(state.half==='top'){state.half='bottom';}
+        else{state.half='top';state.inning=Math.min(12,state.inning+1);}
+        send();
+      },1200);
+      return;
+    }
+    autoAlert('STRIKE OUT — OUT '+state.outs);
+    send();
     return;
   }
   send();
@@ -351,7 +364,7 @@ function addOut(){
     setTimeout(()=>{
       state.outs=0;
       state.bases=[false,false,false];
-      // Cambiar mitad o avanzar entrada
+      state.activePitcher=state.activePitcher===1?2:1;
       if(state.half==='top'){state.half='bottom';}
       else{state.half='top';state.inning=Math.min(12,state.inning+1);}
       send();

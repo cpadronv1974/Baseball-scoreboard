@@ -66,7 +66,7 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
 .big-dot.ball{background:#4b8fe8;border-color:#4b8fe8;box-shadow:0 0 6px rgba(75,143,232,0.7)}
 .big-dot.strike{background:var(--accent);border-color:var(--accent);box-shadow:0 0 6px rgba(245,197,24,0.7)}
 .big-dot.out{background:var(--red);border-color:var(--red);box-shadow:0 0 6px rgba(231,76,60,0.7)}
-.bso-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
+.bso-btns{display:none}
 .bso-undo{display:flex;gap:5px;margin-top:5px}
 
 /* ── BASES EN EL FIXED ── */
@@ -173,7 +173,7 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
   <!-- CONTEO BSO -->
   <div class="bso-fixed">
     <div class="fix-sh">CONTEO B-S-O</div>
-    <div class="bso-main">
+    <div class="bso-main" style="flex-direction:column;gap:8px">
       <div class="bso-indicators">
         <div class="bso-ind-row">
           <span class="bso-ind-lbl">B</span>
@@ -195,11 +195,12 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
           </div>
         </div>
       </div>
-      <div class="bso-btns">
-        <button class="btn b big" onclick="addBall()">+B</button>
-        <button class="btn a big" onclick="addStrike()">+S</button>
-        <button class="btn r big" onclick="addOut()">+O</button>
-      </div>
+      <div class="bso-btns"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:6px">
+      <button onclick="addBall()" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:2px;padding:16px 8px;border-radius:10px;border:2px solid #4b8fe8;color:#4b8fe8;background:rgba(75,143,232,0.08);cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;width:100%" ontouchstart="this.style.background='#4b8fe8';this.style.color='#fff'" ontouchend="this.style.background='rgba(75,143,232,0.08)';this.style.color='#4b8fe8';addBall()">+ BOLA</button>
+      <button onclick="addStrike()" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:2px;padding:16px 8px;border-radius:10px;border:2px solid #f5c518;color:#f5c518;background:rgba(245,197,24,0.08);cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;width:100%" ontouchstart="this.style.background='#f5c518';this.style.color='#000'" ontouchend="this.style.background='rgba(245,197,24,0.08)';this.style.color='#f5c518';addStrike()">+ STRIKE</button>
+      <button onclick="addOut()" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:2px;padding:16px 8px;border-radius:10px;border:2px solid #e74c3c;color:#e74c3c;background:rgba(231,76,60,0.08);cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;width:100%" ontouchstart="this.style.background='#e74c3c';this.style.color='#fff'" ontouchend="this.style.background='rgba(231,76,60,0.08)';this.style.color='#e74c3c';addOut()">+ OUT</button>
     </div>
     <div class="bso-undo">
       <button class="btn gr sm" style="flex:1" onclick="resetBSO()">⟳ LIMPIAR</button>

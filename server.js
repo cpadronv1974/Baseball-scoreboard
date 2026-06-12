@@ -10,6 +10,7 @@ function serve(req,res){
   const u=req.url.split('?')[0];
   if(u==='/state'){res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify(state));return;}
   const routes={'/':'index.html','/overlay':'index.html','/overlay.html':'index.html','/index.html':'index.html','/control':'control.html','/control.html':'control.html','/scorecard':'scorecard_sync.html','/scorecard.html':'scorecard_sync.html'};
+  ,'/overlay2':'overlay2.html','/overlay2.html':'overlay2.html','/control2':'control2.html','/control2.html':'control2.html'
   const f=routes[u];
   if(!f){res.writeHead(404);res.end('Not found');return;}
   const p=path.join(__dirname,f);

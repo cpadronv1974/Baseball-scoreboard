@@ -3,165 +3,150 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Control Simple — Baseball</title>
+<title>Control Simple</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#080810;--panel:#10101e;--border:rgba(255,255,255,0.07);
-  --accent:#e8b84b;--blue:#4b8fe8;--red:#e74c3c;--green:#2ecc71;
-  --muted:#444;--text:#e0e0e0;
-}
+:root{--bg:#080812;--panel:#0f0f1c;--border:rgba(255,255,255,0.07);--accent:#f5c518;--blue:#4b8fe8;--red:#e74c3c;--green:#2ecc71;--muted:#3a3a4a;--text:#e0e0e0}
 body{background:var(--bg);color:var(--text);font-family:'Oswald',sans-serif;min-height:100vh;padding-bottom:30px}
 
-/* HEADER */
-header{
-  background:var(--panel);border-bottom:2px solid var(--accent);
-  padding:10px 14px;display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:100;
-}
-header h1{font-size:1.1rem;letter-spacing:3px;color:var(--accent)}
-#conn-dot{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;margin-right:5px}
-#conn-dot.ok{background:var(--green)}
-#conn-text{font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;color:var(--muted)}
+header{background:var(--panel);border-bottom:2px solid var(--accent);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+header h1{font-size:1rem;letter-spacing:3px;color:var(--accent)}
+.conn{display:flex;align-items:center;gap:5px;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;color:var(--muted)}
+.cdot{width:7px;height:7px;border-radius:50%;background:var(--red)}
+.cdot.ok{background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 
-/* MINI PREVIEW */
+/* PREVIEW */
 #preview{
-  margin:12px;background:#0a0a18;border:1px solid var(--border);
-  border-radius:10px;padding:12px;
-  display:flex;align-items:center;justify-content:space-between;
+  margin:10px 12px;background:#0a0a16;border:1px solid var(--border);border-radius:10px;
+  padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;
   font-family:'Barlow Condensed',sans-serif;
 }
-.prev-team{text-align:center;flex:1}
-.prev-tname{font-size:0.7rem;color:var(--muted);letter-spacing:2px}
-.prev-score{font-size:2rem;font-weight:700;color:var(--accent)}
-.prev-mid{text-align:center;padding:0 10px}
-.prev-inn{font-size:1.4rem;font-weight:700;color:var(--accent)}
-.prev-half{font-size:0.65rem;color:var(--accent);letter-spacing:2px}
-.prev-bso{display:flex;gap:8px;justify-content:center;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)}
-.prev-bso-item{display:flex;align-items:center;gap:3px;font-size:0.6rem;color:var(--muted)}
-.pdot{width:7px;height:7px;border-radius:50%;border:1px solid #333}
-.pdot.b{background:var(--blue);border-color:var(--blue)}
-.pdot.s{background:var(--accent);border-color:var(--accent)}
-.pdot.o{background:var(--red);border-color:var(--red)}
-.prev-pitches{font-size:1.1rem;font-weight:700;color:#fff;text-align:center}
-.prev-pitches-lbl{font-size:0.55rem;color:var(--muted);letter-spacing:2px}
+.pv-team{text-align:center}
+.pv-name{font-size:0.65rem;color:var(--muted);letter-spacing:2px}
+.pv-score{font-size:1.8rem;font-weight:700;color:var(--accent)}
+.pv-mid{text-align:center}
+.pv-inn{font-size:1.3rem;font-weight:700;color:var(--accent)}
+.pv-half{font-size:0.6rem;color:var(--accent);letter-spacing:2px}
+.pv-bso{display:flex;gap:6px;justify-content:center;margin-top:4px}
+.pv-bso-g{display:flex;align-items:center;gap:2px;font-size:0.55rem;color:var(--muted)}
+.pd{width:7px;height:7px;border-radius:50%;border:1px solid #333}
+.pd.b{background:#4b8fe8;border-color:#4b8fe8}
+.pd.s{background:var(--accent);border-color:var(--accent)}
+.pd.o{background:var(--red);border-color:var(--red)}
+.pv-outs{font-size:0.75rem;color:var(--muted);font-weight:700}
 
 /* SECCIONES */
-.sec{margin:10px 12px;background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.sec-head{padding:8px 14px;background:rgba(232,184,75,0.06);border-bottom:1px solid var(--border);font-size:0.75rem;letter-spacing:3px;color:var(--accent);font-family:'Barlow Condensed',sans-serif}
-.sec-body{padding:12px}
+.sec{margin:8px 12px;background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.sh{padding:7px 14px;background:rgba(245,197,24,0.06);border-bottom:1px solid var(--border);font-size:0.7rem;letter-spacing:3px;color:var(--accent);font-family:'Barlow Condensed',sans-serif}
+.sb{padding:10px 12px}
 
 /* BOTONES */
-.bg{display:grid;grid-template-columns:repeat(auto-fit,minmax(75px,1fr));gap:7px;margin-bottom:8px}
-.btn{
-  font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;
-  padding:11px 6px;border-radius:7px;border:1.5px solid;
-  cursor:pointer;background:transparent;font-size:0.9rem;text-align:center;
-  transition:all 0.1s;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
-}
-.btn:active{transform:scale(0.94);opacity:0.8}
-.a{color:var(--accent);border-color:var(--accent)}
-.a:active{background:var(--accent);color:#000}
-.b{color:var(--blue);border-color:var(--blue)}
-.b:active{background:var(--blue);color:#fff}
-.g{color:var(--green);border-color:var(--green)}
-.g:active{background:var(--green);color:#000}
-.r{color:var(--red);border-color:var(--red)}
-.r:active{background:var(--red);color:#fff}
-.gr{color:var(--muted);border-color:var(--muted)}
-.gr:active{background:var(--muted);color:#000}
-.btn.big{padding:14px 6px;font-size:1rem}
-.btn.full{width:100%}
+.bg{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:6px;margin-bottom:7px}
+.btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;padding:10px 5px;border-radius:7px;border:1.5px solid;cursor:pointer;background:transparent;font-size:0.9rem;text-align:center;transition:all 0.1s;-webkit-tap-highlight-color:transparent;touch-action:manipulation;white-space:nowrap}
+.btn:active{transform:scale(0.93);opacity:0.75}
+.a{color:var(--accent);border-color:var(--accent)}.a:active{background:var(--accent);color:#000}
+.b{color:var(--blue);border-color:var(--blue)}.b:active{background:var(--blue);color:#fff}
+.g{color:var(--green);border-color:var(--green)}.g:active{background:var(--green);color:#000}
+.r{color:var(--red);border-color:var(--red)}.r:active{background:var(--red);color:#fff}
+.gr{color:var(--muted);border-color:var(--muted)}.gr:active{background:var(--muted);color:#000}
+.btn.big{padding:13px 5px;font-size:1rem}
+.btn.full{width:100%;margin-bottom:6px}
 
 /* INPUTS */
-.inp{
-  width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;
-  color:var(--text);font-family:'Oswald',sans-serif;font-size:1rem;letter-spacing:2px;
-  padding:9px 10px;margin-bottom:8px;
-}
+.inp{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Oswald',sans-serif;font-size:0.95rem;letter-spacing:2px;padding:8px 10px;margin-bottom:7px}
 .inp:focus{outline:none;border-color:var(--accent)}
+.inp-row{display:flex;gap:8px;align-items:center;margin-bottom:7px}
+.inp-row .inp{margin-bottom:0;flex:1}
+.color-swatch{width:36px;height:36px;border-radius:6px;border:2px solid var(--border);cursor:pointer;flex-shrink:0}
 
-/* LANZAMIENTOS GRANDE */
-.pitch-display{
-  text-align:center;padding:10px 0 6px;
+/* PITCHER PANEL */
+.pitcher-panel{
+  background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  padding:10px;margin-bottom:8px;
 }
-.pitch-big{font-size:3.5rem;font-weight:700;color:#fff;line-height:1}
-.pitch-lbl{font-size:0.6rem;letter-spacing:4px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;margin-top:2px}
+.pitcher-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.pitcher-title{font-size:0.7rem;letter-spacing:2px;color:var(--muted);font-family:'Barlow Condensed',sans-serif}
+.pitcher-count{font-size:1.5rem;font-weight:700;color:var(--accent);text-align:center;margin:4px 0 2px}
+.pitcher-lbl{font-size:0.5rem;letter-spacing:3px;color:var(--muted);text-align:center;font-family:'Barlow Condensed',sans-serif}
+.active-indicator{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px rgba(245,197,24,0.8)}
+.inactive-indicator{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+
+/* OUTS DISPLAY */
+.outs-display{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:8px 0;
+}
+.out-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--muted);background:transparent;transition:all 0.15s}
+.out-dot.on{background:var(--red);border-color:var(--red);box-shadow:0 0 8px rgba(231,76,60,0.6)}
 
 /* TOAST */
-#toast{
-  position:fixed;bottom:16px;left:50%;transform:translateX(-50%) translateY(12px);
-  background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;
-  font-size:1rem;font-weight:700;letter-spacing:2px;
-  padding:9px 20px;border-radius:8px;opacity:0;transition:all 0.2s;
-  pointer-events:none;z-index:999;white-space:nowrap;
-}
+#toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:2px;padding:8px 20px;border-radius:8px;opacity:0;transition:all 0.2s;pointer-events:none;z-index:999;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* AUTO ALERT */
+#auto-alert{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#e74c3c;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:2px;padding:10px 24px;border-radius:8px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:1000}
+#auto-alert.show{opacity:1}
 </style>
 </head>
 <body>
 
 <header>
   <h1>⚾ CONTROL SIMPLE</h1>
-  <div>
-    <span id="conn-dot"></span>
-    <span id="conn-text">Conectando...</span>
-  </div>
+  <div class="conn"><div class="cdot" id="cdot"></div><span id="ctext">Conectando...</span></div>
 </header>
 
 <!-- PREVIEW -->
 <div id="preview">
-  <div class="prev-team">
-    <div class="prev-tname" id="p-away-name">VISITANTE</div>
-    <div class="prev-score" id="p-away-r">0</div>
+  <div class="pv-team">
+    <div class="pv-name" id="pv-away-name">VISITANTE</div>
+    <div class="pv-score" id="pv-away-r">0</div>
   </div>
-  <div class="prev-mid">
-    <div class="prev-inn" id="p-inn">1</div>
-    <div class="prev-half" id="p-half">▲ ALTA</div>
-    <div class="prev-bso">
-      <div class="prev-bso-item">B <div class="pdot" id="pd-b0"></div><div class="pdot" id="pd-b1"></div><div class="pdot" id="pd-b2"></div><div class="pdot" id="pd-b3"></div></div>
-      <div class="prev-bso-item">S <div class="pdot" id="pd-s0"></div><div class="pdot" id="pd-s1"></div></div>
-      <div class="prev-bso-item">O <div class="pdot" id="pd-o0"></div><div class="pdot" id="pd-o1"></div></div>
+  <div class="pv-mid">
+    <div class="pv-inn" id="pv-inn">1</div>
+    <div class="pv-half" id="pv-half">▲ ALTA</div>
+    <div class="pv-bso">
+      <div class="pv-bso-g">B<div class="pd" id="pd-b0"></div><div class="pd" id="pd-b1"></div><div class="pd" id="pd-b2"></div><div class="pd" id="pd-b3"></div></div>
+      <div class="pv-bso-g">S<div class="pd" id="pd-s0"></div><div class="pd" id="pd-s1"></div></div>
+      <div class="pv-bso-g">O<div class="pd" id="pd-o0"></div><div class="pd" id="pd-o1"></div></div>
     </div>
   </div>
-  <div class="prev-team">
-    <div class="prev-tname" id="p-home-name">LOCAL</div>
-    <div class="prev-score" id="p-home-r">0</div>
-  </div>
-  <div style="text-align:center;padding-left:10px;border-left:1px solid var(--border)">
-    <div class="prev-pitches" id="p-pitches">0</div>
-    <div class="prev-pitches-lbl">LANZ.</div>
+  <div class="pv-team">
+    <div class="pv-name" id="pv-home-name">LOCAL</div>
+    <div class="pv-score" id="pv-home-r">0</div>
   </div>
 </div>
 
 <!-- EQUIPOS -->
 <div class="sec">
-  <div class="sec-head">EQUIPOS</div>
-  <div class="sec-body">
-    <input class="inp" id="inp-away" placeholder="VISITANTE" maxlength="20" oninput="setName('away',this.value)">
-    <input class="inp" id="inp-home" placeholder="LOCAL" maxlength="20" oninput="setName('home',this.value)">
+  <div class="sh">EQUIPOS</div>
+  <div class="sb">
+    <div class="inp-row">
+      <input type="color" class="color-swatch" id="away-color" value="#c0392b" oninput="updateColor()">
+      <input class="inp" id="inp-away" placeholder="VISITANTE" maxlength="8" oninput="setName('away',this.value)">
+    </div>
+    <div class="inp-row">
+      <input type="color" class="color-swatch" id="home-color" value="#1a3a6b" oninput="updateColor()">
+      <input class="inp" id="inp-home" placeholder="LOCAL" maxlength="8" oninput="setName('home',this.value)">
+    </div>
   </div>
 </div>
 
 <!-- ENTRADA -->
 <div class="sec">
-  <div class="sec-head">ENTRADA</div>
-  <div class="sec-body">
+  <div class="sh">ENTRADA</div>
+  <div class="sb">
     <div class="bg">
-      <button class="btn b" onclick="chInn(-1)">◀ ANT</button>
-      <button class="btn b big" onclick="toggleHalf()">▲▼ CAMBIO MITAD</button>
-      <button class="btn b" onclick="chInn(1)">SIG ▶</button>
+      <button class="btn b big" onclick="chInn(-1)">◀ ANT</button>
+      <button class="btn b big" onclick="toggleHalf()">▲▼ MITAD</button>
+      <button class="btn b big" onclick="chInn(1)">SIG ▶</button>
     </div>
     <div class="bg">
-      <button class="btn a" onclick="setInn(1)">1</button>
-      <button class="btn a" onclick="setInn(2)">2</button>
-      <button class="btn a" onclick="setInn(3)">3</button>
-      <button class="btn a" onclick="setInn(4)">4</button>
-      <button class="btn a" onclick="setInn(5)">5</button>
-      <button class="btn a" onclick="setInn(6)">6</button>
-      <button class="btn a" onclick="setInn(7)">7</button>
-      <button class="btn a" onclick="setInn(8)">8</button>
+      <button class="btn a" onclick="setInn(1)">1</button><button class="btn a" onclick="setInn(2)">2</button>
+      <button class="btn a" onclick="setInn(3)">3</button><button class="btn a" onclick="setInn(4)">4</button>
+      <button class="btn a" onclick="setInn(5)">5</button><button class="btn a" onclick="setInn(6)">6</button>
+      <button class="btn a" onclick="setInn(7)">7</button><button class="btn a" onclick="setInn(8)">8</button>
       <button class="btn a" onclick="setInn(9)">9</button>
     </div>
   </div>
@@ -169,16 +154,12 @@ header h1{font-size:1.1rem;letter-spacing:3px;color:var(--accent)}
 
 <!-- CARRERAS -->
 <div class="sec">
-  <div class="sec-head">CARRERAS</div>
-  <div class="sec-body">
+  <div class="sh">CARRERAS</div>
+  <div class="sb">
     <div class="bg">
       <button class="btn g big" onclick="addRun('away',1)">+1 VISIT.</button>
-      <button class="btn g big" onclick="addRun('away',2)">+2 VISIT.</button>
       <button class="btn r" onclick="addRun('away',-1)">−1 VISIT.</button>
-    </div>
-    <div class="bg">
       <button class="btn g big" onclick="addRun('home',1)">+1 LOCAL</button>
-      <button class="btn g big" onclick="addRun('home',2)">+2 LOCAL</button>
       <button class="btn r" onclick="addRun('home',-1)">−1 LOCAL</button>
     </div>
   </div>
@@ -186,50 +167,100 @@ header h1{font-size:1.1rem;letter-spacing:3px;color:var(--accent)}
 
 <!-- CONTEO BSO -->
 <div class="sec">
-  <div class="sec-head">CONTEO B-S-O</div>
-  <div class="sec-body">
-    <div class="bg">
-      <button class="btn b big" onclick="addBSO('balls',1)">+ BOLA</button>
-      <button class="btn a big" onclick="addBSO('strikes',1)">+ STRIKE</button>
-      <button class="btn r big" onclick="addBSO('outs',1)">+ OUT</button>
+  <div class="sh">CONTEO B-S-O — AUTO LIMPIEZA</div>
+  <div class="sb">
+    <div class="outs-display">
+      <div class="out-dot" id="out-dot-0"></div>
+      <div class="out-dot" id="out-dot-1"></div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;letter-spacing:2px;color:var(--muted)">OUTS</div>
     </div>
     <div class="bg">
-      <button class="btn gr" onclick="resetBSO()">⟳ LIMPIAR</button>
-      <button class="btn gr" onclick="addBSO('balls',-1)">−B</button>
-      <button class="btn gr" onclick="addBSO('strikes',-1)">−S</button>
-      <button class="btn gr" onclick="addBSO('outs',-1)">−O</button>
+      <button class="btn b big" onclick="addBall()">+ BOLA</button>
+      <button class="btn a big" onclick="addStrike()">+ STRIKE</button>
+      <button class="btn r big" onclick="addOut()">+ OUT</button>
+    </div>
+    <div class="bg">
+      <button class="btn gr" onclick="resetBSO()">⟳ LIMPIAR BSO</button>
+      <button class="btn gr" onclick="undoBall()">−B</button>
+      <button class="btn gr" onclick="undoStrike()">−S</button>
+      <button class="btn gr" onclick="undoOut()">−O</button>
+    </div>
+    <p style="font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;color:var(--muted);text-align:center;margin-top:4px">
+      4B→limpia · 3S→limpia · 3O→siguiente entrada
+    </p>
+  </div>
+</div>
+
+<!-- BASES -->
+<div class="sec">
+  <div class="sh">BASES</div>
+  <div class="sb">
+    <div class="bg">
+      <button class="btn a" onclick="toggleBase(1)">1RA</button>
+      <button class="btn a" onclick="toggleBase(2)">2DA</button>
+      <button class="btn a" onclick="toggleBase(3)">3RA</button>
+      <button class="btn gr" onclick="clearBases()">VACÍAS</button>
+      <button class="btn g" onclick="fullBases()">LLENAS</button>
     </div>
   </div>
 </div>
 
-<!-- LANZAMIENTOS -->
+<!-- PITCHERS -->
 <div class="sec">
-  <div class="sec-head">CONTEO DE LANZAMIENTOS</div>
-  <div class="sec-body">
-    <div class="pitch-display">
-      <div class="pitch-big" id="pitch-display">0</div>
-      <div class="pitch-lbl">LANZAMIENTOS</div>
+  <div class="sh">PITCHERS</div>
+  <div class="sb">
+    <!-- Pitcher 1 -->
+    <div class="pitcher-panel">
+      <div class="pitcher-header">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div id="p1-indicator" class="active-indicator"></div>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:2px;color:var(--accent)">PITCHER 1</span>
+        </div>
+        <button class="btn a" onclick="setActivePitcher(1)" style="padding:4px 12px;font-size:0.7rem">ACTIVO</button>
+      </div>
+      <input class="inp" id="p1-name" placeholder="Nombre pitcher 1" maxlength="20" oninput="updatePitcher()">
+      <div class="pitcher-count" id="p1-count-display">0</div>
+      <div class="pitcher-lbl">LANZAMIENTOS</div>
+      <div class="bg" style="margin-top:8px">
+        <button class="btn a" onclick="addPitch(1,1)">+1</button>
+        <button class="btn a" onclick="addPitch(1,5)">+5</button>
+        <button class="btn gr" onclick="addPitch(1,-1)">−1</button>
+        <button class="btn gr" onclick="resetPitcher(1)">RESET</button>
+      </div>
     </div>
-    <div class="bg">
-      <button class="btn a big" onclick="addPitch(1)">+1 LANZ.</button>
-      <button class="btn a" onclick="addPitch(5)">+5</button>
-      <button class="btn a" onclick="addPitch(10)">+10</button>
-      <button class="btn r" onclick="addPitch(-1)">−1</button>
-      <button class="btn gr" onclick="resetPitches()">RESET</button>
+    <!-- Pitcher 2 -->
+    <div class="pitcher-panel">
+      <div class="pitcher-header">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div id="p2-indicator" class="inactive-indicator"></div>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:2px;color:var(--muted)">PITCHER 2</span>
+        </div>
+        <button class="btn gr" onclick="setActivePitcher(2)" style="padding:4px 12px;font-size:0.7rem">ACTIVO</button>
+      </div>
+      <input class="inp" id="p2-name" placeholder="Nombre pitcher 2" maxlength="20" oninput="updatePitcher()">
+      <div class="pitcher-count" id="p2-count-display" style="color:var(--muted)">0</div>
+      <div class="pitcher-lbl">LANZAMIENTOS</div>
+      <div class="bg" style="margin-top:8px">
+        <button class="btn a" onclick="addPitch(2,1)">+1</button>
+        <button class="btn a" onclick="addPitch(2,5)">+5</button>
+        <button class="btn gr" onclick="addPitch(2,-1)">−1</button>
+        <button class="btn gr" onclick="resetPitcher(2)">RESET</button>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- RESET -->
-<div style="margin:10px 12px">
-  <button class="btn r full big" onclick="resetGame()">↺ REINICIAR JUEGO</button>
+<div style="margin:8px 12px">
+  <button class="btn r full big" onclick="resetGame()">↺ REINICIAR JUEGO COMPLETO</button>
 </div>
 
 <div id="toast"></div>
+<div id="auto-alert"></div>
 
 <script>
 const SERVER='https://baseball-scoreboard.onrender.com';
-let ws, reconnTimer;
+let ws,reconnTimer;
 
 let state={
   away:{name:'VISITANTE',r:0,h:0,e:0,innings:['-','-','-','-','-','-','-','-','-']},
@@ -237,78 +268,168 @@ let state={
   inning:1,half:'top',balls:0,strikes:0,outs:0,
   bases:[false,false,false],
   title:'BÉISBOL EN VIVO',status:'EN JUEGO',
-  pitches:0
+  awayColor:'#c0392b',homeColor:'#1a3a6b',
+  pitcher1Name:'',pitcher1Pitches:0,
+  pitcher2Name:'',pitcher2Pitches:0,
+  activePitcher:1
 };
 
-// WebSocket
 const WS=SERVER.replace('https://','wss://').replace('http://','ws://');
 function connect(){
   ws=new WebSocket(WS);
   ws.onopen=()=>{setConn(true);clearTimeout(reconnTimer)};
-  ws.onmessage=(e)=>{const m=JSON.parse(e.data);if(m.type==='state'){state=m.data;renderPreview();syncInputs()}};
+  ws.onmessage=(e)=>{const m=JSON.parse(e.data);if(m.type==='state'){state=m.data;renderAll();syncInputs()}};
   ws.onclose=ws.onerror=()=>{setConn(false);reconnTimer=setTimeout(connect,2500)};
 }
 connect();
 
 function setConn(ok){
-  document.getElementById('conn-dot').className=ok?'ok':'';
-  document.getElementById('conn-text').textContent=ok?'Conectado':'Reconectando...';
+  document.getElementById('cdot').className='cdot'+(ok?' ok':'');
+  document.getElementById('ctext').textContent=ok?'Conectado':'Reconectando...';
 }
 function send(){
   if(ws&&ws.readyState===1)ws.send(JSON.stringify({type:'update',data:state}));
-  renderPreview();
+  renderAll();
 }
 function syncInputs(){
-  document.getElementById('inp-away').value=state.away.name;
-  document.getElementById('inp-home').value=state.home.name;
-  document.getElementById('pitch-display').textContent=state.pitches||0;
+  document.getElementById('inp-away').value=state.away.name||'';
+  document.getElementById('inp-home').value=state.home.name||'';
+  document.getElementById('away-color').value=state.awayColor||'#c0392b';
+  document.getElementById('home-color').value=state.homeColor||'#1a3a6b';
+  document.getElementById('p1-name').value=state.pitcher1Name||'';
+  document.getElementById('p2-name').value=state.pitcher2Name||'';
+  document.getElementById('p1-count-display').textContent=state.pitcher1Pitches||0;
+  document.getElementById('p2-count-display').textContent=state.pitcher2Pitches||0;
 }
 
-// Acciones
-function setName(t,v){state[t].name=v.toUpperCase()||(t==='away'?'VISITANTE':'LOCAL');send()}
+// ── ACCIONES ──
+function setName(t,v){state[t].name=v.toUpperCase();send()}
+function updateColor(){
+  state.awayColor=document.getElementById('away-color').value;
+  state.homeColor=document.getElementById('home-color').value;
+  send();
+}
 function addRun(t,n){
   state[t].r=Math.max(0,state[t].r+n);
   const col=state.inning-1;
   const cur=state[t].innings[col];
   const prev=cur==='-'?0:parseInt(cur)||0;
   state[t].innings[col]=Math.max(0,prev+n);
-  send();toast((n>0?'+':'')+n+' '+t.toUpperCase());
+  send();toast((n>0?'+':'')+n+' carrera '+t);
 }
 function chInn(d){state.inning=Math.max(1,Math.min(12,state.inning+d));send();toast('ENTRADA '+state.inning)}
 function setInn(n){state.inning=n;send();toast('ENTRADA '+n)}
 function toggleHalf(){state.half=state.half==='top'?'bottom':'top';send();toast(state.half==='top'?'▲ ALTA':'▼ BAJA')}
-function addBSO(t,n){const mx={balls:4,strikes:3,outs:3};state[t]=Math.max(0,Math.min(mx[t],state[t]+n));send()}
+
+// Auto-limpieza BSO
+function addBall(){
+  // Cuenta lanzamiento al pitcher activo
+  addActivePitch();
+  state.balls=Math.min(4,state.balls+1);
+  if(state.balls>=4){
+    autoAlert('BASE POR BOLAS');
+    setTimeout(()=>{state.balls=0;state.strikes=0;send()},800);
+    return;
+  }
+  send();
+}
+function addStrike(){
+  addActivePitch();
+  state.strikes=Math.min(3,state.strikes+1);
+  if(state.strikes>=3){
+    autoAlert('STRIKE OUT');
+    setTimeout(()=>{state.balls=0;state.strikes=0;send()},800);
+    return;
+  }
+  send();
+}
+function addOut(){
+  state.outs=Math.min(3,state.outs+1);
+  state.balls=0;state.strikes=0;
+  if(state.outs>=3){
+    autoAlert('3 OUTS — CAMBIO DE ENTRADA');
+    setTimeout(()=>{
+      state.outs=0;
+      state.bases=[false,false,false];
+      // Cambiar mitad o avanzar entrada
+      if(state.half==='top'){state.half='bottom';}
+      else{state.half='top';state.inning=Math.min(12,state.inning+1);}
+      send();
+    },1200);
+    return;
+  }
+  send();
+}
+function undoBall(){state.balls=Math.max(0,state.balls-1);send()}
+function undoStrike(){state.strikes=Math.max(0,state.strikes-1);send()}
+function undoOut(){state.outs=Math.max(0,state.outs-1);send()}
 function resetBSO(){state.balls=0;state.strikes=0;state.outs=0;send();toast('CONTEO LIMPIADO')}
-function addPitch(n){state.pitches=Math.max(0,(state.pitches||0)+n);document.getElementById('pitch-display').textContent=state.pitches;send()}
-function resetPitches(){state.pitches=0;document.getElementById('pitch-display').textContent=0;send();toast('LANZAMIENTOS: 0')}
+
+function toggleBase(n){state.bases[n-1]=!state.bases[n-1];send();toast('BASE '+n+(state.bases[n-1]?' OCUPADA':' LIBRE'))}
+function clearBases(){state.bases=[false,false,false];send();toast('BASES VACÍAS')}
+function fullBases(){state.bases=[true,true,true];send();toast('BASES LLENAS')}
+
+// Pitchers
+function updatePitcher(){
+  state.pitcher1Name=document.getElementById('p1-name').value;
+  state.pitcher2Name=document.getElementById('p2-name').value;
+  send();
+}
+function setActivePitcher(n){
+  state.activePitcher=n;
+  send();toast('PITCHER '+n+' ACTIVO');
+  updatePitcherUI();
+}
+function addActivePitch(){
+  if(state.activePitcher===1)state.pitcher1Pitches=(state.pitcher1Pitches||0)+1;
+  else state.pitcher2Pitches=(state.pitcher2Pitches||0)+1;
+  syncInputs();
+}
+function addPitch(p,n){
+  if(p===1)state.pitcher1Pitches=Math.max(0,(state.pitcher1Pitches||0)+n);
+  else state.pitcher2Pitches=Math.max(0,(state.pitcher2Pitches||0)+n);
+  syncInputs();send();
+}
+function resetPitcher(p){
+  if(p===1)state.pitcher1Pitches=0;
+  else state.pitcher2Pitches=0;
+  syncInputs();send();toast('PITCHER '+p+' RESET');
+}
+function updatePitcherUI(){
+  const p1a=state.activePitcher===1;
+  document.getElementById('p1-indicator').className=p1a?'active-indicator':'inactive-indicator';
+  document.getElementById('p2-indicator').className=p1a?'inactive-indicator':'active-indicator';
+}
+
 function resetGame(){
   if(!confirm('¿Reiniciar juego completo?'))return;
   state.away={name:state.away.name,r:0,h:0,e:0,innings:['-','-','-','-','-','-','-','-','-']};
   state.home={name:state.home.name,r:0,h:0,e:0,innings:['-','-','-','-','-','-','-','-','-']};
   state.inning=1;state.half='top';state.balls=0;state.strikes=0;state.outs=0;
-  state.bases=[false,false,false];state.pitches=0;
+  state.bases=[false,false,false];state.pitcher1Pitches=0;state.pitcher2Pitches=0;
   send();toast('JUEGO REINICIADO');
 }
 
-function renderPreview(){
-  document.getElementById('p-away-name').textContent=state.away.name;
-  document.getElementById('p-home-name').textContent=state.home.name;
-  document.getElementById('p-away-r').textContent=state.away.r;
-  document.getElementById('p-home-r').textContent=state.home.r;
-  document.getElementById('p-inn').textContent=state.inning;
-  document.getElementById('p-half').textContent=state.half==='top'?'▲ ALTA':'▼ BAJA';
-  document.getElementById('p-pitches').textContent=state.pitches||0;
-  ['pd-b0','pd-b1','pd-b2','pd-b3'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='pdot'+(i<state.balls?' b':'')});
-  ['pd-s0','pd-s1'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='pdot'+(i<state.strikes?' s':'')});
-  ['pd-o0','pd-o1'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='pdot'+(i<state.outs?' o':'')});
+function renderAll(){
+  document.getElementById('pv-away-name').textContent=state.away.name||'VIS';
+  document.getElementById('pv-home-name').textContent=state.home.name||'LOC';
+  document.getElementById('pv-away-r').textContent=state.away.r;
+  document.getElementById('pv-home-r').textContent=state.home.r;
+  document.getElementById('pv-inn').textContent=state.inning;
+  document.getElementById('pv-half').textContent=state.half==='top'?'▲ ALTA':'▼ BAJA';
+  ['pd-b0','pd-b1','pd-b2','pd-b3'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='pd'+(i<state.balls?' b':'')});
+  ['pd-s0','pd-s1'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='pd'+(i<state.strikes?' s':'')});
+  ['pd-o0','pd-o1'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='pd'+(i<state.outs?' o':'')});
+  ['out-dot-0','out-dot-1'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='out-dot'+(i<state.outs?' on':'')});
+  document.getElementById('p1-count-display').textContent=state.pitcher1Pitches||0;
+  document.getElementById('p2-count-display').textContent=state.pitcher2Pitches||0;
+  updatePitcherUI();
 }
 
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1500);
-}
-renderPreview();
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1500)}
+function autoAlert(msg){const a=document.getElementById('auto-alert');a.textContent=msg;a.classList.add('show');clearTimeout(a._t);a._t=setTimeout(()=>a.classList.remove('show'),2000)}
+
+renderAll();
 </script>
 </body>
 </html>

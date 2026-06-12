@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Overlay3</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700;800&family=Barlow+Condensed:wght@400;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:transparent;overflow:hidden;width:100vw;height:100vh}
+
+/* Barra en la parte inferior, ancho completo */
+#sb{
+  position:absolute;bottom:50px;left:0;right:0;
+  display:flex;align-items:stretch;height:66px;
+  font-family:'Oswald',sans-serif;
+  filter:drop-shadow(0 -3px 16px rgba(0,0,0,0.95));
+}
+
+/* ── VISITANTE — izquierda ── */
+.away-blk{
+  display:flex;align-items:center;
+  background:linear-gradient(90deg,#111118,#0d0d18);
+  flex:1;padding:0 14px;gap:10px;
+  border-right:3px solid #f5c518;
+}
+.away-color-bar{width:5px;height:100%;flex-shrink:0;transition:background 0.3s}
+.away-info{display:flex;align-items:center;gap:10px;flex:1}
+.away-name{
+  font-size:clamp(0.8rem,2vw,1.3rem);font-weight:800;
+  letter-spacing:2px;color:#fff;line-height:1;
+  max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.away-score{font-size:2.2rem;font-weight:800;color:#fff;line-height:1;min-width:28px}
+.away-score.lead{color:#f5c518}
+.away-label{font-family:'Barlow Condensed',sans-serif;font-size:0.45rem;letter-spacing:4px;color:rgba(255,255,255,0.35)}
+
+/* ── CENTRO ── */
+.center-blk{
+  background:#0a0a16;
+  display:flex;align-items:center;
+  flex-shrink:0;
+}
+.inn-blk{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:0 10px;border-right:1px solid rgba(255,255,255,0.07);height:100%;min-width:42px;
+}
+.inn-arrow{font-size:0.6rem;color:#f5c518;line-height:1}
+.inn-num{font-size:1.6rem;font-weight:800;color:#f5c518;line-height:1}
+.bases-blk{
+  display:flex;align-items:center;justify-content:center;
+  padding:0 9px;border-right:1px solid rgba(255,255,255,0.07);height:100%;
+}
+.diamond{width:38px;height:38px;position:relative}
+.base{width:12px;height:12px;border:2px solid #2a2a3a;background:#1a1a2a;position:absolute;transform:rotate(45deg);transition:all 0.12s}
+.base.occ{background:#f5c518;border-color:#f5c518;box-shadow:0 0 8px rgba(245,197,24,0.8)}
+.base-2{top:0;left:50%;transform:translateX(-50%) rotate(45deg)}
+.base-3{bottom:6px;left:1px;transform:rotate(45deg)}
+.base-1{bottom:6px;right:1px;transform:rotate(45deg)}
+.bso-blk{
+  display:flex;flex-direction:column;justify-content:center;gap:4px;
+  padding:0 9px;border-right:1px solid rgba(255,255,255,0.07);height:100%;
+}
+.bso-row{display:flex;align-items:center;gap:3px}
+.bso-lbl{font-family:'Barlow Condensed',sans-serif;font-size:0.48rem;letter-spacing:1px;color:#444;width:8px}
+.dots{display:flex;gap:3px}
+.dot{width:7px;height:7px;border-radius:50%;border:1.5px solid #2a2a3a;background:transparent;transition:all 0.1s}
+.dot.ball{background:#4b8fe8;border-color:#4b8fe8;box-shadow:0 0 4px rgba(75,143,232,0.7)}
+.dot.strike{background:#f5c518;border-color:#f5c518;box-shadow:0 0 4px rgba(245,197,24,0.7)}
+.dot.out{background:#e74c3c;border-color:#e74c3c;box-shadow:0 0 4px rgba(231,76,60,0.7)}
+.pitchers-blk{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:0 9px;height:100%;gap:3px;
+}
+.pitcher-row{display:flex;align-items:center;gap:5px;font-family:'Barlow Condensed',sans-serif}
+.p-ind{width:5px;height:5px;border-radius:50%;background:#333;flex-shrink:0}
+.p-ind.active{background:#f5c518}
+.p-name{font-size:0.65rem;letter-spacing:1px;color:#666;min-width:55px}
+.p-name.active{color:#fff}
+.p-cnt{font-size:0.65rem;font-weight:700;color:#555}
+.p-cnt.active{color:#f5c518}
+
+/* ── LOCAL — derecha ── */
+.home-blk{
+  display:flex;align-items:center;
+  background:linear-gradient(90deg,#0d0d18,#111118);
+  flex:1;padding:0 14px;gap:10px;
+  border-left:3px solid #f5c518;
+  justify-content:flex-end;
+}
+.home-color-bar{width:5px;height:100%;flex-shrink:0;transition:background 0.3s}
+.home-info{display:flex;align-items:center;gap:10px;flex:1;justify-content:flex-end}
+.home-name{
+  font-size:clamp(0.8rem,2vw,1.3rem);font-weight:800;
+  letter-spacing:2px;color:#fff;line-height:1;text-align:right;
+  max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.home-score{font-size:2.2rem;font-weight:800;color:#fff;line-height:1;min-width:28px;text-align:left}
+.home-score.lead{color:#f5c518}
+.home-label{font-family:'Barlow Condensed',sans-serif;font-size:0.45rem;letter-spacing:4px;color:rgba(255,255,255,0.35);text-align:right}
+
+#conn{position:fixed;top:4px;right:4px;width:5px;height:5px;border-radius:50%;background:#2ecc71;opacity:0.6}
+#conn.off{background:#e74c3c}
+</style>
+</head>
+<body>
+<div id="sb">
+
+  <!-- VISITANTE IZQUIERDA -->
+  <div class="away-blk">
+    <div class="away-color-bar" id="away-color-bar" style="background:#c0392b"></div>
+    <div class="away-info">
+      <div>
+        <div class="away-label">VISIT.</div>
+        <div class="away-name" id="away-name">VIS</div>
+      </div>
+      <div class="away-score" id="away-score">0</div>
+    </div>
+  </div>
+
+  <!-- CENTRO -->
+  <div class="center-blk">
+    <div class="inn-blk">
+      <div class="inn-arrow" id="inn-half">▲</div>
+      <div class="inn-num" id="inn-num">1</div>
+    </div>
+    <div class="bases-blk">
+      <div class="diamond">
+        <div class="base base-2" id="base-2"></div>
+        <div class="base base-3" id="base-3"></div>
+        <div class="base base-1" id="base-1"></div>
+      </div>
+    </div>
+    <div class="bso-blk">
+      <div class="bso-row"><span class="bso-lbl">B</span><div class="dots"><div class="dot" id="b0"></div><div class="dot" id="b1"></div><div class="dot" id="b2"></div><div class="dot" id="b3"></div></div></div>
+      <div class="bso-row"><span class="bso-lbl">S</span><div class="dots"><div class="dot" id="s0"></div><div class="dot" id="s1"></div></div></div>
+      <div class="bso-row"><span class="bso-lbl">O</span><div class="dots"><div class="dot" id="o0"></div><div class="dot" id="o1"></div></div></div>
+    </div>
+    <div class="pitchers-blk">
+      <div class="pitcher-row"><div class="p-ind" id="p1-ind"></div><div class="p-name" id="p1-name">PITCHER 1</div><div class="p-cnt" id="p1-cnt">P:0</div></div>
+      <div class="pitcher-row"><div class="p-ind" id="p2-ind"></div><div class="p-name" id="p2-name">PITCHER 2</div><div class="p-cnt" id="p2-cnt">P:0</div></div>
+    </div>
+  </div>
+
+  <!-- LOCAL DERECHA -->
+  <div class="home-blk">
+    <div class="home-info">
+      <div class="home-score" id="home-score">0</div>
+      <div>
+        <div class="home-label">LOCAL</div>
+        <div class="home-name" id="home-name">LOC</div>
+      </div>
+    </div>
+    <div class="home-color-bar" id="home-color-bar" style="background:#1a3a6b"></div>
+  </div>
+
+</div>
+<div id="conn" class="off"></div>
+<script>
+const SERVER='https://baseball-scoreboard.onrender.com';
+function render(s){
+  document.getElementById('away-name').textContent=(s.away.name||'VIS').substring(0,8).toUpperCase();
+  document.getElementById('home-name').textContent=(s.home.name||'LOC').substring(0,8).toUpperCase();
+  document.getElementById('away-color-bar').style.background=s.awayColor||'#c0392b';
+  document.getElementById('home-color-bar').style.background=s.homeColor||'#1a3a6b';
+  const ar=s.away.r,hr=s.home.r;
+  const as=document.getElementById('away-score'),hs=document.getElementById('home-score');
+  as.textContent=ar;hs.textContent=hr;
+  as.className='away-score'+(ar>hr?' lead':'');
+  hs.className='home-score'+(hr>ar?' lead':'');
+  document.getElementById('inn-num').textContent=s.inning;
+  document.getElementById('inn-half').textContent=s.half==='top'?'▲':'▼';
+  ['b0','b1','b2','b3'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='dot'+(i<s.balls?' ball':'')});
+  ['s0','s1'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='dot'+(i<s.strikes?' strike':'')});
+  ['o0','o1'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='dot'+(i<s.outs?' out':'')});
+  [1,2,3].forEach(n=>{const el=document.getElementById('base-'+n);if(el)el.className='base base-'+['1','2','3'][n-1]+(s.bases[n-1]?' occ':'')});
+  const p1a=s.activePitcher===1,p2a=s.activePitcher===2;
+  document.getElementById('p1-name').textContent=s.pitcher1Name||'PITCHER 1';
+  document.getElementById('p2-name').textContent=s.pitcher2Name||'PITCHER 2';
+  document.getElementById('p1-cnt').textContent='P:'+(s.pitcher1Pitches||0);
+  document.getElementById('p2-cnt').textContent='P:'+(s.pitcher2Pitches||0);
+  document.getElementById('p1-ind').className='p-ind'+(p1a?' active':'');
+  document.getElementById('p2-ind').className='p-ind'+(p2a?' active':'');
+  document.getElementById('p1-name').className='p-name'+(p1a?' active':'');
+  document.getElementById('p2-name').className='p-name'+(p2a?' active':'');
+  document.getElementById('p1-cnt').className='p-cnt'+(p1a?' active':'');
+  document.getElementById('p2-cnt').className='p-cnt'+(p2a?' active':'');
+}
+async function poll(){
+  try{const r=await fetch(SERVER+'/state',{mode:'cors'});if(r.ok){render(await r.json());document.getElementById('conn').className='';}
+  }catch(e){document.getElementById('conn').className='off';}
+}
+setInterval(poll,1000);poll();
+</script>
+</body>
+</html>

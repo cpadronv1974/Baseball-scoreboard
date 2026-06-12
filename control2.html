@@ -8,120 +8,158 @@
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#080812;--panel:#0f0f1c;--border:rgba(255,255,255,0.07);--accent:#f5c518;--blue:#4b8fe8;--red:#e74c3c;--green:#2ecc71;--muted:#3a3a4a;--text:#e0e0e0}
-body{background:var(--bg);color:var(--text);font-family:'Oswald',sans-serif;min-height:100vh;padding-bottom:30px}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Oswald',sans-serif;display:flex;flex-direction:column;}
 
-header{background:var(--panel);border-bottom:2px solid var(--accent);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-header h1{font-size:1rem;letter-spacing:3px;color:var(--accent)}
-.conn{display:flex;align-items:center;gap:5px;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;color:var(--muted)}
+/* ── HEADER fijo ── */
+header{background:var(--panel);border-bottom:2px solid var(--accent);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:100}
+header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
+.conn{display:flex;align-items:center;gap:5px;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;color:var(--muted)}
 .cdot{width:7px;height:7px;border-radius:50%;background:var(--red)}
 .cdot.ok{background:var(--green);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 
-/* PREVIEW */
+/* ── PANEL SUPERIOR FIJO (preview + equipos + BSO + bases) ── */
+#top-fixed{
+  flex-shrink:0;
+  background:var(--bg);
+  border-bottom:2px solid var(--border);
+  overflow:hidden;
+}
+
+/* ── PREVIEW MINI ── */
 #preview{
-  margin:10px 12px;background:#0a0a16;border:1px solid var(--border);border-radius:10px;
-  padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:#0a0a16;border-bottom:1px solid var(--border);
+  padding:8px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;
   font-family:'Barlow Condensed',sans-serif;
 }
-.pv-team{text-align:center}
-.pv-name{font-size:0.65rem;color:var(--muted);letter-spacing:2px}
-.pv-score{font-size:1.8rem;font-weight:700;color:var(--accent)}
+.pv-team{text-align:center;flex:1}
+.pv-name{font-size:0.6rem;color:var(--muted);letter-spacing:2px}
+.pv-score{font-size:1.6rem;font-weight:700;color:var(--accent)}
 .pv-mid{text-align:center}
-.pv-inn{font-size:1.3rem;font-weight:700;color:var(--accent)}
-.pv-half{font-size:0.6rem;color:var(--accent);letter-spacing:2px}
-.pv-bso{display:flex;gap:6px;justify-content:center;margin-top:4px}
-.pv-bso-g{display:flex;align-items:center;gap:2px;font-size:0.55rem;color:var(--muted)}
-.pd{width:7px;height:7px;border-radius:50%;border:1px solid #333}
+.pv-inn{font-size:1.2rem;font-weight:700;color:var(--accent)}
+.pv-half{font-size:0.55rem;color:var(--accent);letter-spacing:2px}
+.pv-bso{display:flex;gap:5px;justify-content:center;margin-top:3px}
+.pv-bso-g{display:flex;align-items:center;gap:2px;font-size:0.5rem;color:var(--muted)}
+.pd{width:6px;height:6px;border-radius:50%;border:1px solid #333}
 .pd.b{background:#4b8fe8;border-color:#4b8fe8}
 .pd.s{background:var(--accent);border-color:var(--accent)}
 .pd.o{background:var(--red);border-color:var(--red)}
-.pv-outs{font-size:0.75rem;color:var(--muted);font-weight:700}
 
-/* SECCIONES */
-.sec{margin:8px 12px;background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.sh{padding:7px 14px;background:rgba(245,197,24,0.06);border-bottom:1px solid var(--border);font-size:0.7rem;letter-spacing:3px;color:var(--accent);font-family:'Barlow Condensed',sans-serif}
-.sb{padding:10px 12px}
+/* ── EQUIPOS ── */
+.fix-sec{padding:8px 12px;border-bottom:1px solid var(--border)}
+.fix-sh{font-size:0.6rem;letter-spacing:3px;color:var(--accent);font-family:'Barlow Condensed',sans-serif;margin-bottom:6px}
+.inp-row{display:flex;gap:6px;align-items:center;margin-bottom:5px}
+.inp-row:last-child{margin-bottom:0}
+.inp{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Oswald',sans-serif;font-size:0.9rem;letter-spacing:2px;padding:6px 8px}
+.inp:focus{outline:none;border-color:var(--accent)}
+.color-swatch{width:32px;height:32px;border-radius:6px;border:2px solid var(--border);cursor:pointer;flex-shrink:0;padding:0}
 
-/* BOTONES */
-.bg{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:6px;margin-bottom:7px}
-.btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;padding:10px 5px;border-radius:7px;border:1.5px solid;cursor:pointer;background:transparent;font-size:0.9rem;text-align:center;transition:all 0.1s;-webkit-tap-highlight-color:transparent;touch-action:manipulation;white-space:nowrap}
+/* ── BSO EN EL FIXED ── */
+.bso-fixed{padding:8px 12px;border-bottom:1px solid var(--border)}
+.bso-main{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.bso-indicators{display:flex;flex-direction:column;gap:4px;flex:1}
+.bso-ind-row{display:flex;align-items:center;gap:5px}
+.bso-ind-lbl{font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;letter-spacing:2px;color:var(--muted);width:14px}
+.big-dots{display:flex;gap:5px}
+.big-dot{width:14px;height:14px;border-radius:50%;border:2px solid #2a2a3a;background:transparent;transition:all 0.12s}
+.big-dot.ball{background:#4b8fe8;border-color:#4b8fe8;box-shadow:0 0 6px rgba(75,143,232,0.7)}
+.big-dot.strike{background:var(--accent);border-color:var(--accent);box-shadow:0 0 6px rgba(245,197,24,0.7)}
+.big-dot.out{background:var(--red);border-color:var(--red);box-shadow:0 0 6px rgba(231,76,60,0.7)}
+.bso-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
+.bso-undo{display:flex;gap:5px;margin-top:5px}
+
+/* ── BASES EN EL FIXED ── */
+.bases-fixed{padding:8px 12px;border-bottom:1px solid var(--border)}
+.bases-layout{display:flex;align-items:center;gap:10px}
+.bases-diamond-big{position:relative;width:80px;height:80px;flex-shrink:0}
+.base-btn{
+  width:28px;height:28px;border-radius:4px;
+  position:absolute;transform:rotate(45deg);
+  border:2px solid #2a2a3a;background:#1a1a2a;
+  cursor:pointer;transition:all 0.12s;
+  -webkit-tap-highlight-color:transparent;
+}
+.base-btn:active{transform:rotate(45deg) scale(0.9)}
+.base-btn.occ{background:var(--accent);border-color:var(--accent);box-shadow:0 0 10px rgba(245,197,24,0.8)}
+.base-btn-2{top:4px;left:50%;transform:translateX(-50%) rotate(45deg)}
+.base-btn-2:active{transform:translateX(-50%) rotate(45deg) scale(0.9)}
+.base-btn-3{bottom:12px;left:4px}
+.base-btn-1{bottom:12px;right:4px}
+.bases-extra{display:flex;flex-direction:column;gap:5px;flex:1}
+
+/* ── SCROLL AREA ── */
+#scroll-area{flex:1;overflow-y:auto;padding-bottom:20px}
+
+/* ── SECCIONES SCROLL ── */
+.sec{margin:7px 12px;background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.sh{padding:6px 14px;background:rgba(245,197,24,0.06);border-bottom:1px solid var(--border);font-size:0.65rem;letter-spacing:3px;color:var(--accent);font-family:'Barlow Condensed',sans-serif}
+.sb{padding:9px 11px}
+
+/* ── BOTONES GENERALES ── */
+.bg{display:grid;grid-template-columns:repeat(auto-fit,minmax(68px,1fr));gap:5px;margin-bottom:6px}
+.btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;padding:9px 4px;border-radius:7px;border:1.5px solid;cursor:pointer;background:transparent;font-size:0.85rem;text-align:center;transition:all 0.1s;-webkit-tap-highlight-color:transparent;touch-action:manipulation;white-space:nowrap}
 .btn:active{transform:scale(0.93);opacity:0.75}
 .a{color:var(--accent);border-color:var(--accent)}.a:active{background:var(--accent);color:#000}
 .b{color:var(--blue);border-color:var(--blue)}.b:active{background:var(--blue);color:#fff}
 .g{color:var(--green);border-color:var(--green)}.g:active{background:var(--green);color:#000}
 .r{color:var(--red);border-color:var(--red)}.r:active{background:var(--red);color:#fff}
 .gr{color:var(--muted);border-color:var(--muted)}.gr:active{background:var(--muted);color:#000}
-.btn.big{padding:13px 5px;font-size:1rem}
-.btn.full{width:100%;margin-bottom:6px}
+.btn.big{padding:12px 4px;font-size:0.9rem}
+.btn.full{width:100%;margin-bottom:5px}
+.btn.sm{padding:6px 4px;font-size:0.75rem}
 
-/* INPUTS */
-.inp{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Oswald',sans-serif;font-size:0.95rem;letter-spacing:2px;padding:8px 10px;margin-bottom:7px}
-.inp:focus{outline:none;border-color:var(--accent)}
-.inp-row{display:flex;gap:8px;align-items:center;margin-bottom:7px}
-.inp-row .inp{margin-bottom:0;flex:1}
-.color-swatch{width:36px;height:36px;border-radius:6px;border:2px solid var(--border);cursor:pointer;flex-shrink:0}
+/* ── PITCHER PANEL ── */
+.pitcher-panel{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px;margin-bottom:7px}
+.pitcher-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.pitcher-title{font-size:0.65rem;letter-spacing:2px;font-family:'Barlow Condensed',sans-serif}
+.pitcher-count{font-size:1.4rem;font-weight:700;color:var(--accent);text-align:center;margin:3px 0 1px}
+.pitcher-lbl{font-size:0.45rem;letter-spacing:3px;color:var(--muted);text-align:center;font-family:'Barlow Condensed',sans-serif}
+.act-ind{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 5px rgba(245,197,24,0.8)}
+.inact-ind{width:8px;height:8px;border-radius:50%;background:var(--muted)}
 
-/* PITCHER PANEL */
-.pitcher-panel{
-  background:var(--bg);border:1px solid var(--border);border-radius:8px;
-  padding:10px;margin-bottom:8px;
-}
-.pitcher-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.pitcher-title{font-size:0.7rem;letter-spacing:2px;color:var(--muted);font-family:'Barlow Condensed',sans-serif}
-.pitcher-count{font-size:1.5rem;font-weight:700;color:var(--accent);text-align:center;margin:4px 0 2px}
-.pitcher-lbl{font-size:0.5rem;letter-spacing:3px;color:var(--muted);text-align:center;font-family:'Barlow Condensed',sans-serif}
-.active-indicator{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px rgba(245,197,24,0.8)}
-.inactive-indicator{width:8px;height:8px;border-radius:50%;background:var(--muted)}
-
-/* OUTS DISPLAY */
-.outs-display{
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  padding:8px 0;
-}
-.out-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--muted);background:transparent;transition:all 0.15s}
-.out-dot.on{background:var(--red);border-color:var(--red);box-shadow:0 0 8px rgba(231,76,60,0.6)}
-
-/* TOAST */
-#toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:2px;padding:8px 20px;border-radius:8px;opacity:0;transition:all 0.2s;pointer-events:none;z-index:999;white-space:nowrap}
+/* ── TOAST / ALERT ── */
+#toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:2px;padding:7px 18px;border-radius:8px;opacity:0;transition:all 0.2s;pointer-events:none;z-index:999;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* AUTO ALERT */
-#auto-alert{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#e74c3c;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:2px;padding:10px 24px;border-radius:8px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:1000}
+#auto-alert{position:fixed;top:56px;left:50%;transform:translateX(-50%);background:#e74c3c;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:2px;padding:9px 22px;border-radius:8px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:1000;white-space:nowrap}
 #auto-alert.show{opacity:1}
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header>
   <h1>⚾ CONTROL SIMPLE</h1>
   <div class="conn"><div class="cdot" id="cdot"></div><span id="ctext">Conectando...</span></div>
 </header>
 
-<!-- PREVIEW -->
-<div id="preview">
-  <div class="pv-team">
-    <div class="pv-name" id="pv-away-name">VISITANTE</div>
-    <div class="pv-score" id="pv-away-r">0</div>
-  </div>
-  <div class="pv-mid">
-    <div class="pv-inn" id="pv-inn">1</div>
-    <div class="pv-half" id="pv-half">▲ ALTA</div>
-    <div class="pv-bso">
-      <div class="pv-bso-g">B<div class="pd" id="pd-b0"></div><div class="pd" id="pd-b1"></div><div class="pd" id="pd-b2"></div><div class="pd" id="pd-b3"></div></div>
-      <div class="pv-bso-g">S<div class="pd" id="pd-s0"></div><div class="pd" id="pd-s1"></div></div>
-      <div class="pv-bso-g">O<div class="pd" id="pd-o0"></div><div class="pd" id="pd-o1"></div></div>
+<!-- PANEL SUPERIOR FIJO -->
+<div id="top-fixed">
+
+  <!-- PREVIEW MINI -->
+  <div id="preview">
+    <div class="pv-team">
+      <div class="pv-name" id="pv-away-name">VISITANTE</div>
+      <div class="pv-score" id="pv-away-r">0</div>
+    </div>
+    <div class="pv-mid">
+      <div class="pv-inn" id="pv-inn">1</div>
+      <div class="pv-half" id="pv-half">▲ ALTA</div>
+      <div class="pv-bso">
+        <div class="pv-bso-g">B<div class="pd" id="pd-b0"></div><div class="pd" id="pd-b1"></div><div class="pd" id="pd-b2"></div><div class="pd" id="pd-b3"></div></div>
+        <div class="pv-bso-g">S<div class="pd" id="pd-s0"></div><div class="pd" id="pd-s1"></div></div>
+        <div class="pv-bso-g">O<div class="pd" id="pd-o0"></div><div class="pd" id="pd-o1"></div></div>
+      </div>
+    </div>
+    <div class="pv-team">
+      <div class="pv-name" id="pv-home-name">LOCAL</div>
+      <div class="pv-score" id="pv-home-r">0</div>
     </div>
   </div>
-  <div class="pv-team">
-    <div class="pv-name" id="pv-home-name">LOCAL</div>
-    <div class="pv-score" id="pv-home-r">0</div>
-  </div>
-</div>
 
-<!-- EQUIPOS -->
-<div class="sec">
-  <div class="sh">EQUIPOS</div>
-  <div class="sb">
+  <!-- EQUIPOS -->
+  <div class="fix-sec">
+    <div class="fix-sh">EQUIPOS</div>
     <div class="inp-row">
       <input type="color" class="color-swatch" id="away-color" value="#c0392b" oninput="updateColor()">
       <input class="inp" id="inp-away" placeholder="VISITANTE" maxlength="8" oninput="setName('away',this.value)">
@@ -131,129 +169,149 @@ header h1{font-size:1rem;letter-spacing:3px;color:var(--accent)}
       <input class="inp" id="inp-home" placeholder="LOCAL" maxlength="8" oninput="setName('home',this.value)">
     </div>
   </div>
-</div>
 
-<!-- ENTRADA -->
-<div class="sec">
-  <div class="sh">ENTRADA</div>
-  <div class="sb">
-    <div class="bg">
-      <button class="btn b big" onclick="chInn(-1)">◀ ANT</button>
-      <button class="btn b big" onclick="toggleHalf()">▲▼ MITAD</button>
-      <button class="btn b big" onclick="chInn(1)">SIG ▶</button>
-    </div>
-    <div class="bg">
-      <button class="btn a" onclick="setInn(1)">1</button><button class="btn a" onclick="setInn(2)">2</button>
-      <button class="btn a" onclick="setInn(3)">3</button><button class="btn a" onclick="setInn(4)">4</button>
-      <button class="btn a" onclick="setInn(5)">5</button><button class="btn a" onclick="setInn(6)">6</button>
-      <button class="btn a" onclick="setInn(7)">7</button><button class="btn a" onclick="setInn(8)">8</button>
-      <button class="btn a" onclick="setInn(9)">9</button>
-    </div>
-  </div>
-</div>
-
-<!-- CARRERAS -->
-<div class="sec">
-  <div class="sh">CARRERAS</div>
-  <div class="sb">
-    <div class="bg">
-      <button class="btn g big" onclick="addRun('away',1)">+1 VISIT.</button>
-      <button class="btn r" onclick="addRun('away',-1)">−1 VISIT.</button>
-      <button class="btn g big" onclick="addRun('home',1)">+1 LOCAL</button>
-      <button class="btn r" onclick="addRun('home',-1)">−1 LOCAL</button>
-    </div>
-  </div>
-</div>
-
-<!-- CONTEO BSO -->
-<div class="sec">
-  <div class="sh">CONTEO B-S-O — AUTO LIMPIEZA</div>
-  <div class="sb">
-    <div class="outs-display">
-      <div class="out-dot" id="out-dot-0"></div>
-      <div class="out-dot" id="out-dot-1"></div>
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;letter-spacing:2px;color:var(--muted)">OUTS</div>
-    </div>
-    <div class="bg">
-      <button class="btn b big" onclick="addBall()">+ BOLA</button>
-      <button class="btn a big" onclick="addStrike()">+ STRIKE</button>
-      <button class="btn r big" onclick="addOut()">+ OUT</button>
-    </div>
-    <div class="bg">
-      <button class="btn gr" onclick="resetBSO()">⟳ LIMPIAR BSO</button>
-      <button class="btn gr" onclick="undoBall()">−B</button>
-      <button class="btn gr" onclick="undoStrike()">−S</button>
-      <button class="btn gr" onclick="undoOut()">−O</button>
-    </div>
-    <p style="font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;color:var(--muted);text-align:center;margin-top:4px">
-      4B→limpia · 3S→limpia · 3O→siguiente entrada
-    </p>
-  </div>
-</div>
-
-<!-- BASES -->
-<div class="sec">
-  <div class="sh">BASES</div>
-  <div class="sb">
-    <div class="bg">
-      <button class="btn a" onclick="toggleBase(1)">1RA</button>
-      <button class="btn a" onclick="toggleBase(2)">2DA</button>
-      <button class="btn a" onclick="toggleBase(3)">3RA</button>
-      <button class="btn gr" onclick="clearBases()">VACÍAS</button>
-      <button class="btn g" onclick="fullBases()">LLENAS</button>
-    </div>
-  </div>
-</div>
-
-<!-- PITCHERS -->
-<div class="sec">
-  <div class="sh">PITCHERS</div>
-  <div class="sb">
-    <!-- Pitcher 1 -->
-    <div class="pitcher-panel">
-      <div class="pitcher-header">
-        <div style="display:flex;align-items:center;gap:8px">
-          <div id="p1-indicator" class="active-indicator"></div>
-          <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:2px;color:var(--accent)">PITCHER 1</span>
+  <!-- CONTEO BSO -->
+  <div class="bso-fixed">
+    <div class="fix-sh">CONTEO B-S-O</div>
+    <div class="bso-main">
+      <div class="bso-indicators">
+        <div class="bso-ind-row">
+          <span class="bso-ind-lbl">B</span>
+          <div class="big-dots">
+            <div class="big-dot" id="bd-b0"></div><div class="big-dot" id="bd-b1"></div>
+            <div class="big-dot" id="bd-b2"></div><div class="big-dot" id="bd-b3"></div>
+          </div>
         </div>
-        <button class="btn a" onclick="setActivePitcher(1)" style="padding:4px 12px;font-size:0.7rem">ACTIVO</button>
+        <div class="bso-ind-row">
+          <span class="bso-ind-lbl">S</span>
+          <div class="big-dots">
+            <div class="big-dot" id="bd-s0"></div><div class="big-dot" id="bd-s1"></div>
+          </div>
+        </div>
+        <div class="bso-ind-row">
+          <span class="bso-ind-lbl">O</span>
+          <div class="big-dots">
+            <div class="big-dot" id="bd-o0"></div><div class="big-dot" id="bd-o1"></div>
+          </div>
+        </div>
       </div>
-      <input class="inp" id="p1-name" placeholder="Nombre pitcher 1" maxlength="20" oninput="updatePitcher()">
-      <div class="pitcher-count" id="p1-count-display">0</div>
-      <div class="pitcher-lbl">LANZAMIENTOS</div>
-      <div class="bg" style="margin-top:8px">
-        <button class="btn a" onclick="addPitch(1,1)">+1</button>
-        <button class="btn a" onclick="addPitch(1,5)">+5</button>
-        <button class="btn gr" onclick="addPitch(1,-1)">−1</button>
-        <button class="btn gr" onclick="resetPitcher(1)">RESET</button>
+      <div class="bso-btns">
+        <button class="btn b big" onclick="addBall()">+B</button>
+        <button class="btn a big" onclick="addStrike()">+S</button>
+        <button class="btn r big" onclick="addOut()">+O</button>
       </div>
     </div>
-    <!-- Pitcher 2 -->
-    <div class="pitcher-panel">
-      <div class="pitcher-header">
-        <div style="display:flex;align-items:center;gap:8px">
-          <div id="p2-indicator" class="inactive-indicator"></div>
-          <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:2px;color:var(--muted)">PITCHER 2</span>
-        </div>
-        <button class="btn gr" onclick="setActivePitcher(2)" style="padding:4px 12px;font-size:0.7rem">ACTIVO</button>
+    <div class="bso-undo">
+      <button class="btn gr sm" style="flex:1" onclick="resetBSO()">⟳ LIMPIAR</button>
+      <button class="btn gr sm" style="flex:1" onclick="undoBall()">−B</button>
+      <button class="btn gr sm" style="flex:1" onclick="undoStrike()">−S</button>
+      <button class="btn gr sm" style="flex:1" onclick="undoOut()">−O</button>
+    </div>
+    <p style="font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;color:var(--muted);text-align:center;margin-top:4px">4B→BB · 3S→K+OUT · 3O→siguiente entrada</p>
+  </div>
+
+  <!-- BASES -->
+  <div class="bases-fixed">
+    <div class="fix-sh">BASES</div>
+    <div class="bases-layout">
+      <div class="bases-diamond-big">
+        <button class="base-btn base-btn-2" id="base-btn-2" onclick="toggleBase(2)"></button>
+        <button class="base-btn base-btn-3" id="base-btn-3" onclick="toggleBase(3)"></button>
+        <button class="base-btn base-btn-1" id="base-btn-1" onclick="toggleBase(1)"></button>
       </div>
-      <input class="inp" id="p2-name" placeholder="Nombre pitcher 2" maxlength="20" oninput="updatePitcher()">
-      <div class="pitcher-count" id="p2-count-display" style="color:var(--muted)">0</div>
-      <div class="pitcher-lbl">LANZAMIENTOS</div>
-      <div class="bg" style="margin-top:8px">
-        <button class="btn a" onclick="addPitch(2,1)">+1</button>
-        <button class="btn a" onclick="addPitch(2,5)">+5</button>
-        <button class="btn gr" onclick="addPitch(2,-1)">−1</button>
-        <button class="btn gr" onclick="resetPitcher(2)">RESET</button>
+      <div class="bases-extra">
+        <button class="btn gr btn-full" onclick="clearBases()">BASES VACÍAS</button>
+        <button class="btn g btn-full" onclick="fullBases()">BASES LLENAS</button>
       </div>
     </div>
   </div>
-</div>
 
-<!-- RESET -->
-<div style="margin:8px 12px">
-  <button class="btn r full big" onclick="resetGame()">↺ REINICIAR JUEGO COMPLETO</button>
-</div>
+</div><!-- /top-fixed -->
+
+<!-- ÁREA DE SCROLL -->
+<div id="scroll-area">
+
+  <!-- CARRERAS -->
+  <div class="sec">
+    <div class="sh">CARRERAS</div>
+    <div class="sb">
+      <div class="bg">
+        <button class="btn g big" onclick="addRun('away',1)">+1 VISIT.</button>
+        <button class="btn r" onclick="addRun('away',-1)">−1 VISIT.</button>
+        <button class="btn g big" onclick="addRun('home',1)">+1 LOCAL</button>
+        <button class="btn r" onclick="addRun('home',-1)">−1 LOCAL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENTRADA -->
+  <div class="sec">
+    <div class="sh">ENTRADA</div>
+    <div class="sb">
+      <div class="bg">
+        <button class="btn b big" onclick="chInn(-1)">◀ ANT</button>
+        <button class="btn b big" onclick="toggleHalf()">▲▼ MITAD</button>
+        <button class="btn b big" onclick="chInn(1)">SIG ▶</button>
+      </div>
+      <div class="bg">
+        <button class="btn a" onclick="setInn(1)">1</button><button class="btn a" onclick="setInn(2)">2</button>
+        <button class="btn a" onclick="setInn(3)">3</button><button class="btn a" onclick="setInn(4)">4</button>
+        <button class="btn a" onclick="setInn(5)">5</button><button class="btn a" onclick="setInn(6)">6</button>
+        <button class="btn a" onclick="setInn(7)">7</button><button class="btn a" onclick="setInn(8)">8</button>
+        <button class="btn a" onclick="setInn(9)">9</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PITCHERS -->
+  <div class="sec">
+    <div class="sh">PITCHERS</div>
+    <div class="sb">
+      <div class="pitcher-panel">
+        <div class="pitcher-header">
+          <div style="display:flex;align-items:center;gap:7px">
+            <div id="p1-indicator" class="act-ind"></div>
+            <span class="pitcher-title" style="color:var(--accent)">PITCHER 1</span>
+          </div>
+          <button class="btn a sm" onclick="setActivePitcher(1)" style="padding:4px 10px">ACTIVO</button>
+        </div>
+        <input class="inp" id="p1-name" placeholder="Nombre pitcher 1" maxlength="20" oninput="updatePitcher()" style="margin-bottom:6px">
+        <div class="pitcher-count" id="p1-count-display">0</div>
+        <div class="pitcher-lbl">LANZAMIENTOS</div>
+        <div class="bg" style="margin-top:7px">
+          <button class="btn a" onclick="addPitch(1,1)">+1</button>
+          <button class="btn a" onclick="addPitch(1,5)">+5</button>
+          <button class="btn gr" onclick="addPitch(1,-1)">−1</button>
+          <button class="btn gr" onclick="resetPitcher(1)">RESET</button>
+        </div>
+      </div>
+      <div class="pitcher-panel">
+        <div class="pitcher-header">
+          <div style="display:flex;align-items:center;gap:7px">
+            <div id="p2-indicator" class="inact-ind"></div>
+            <span class="pitcher-title" style="color:var(--muted)">PITCHER 2</span>
+          </div>
+          <button class="btn gr sm" onclick="setActivePitcher(2)" style="padding:4px 10px">ACTIVO</button>
+        </div>
+        <input class="inp" id="p2-name" placeholder="Nombre pitcher 2" maxlength="20" oninput="updatePitcher()" style="margin-bottom:6px">
+        <div class="pitcher-count" id="p2-count-display" style="color:var(--muted)">0</div>
+        <div class="pitcher-lbl">LANZAMIENTOS</div>
+        <div class="bg" style="margin-top:7px">
+          <button class="btn a" onclick="addPitch(2,1)">+1</button>
+          <button class="btn a" onclick="addPitch(2,5)">+5</button>
+          <button class="btn gr" onclick="addPitch(2,-1)">−1</button>
+          <button class="btn gr" onclick="resetPitcher(2)">RESET</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESET -->
+  <div style="margin:7px 12px">
+    <button class="btn r full big" onclick="resetGame()">↺ REINICIAR JUEGO COMPLETO</button>
+  </div>
+
+</div><!-- /scroll-area -->
 
 <div id="toast"></div>
 <div id="auto-alert"></div>
@@ -261,7 +319,6 @@ header h1{font-size:1rem;letter-spacing:3px;color:var(--accent)}
 <script>
 const SERVER='https://baseball-scoreboard.onrender.com';
 let ws,reconnTimer;
-
 let state={
   away:{name:'VISITANTE',r:0,h:0,e:0,innings:['-','-','-','-','-','-','-','-','-']},
   home:{name:'LOCAL',r:0,h:0,e:0,innings:['-','-','-','-','-','-','-','-','-']},
@@ -283,14 +340,8 @@ function connect(){
 }
 connect();
 
-function setConn(ok){
-  document.getElementById('cdot').className='cdot'+(ok?' ok':'');
-  document.getElementById('ctext').textContent=ok?'Conectado':'Reconectando...';
-}
-function send(){
-  if(ws&&ws.readyState===1)ws.send(JSON.stringify({type:'update',data:state}));
-  renderAll();
-}
+function setConn(ok){document.getElementById('cdot').className='cdot'+(ok?' ok':'');document.getElementById('ctext').textContent=ok?'Conectado':'Reconectando...';}
+function send(){if(ws&&ws.readyState===1)ws.send(JSON.stringify({type:'update',data:state}));renderAll();}
 function syncInputs(){
   document.getElementById('inp-away').value=state.away.name||'';
   document.getElementById('inp-home').value=state.home.name||'';
@@ -302,35 +353,29 @@ function syncInputs(){
   document.getElementById('p2-count-display').textContent=state.pitcher2Pitches||0;
 }
 
-// ── ACCIONES ──
 function setName(t,v){state[t].name=v.toUpperCase();send()}
-function updateColor(){
-  state.awayColor=document.getElementById('away-color').value;
-  state.homeColor=document.getElementById('home-color').value;
-  send();
-}
+function updateColor(){state.awayColor=document.getElementById('away-color').value;state.homeColor=document.getElementById('home-color').value;send()}
 function addRun(t,n){
   state[t].r=Math.max(0,state[t].r+n);
-  const col=state.inning-1;
-  const cur=state[t].innings[col];
-  const prev=cur==='-'?0:parseInt(cur)||0;
-  state[t].innings[col]=Math.max(0,prev+n);
-  send();toast((n>0?'+':'')+n+' carrera '+t);
+  const col=state.inning-1;const cur=state[t].innings[col];const prev=cur==='-'?0:parseInt(cur)||0;
+  state[t].innings[col]=Math.max(0,prev+n);send();toast((n>0?'+':'')+n+' '+t);
 }
 function chInn(d){state.inning=Math.max(1,Math.min(12,state.inning+d));send();toast('ENTRADA '+state.inning)}
 function setInn(n){state.inning=n;send();toast('ENTRADA '+n)}
 function toggleHalf(){state.half=state.half==='top'?'bottom':'top';send();toast(state.half==='top'?'▲ ALTA':'▼ BAJA')}
 
-// Auto-limpieza BSO
+function nextInning(){
+  state.outs=0;state.bases=[false,false,false];
+  state.activePitcher=state.activePitcher===1?2:1;
+  if(state.half==='top'){state.half='bottom';}
+  else{state.half='top';state.inning=Math.min(12,state.inning+1);}
+  send();
+}
+
 function addBall(){
-  // Cuenta lanzamiento al pitcher activo
   addActivePitch();
   state.balls=Math.min(4,state.balls+1);
-  if(state.balls>=4){
-    autoAlert('BASE POR BOLAS');
-    setTimeout(()=>{state.balls=0;state.strikes=0;send()},800);
-    return;
-  }
+  if(state.balls>=4){autoAlert('BASE POR BOLAS');setTimeout(()=>{state.balls=0;state.strikes=0;send()},800);return;}
   send();
 }
 function addStrike(){
@@ -339,38 +384,15 @@ function addStrike(){
   if(state.strikes>=3){
     state.balls=0;state.strikes=0;
     state.outs=Math.min(3,state.outs+1);
-    if(state.outs>=3){
-      autoAlert('STRIKE OUT — 3 OUTS → CAMBIO DE ENTRADA');
-      setTimeout(()=>{
-        state.outs=0;state.bases=[false,false,false];
-        state.activePitcher=state.activePitcher===1?2:1;
-        if(state.half==='top'){state.half='bottom';}
-        else{state.half='top';state.inning=Math.min(12,state.inning+1);}
-        send();
-      },1200);
-      return;
-    }
-    autoAlert('STRIKE OUT — OUT '+state.outs);
-    send();
-    return;
+    if(state.outs>=3){autoAlert('STRIKE OUT — 3 OUTS');setTimeout(()=>nextInning(),1200);return;}
+    autoAlert('STRIKE OUT — OUT '+state.outs);send();return;
   }
   send();
 }
 function addOut(){
-  state.outs=Math.min(3,state.outs+1);
   state.balls=0;state.strikes=0;
-  if(state.outs>=3){
-    autoAlert('3 OUTS — CAMBIO DE ENTRADA');
-    setTimeout(()=>{
-      state.outs=0;
-      state.bases=[false,false,false];
-      state.activePitcher=state.activePitcher===1?2:1;
-      if(state.half==='top'){state.half='bottom';}
-      else{state.half='top';state.inning=Math.min(12,state.inning+1);}
-      send();
-    },1200);
-    return;
-  }
+  state.outs=Math.min(3,state.outs+1);
+  if(state.outs>=3){autoAlert('3 OUTS — CAMBIO DE ENTRADA');setTimeout(()=>nextInning(),1200);return;}
   send();
 }
 function undoBall(){state.balls=Math.max(0,state.balls-1);send()}
@@ -378,40 +400,20 @@ function undoStrike(){state.strikes=Math.max(0,state.strikes-1);send()}
 function undoOut(){state.outs=Math.max(0,state.outs-1);send()}
 function resetBSO(){state.balls=0;state.strikes=0;state.outs=0;send();toast('CONTEO LIMPIADO')}
 
-function toggleBase(n){state.bases[n-1]=!state.bases[n-1];send();toast('BASE '+n+(state.bases[n-1]?' OCUPADA':' LIBRE'))}
+function toggleBase(n){state.bases[n-1]=!state.bases[n-1];send()}
 function clearBases(){state.bases=[false,false,false];send();toast('BASES VACÍAS')}
 function fullBases(){state.bases=[true,true,true];send();toast('BASES LLENAS')}
 
-// Pitchers
-function updatePitcher(){
-  state.pitcher1Name=document.getElementById('p1-name').value;
-  state.pitcher2Name=document.getElementById('p2-name').value;
-  send();
-}
-function setActivePitcher(n){
-  state.activePitcher=n;
-  send();toast('PITCHER '+n+' ACTIVO');
-  updatePitcherUI();
-}
-function addActivePitch(){
-  if(state.activePitcher===1)state.pitcher1Pitches=(state.pitcher1Pitches||0)+1;
-  else state.pitcher2Pitches=(state.pitcher2Pitches||0)+1;
-  syncInputs();
-}
-function addPitch(p,n){
-  if(p===1)state.pitcher1Pitches=Math.max(0,(state.pitcher1Pitches||0)+n);
-  else state.pitcher2Pitches=Math.max(0,(state.pitcher2Pitches||0)+n);
-  syncInputs();send();
-}
-function resetPitcher(p){
-  if(p===1)state.pitcher1Pitches=0;
-  else state.pitcher2Pitches=0;
-  syncInputs();send();toast('PITCHER '+p+' RESET');
-}
+function updatePitcher(){state.pitcher1Name=document.getElementById('p1-name').value;state.pitcher2Name=document.getElementById('p2-name').value;send()}
+function setActivePitcher(n){state.activePitcher=n;send();toast('PITCHER '+n+' ACTIVO');updatePitcherUI()}
+function addActivePitch(){if(state.activePitcher===1)state.pitcher1Pitches=(state.pitcher1Pitches||0)+1;else state.pitcher2Pitches=(state.pitcher2Pitches||0)+1;syncInputs()}
+function addPitch(p,n){if(p===1)state.pitcher1Pitches=Math.max(0,(state.pitcher1Pitches||0)+n);else state.pitcher2Pitches=Math.max(0,(state.pitcher2Pitches||0)+n);syncInputs();send()}
+function resetPitcher(p){if(p===1)state.pitcher1Pitches=0;else state.pitcher2Pitches=0;syncInputs();send();toast('PITCHER '+p+' RESET')}
 function updatePitcherUI(){
   const p1a=state.activePitcher===1;
-  document.getElementById('p1-indicator').className=p1a?'active-indicator':'inactive-indicator';
-  document.getElementById('p2-indicator').className=p1a?'inactive-indicator':'active-indicator';
+  document.getElementById('p1-indicator').className=p1a?'act-ind':'inact-ind';
+  document.getElementById('p2-indicator').className=p1a?'inact-ind':'act-ind';
+  document.getElementById('p1-indicator').parentElement.nextElementSibling.previousElementSibling.children[1].style.color=p1a?'var(--accent)':'var(--muted)';
 }
 
 function resetGame(){
@@ -433,13 +435,19 @@ function renderAll(){
   ['pd-b0','pd-b1','pd-b2','pd-b3'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='pd'+(i<state.balls?' b':'')});
   ['pd-s0','pd-s1'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='pd'+(i<state.strikes?' s':'')});
   ['pd-o0','pd-o1'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='pd'+(i<state.outs?' o':'')});
-  ['out-dot-0','out-dot-1'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='out-dot'+(i<state.outs?' on':'')});
+  // Big BSO dots
+  ['bd-b0','bd-b1','bd-b2','bd-b3'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='big-dot'+(i<state.balls?' ball':'')});
+  ['bd-s0','bd-s1'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='big-dot'+(i<state.strikes?' strike':'')});
+  ['bd-o0','bd-o1'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='big-dot'+(i<state.outs?' out':'')});
+  // Bases
+  [1,2,3].forEach(n=>{const el=document.getElementById('base-btn-'+n);if(el)el.className='base-btn base-btn-'+n+(state.bases[n-1]?' occ':'')});
+  // Pitchers
   document.getElementById('p1-count-display').textContent=state.pitcher1Pitches||0;
   document.getElementById('p2-count-display').textContent=state.pitcher2Pitches||0;
   updatePitcherUI();
 }
 
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1500)}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1400)}
 function autoAlert(msg){const a=document.getElementById('auto-alert');a.textContent=msg;a.classList.add('show');clearTimeout(a._t);a._t=setTimeout(()=>a.classList.remove('show'),2000)}
 
 renderAll();

@@ -72,20 +72,18 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
 /* ── BASES EN EL FIXED ── */
 .bases-fixed{padding:8px 12px;border-bottom:1px solid var(--border)}
 .bases-layout{display:flex;align-items:center;gap:10px}
-.bases-diamond-big{position:relative;width:80px;height:80px;flex-shrink:0}
 .base-btn{
-  width:28px;height:28px;border-radius:4px;
+  width:22px;height:22px;border-radius:3px;
   position:absolute;transform:rotate(45deg);
   border:2px solid #2a2a3a;background:#1a1a2a;
   cursor:pointer;transition:all 0.12s;
   -webkit-tap-highlight-color:transparent;
 }
-.base-btn:active{transform:rotate(45deg) scale(0.9)}
-.base-btn.occ{background:var(--accent);border-color:var(--accent);box-shadow:0 0 10px rgba(245,197,24,0.8)}
-.base-btn-2{top:4px;left:50%;transform:translateX(-50%) rotate(45deg)}
-.base-btn-2:active{transform:translateX(-50%) rotate(45deg) scale(0.9)}
-.base-btn-3{bottom:12px;left:4px}
-.base-btn-1{bottom:12px;right:4px}
+.base-btn:active{opacity:0.7}
+.base-btn.occ{background:var(--accent);border-color:var(--accent);box-shadow:0 0 8px rgba(245,197,24,0.8)}
+.base-btn-2{top:2px;left:50%;transform:translateX(-50%) rotate(45deg)}
+.base-btn-3{bottom:8px;left:2px;transform:rotate(45deg)}
+.base-btn-1{bottom:8px;right:2px;transform:rotate(45deg)}
 .bases-extra{display:flex;flex-direction:column;gap:5px;flex:1}
 
 /* ── SCROLL AREA ── */
@@ -119,6 +117,10 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
 .inact-ind{width:8px;height:8px;border-radius:50%;background:var(--muted)}
 
 /* ── TOAST / ALERT ── */
+.bso-big-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:2px;padding:16px 8px;border-radius:10px;border:2px solid;cursor:pointer;background:transparent;touch-action:manipulation;-webkit-tap-highlight-color:transparent;width:100%;transition:all 0.15s;user-select:none;-webkit-user-select:none;}
+.bso-ball{color:#4b8fe8;border-color:#4b8fe8}.bso-ball:active{background:#4b8fe8;color:#fff}
+.bso-strike{color:#f5c518;border-color:#f5c518}.bso-strike:active{background:#f5c518;color:#000}
+.bso-out{color:#e74c3c;border-color:#e74c3c}.bso-out:active{background:#e74c3c;color:#fff}
 #toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:2px;padding:7px 18px;border-radius:8px;opacity:0;transition:all 0.2s;pointer-events:none;z-index:999;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 #auto-alert{position:fixed;top:56px;left:50%;transform:translateX(-50%);background:#e74c3c;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:2px;padding:9px 22px;border-radius:8px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:1000;white-space:nowrap}
@@ -136,7 +138,7 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
 <!-- PANEL SUPERIOR FIJO -->
 <div id="top-fixed">
 
-  <!-- PREVIEW MINI -->
+  <!-- PREVIEW MINI + BASES -->
   <div id="preview">
     <div class="pv-team">
       <div class="pv-name" id="pv-away-name">VISITANTE</div>
@@ -149,6 +151,15 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
         <div class="pv-bso-g">B<div class="pd" id="pd-b0"></div><div class="pd" id="pd-b1"></div><div class="pd" id="pd-b2"></div><div class="pd" id="pd-b3"></div></div>
         <div class="pv-bso-g">S<div class="pd" id="pd-s0"></div><div class="pd" id="pd-s1"></div></div>
         <div class="pv-bso-g">O<div class="pd" id="pd-o0"></div><div class="pd" id="pd-o1"></div></div>
+      </div>
+    </div>
+    <!-- BASES en el preview -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.5rem;letter-spacing:2px;color:var(--muted)">BASES</div>
+      <div style="position:relative;width:70px;height:70px">
+        <button class="base-btn base-btn-2" id="base-btn-2" onclick="toggleBase(2)"></button>
+        <button class="base-btn base-btn-3" id="base-btn-3" onclick="toggleBase(3)"></button>
+        <button class="base-btn base-btn-1" id="base-btn-1" onclick="toggleBase(1)"></button>
       </div>
     </div>
     <div class="pv-team">
@@ -198,9 +209,9 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
       <div class="bso-btns"></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:6px">
-      <button onclick="addBall()" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:2px;padding:16px 8px;border-radius:10px;border:2px solid #4b8fe8;color:#4b8fe8;background:rgba(75,143,232,0.08);cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;width:100%" ontouchstart="this.style.background='#4b8fe8';this.style.color='#fff'" ontouchend="this.style.background='rgba(75,143,232,0.08)';this.style.color='#4b8fe8';addBall()">+ BOLA</button>
-      <button onclick="addStrike()" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:2px;padding:16px 8px;border-radius:10px;border:2px solid #f5c518;color:#f5c518;background:rgba(245,197,24,0.08);cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;width:100%" ontouchstart="this.style.background='#f5c518';this.style.color='#000'" ontouchend="this.style.background='rgba(245,197,24,0.08)';this.style.color='#f5c518';addStrike()">+ STRIKE</button>
-      <button onclick="addOut()" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:2px;padding:16px 8px;border-radius:10px;border:2px solid #e74c3c;color:#e74c3c;background:rgba(231,76,60,0.08);cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;width:100%" ontouchstart="this.style.background='#e74c3c';this.style.color='#fff'" ontouchend="this.style.background='rgba(231,76,60,0.08)';this.style.color='#e74c3c';addOut()">+ OUT</button>
+      <button class="bso-big-btn bso-ball" onclick="dbc(addBall)">+ BOLA</button>
+      <button class="bso-big-btn bso-strike" onclick="dbc(addStrike)">+ STRIKE</button>
+      <button class="bso-big-btn bso-out" onclick="dbc(addOut)">+ OUT</button>
     </div>
     <div class="bso-undo">
       <button class="btn gr sm" style="flex:1" onclick="resetBSO()">⟳ LIMPIAR</button>
@@ -211,26 +222,23 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
     <p style="font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;color:var(--muted);text-align:center;margin-top:4px">4B→BB · 3S→K+OUT · 3O→siguiente entrada</p>
   </div>
 
-  <!-- BASES -->
-  <div class="bases-fixed">
-    <div class="fix-sh">BASES</div>
-    <div class="bases-layout">
-      <div class="bases-diamond-big">
-        <button class="base-btn base-btn-2" id="base-btn-2" onclick="toggleBase(2)"></button>
-        <button class="base-btn base-btn-3" id="base-btn-3" onclick="toggleBase(3)"></button>
-        <button class="base-btn base-btn-1" id="base-btn-1" onclick="toggleBase(1)"></button>
-      </div>
-      <div class="bases-extra">
-        <button class="btn gr btn-full" onclick="clearBases()">BASES VACÍAS</button>
-        <button class="btn g btn-full" onclick="fullBases()">BASES LLENAS</button>
-      </div>
-    </div>
-  </div>
+
 
 </div><!-- /top-fixed -->
 
 <!-- ÁREA DE SCROLL -->
 <div id="scroll-area">
+
+  <!-- BASES RÁPIDAS -->
+  <div class="sec">
+    <div class="sh">BASES</div>
+    <div class="sb">
+      <div class="bg">
+        <button class="btn gr" onclick="clearBases()">VACÍAS</button>
+        <button class="btn g" onclick="fullBases()">LLENAS</button>
+      </div>
+    </div>
+  </div>
 
   <!-- CARRERAS -->
   <div class="sec">
@@ -332,6 +340,12 @@ let state={
   activePitcher:1
 };
 
+function ev(e,fn){e.preventDefault();fn();}
+// Debounce para evitar doble disparo en móvil
+let _lastClick=0;
+function _db(fn){const now=Date.now();if(now-_lastClick<400)return;_lastClick=now;fn();}
+const _addBall=addBall,_addStrike=addStrike,_addOut=addOut;
+let _dbt=0;function dbc(fn){const t=Date.now();if(t-_dbt<350)return;_dbt=t;fn();}
 const WS=SERVER.replace('https://','wss://').replace('http://','ws://');
 function connect(){
   ws=new WebSocket(WS);

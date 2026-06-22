@@ -19,51 +19,51 @@ html,body{background:transparent;overflow:hidden;width:100vw;height:100vh}
 /* ── VISITANTE — izquierda ── */
 .away-blk{
   display:flex;align-items:center;
-  background:linear-gradient(90deg,#111118,#0d0d18);
-  flex:1;padding:0 14px;gap:10px;
+  flex:1;padding:0 14px;gap:10px;min-width:190px;
   border-right:3px solid #f5c518;
+  transition:background 0.3s;
 }
 .away-color-bar{width:5px;height:100%;flex-shrink:0;transition:background 0.3s}
 .away-info{display:flex;align-items:center;gap:10px;flex:1}
 .away-name{
-  font-size:clamp(0.8rem,2vw,1.3rem);font-weight:800;
-  letter-spacing:2px;color:#fff;line-height:1;
-  max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:clamp(0.75rem,1.6vw,1.15rem);font-weight:800;
+  letter-spacing:1px;color:#fff;line-height:1;
+  max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .away-score{font-size:2.2rem;font-weight:800;color:#fff;line-height:1;min-width:28px}
 .away-score.lead{color:#f5c518}
-.away-label{font-family:'Barlow Condensed',sans-serif;font-size:0.45rem;letter-spacing:4px;color:rgba(255,255,255,0.35)}
+.away-label{font-family:'Barlow Condensed',sans-serif;font-size:0.45rem;letter-spacing:4px;color:rgba(255,255,255,0.55)}
 
 /* ── CENTRO ── */
 .center-blk{
-  background:#0a0a16;
+  background:#1c2333;
   display:flex;align-items:center;
   flex-shrink:0;
 }
 .inn-blk{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:0 10px;border-right:1px solid rgba(255,255,255,0.07);height:100%;min-width:42px;
+  padding:0 10px;border-right:1px solid rgba(255,255,255,0.12);height:100%;min-width:42px;
 }
 .inn-arrow{font-size:0.6rem;color:#f5c518;line-height:1}
 .inn-num{font-size:1.6rem;font-weight:800;color:#f5c518;line-height:1}
 .bases-blk{
   display:flex;align-items:center;justify-content:center;
-  padding:0 9px;border-right:1px solid rgba(255,255,255,0.07);height:100%;
+  padding:0 9px;border-right:1px solid rgba(255,255,255,0.12);height:100%;
 }
 .diamond{width:38px;height:38px;position:relative}
-.base{width:12px;height:12px;border:2px solid #2a2a3a;background:#1a1a2a;position:absolute;transform:rotate(45deg);transition:all 0.12s}
+.base{width:12px;height:12px;border:2px solid #5a6478;background:#39425a;position:absolute;transform:rotate(45deg);transition:all 0.12s}
 .base.occ{background:#f5c518;border-color:#f5c518;box-shadow:0 0 8px rgba(245,197,24,0.8)}
 .base-2{top:0;left:50%;transform:translateX(-50%) rotate(45deg)}
 .base-3{bottom:6px;left:1px;transform:rotate(45deg)}
 .base-1{bottom:6px;right:1px;transform:rotate(45deg)}
 .bso-blk{
   display:flex;flex-direction:column;justify-content:center;gap:4px;
-  padding:0 9px;border-right:1px solid rgba(255,255,255,0.07);height:100%;
+  padding:0 9px;border-right:1px solid rgba(255,255,255,0.12);height:100%;
 }
 .bso-row{display:flex;align-items:center;gap:3px}
-.bso-lbl{font-family:'Barlow Condensed',sans-serif;font-size:0.48rem;letter-spacing:1px;color:#444;width:8px}
+.bso-lbl{font-family:'Barlow Condensed',sans-serif;font-size:0.48rem;letter-spacing:1px;color:#8a93a8;width:8px}
 .dots{display:flex;gap:3px}
-.dot{width:7px;height:7px;border-radius:50%;border:1.5px solid #2a2a3a;background:transparent;transition:all 0.1s}
+.dot{width:7px;height:7px;border-radius:50%;border:1.5px solid #5a6478;background:transparent;transition:all 0.1s}
 .dot.ball{background:#4b8fe8;border-color:#4b8fe8;box-shadow:0 0 4px rgba(75,143,232,0.7)}
 .dot.strike{background:#f5c518;border-color:#f5c518;box-shadow:0 0 4px rgba(245,197,24,0.7)}
 .dot.out{background:#e74c3c;border-color:#e74c3c;box-shadow:0 0 4px rgba(231,76,60,0.7)}
@@ -74,7 +74,7 @@ html,body{background:transparent;overflow:hidden;width:100vw;height:100vh}
 .pitcher-row{display:flex;align-items:center;gap:5px;font-family:'Barlow Condensed',sans-serif}
 .p-ind{width:5px;height:5px;border-radius:50%;background:#333;flex-shrink:0}
 .p-ind.active{background:#f5c518}
-.p-name{font-size:0.65rem;letter-spacing:1px;color:#666;min-width:55px}
+.p-name{font-size:0.65rem;letter-spacing:1px;color:#9aa3b8;min-width:55px}
 .p-name.active{color:#fff}
 .p-cnt{font-size:0.65rem;font-weight:700;color:#555}
 .p-cnt.active{color:#f5c518}
@@ -82,21 +82,21 @@ html,body{background:transparent;overflow:hidden;width:100vw;height:100vh}
 /* ── LOCAL — derecha ── */
 .home-blk{
   display:flex;align-items:center;
-  background:linear-gradient(90deg,#0d0d18,#111118);
-  flex:1;padding:0 14px;gap:10px;
+  flex:1;padding:0 14px;gap:10px;min-width:190px;
   border-left:3px solid #f5c518;
   justify-content:flex-end;
+  transition:background 0.3s;
 }
 .home-color-bar{width:5px;height:100%;flex-shrink:0;transition:background 0.3s}
 .home-info{display:flex;align-items:center;gap:10px;flex:1;justify-content:flex-end}
 .home-name{
-  font-size:clamp(0.8rem,2vw,1.3rem);font-weight:800;
-  letter-spacing:2px;color:#fff;line-height:1;text-align:right;
-  max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:clamp(0.75rem,1.6vw,1.15rem);font-weight:800;
+  letter-spacing:1px;color:#fff;line-height:1;text-align:right;
+  max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .home-score{font-size:2.2rem;font-weight:800;color:#fff;line-height:1;min-width:28px;text-align:left}
 .home-score.lead{color:#f5c518}
-.home-label{font-family:'Barlow Condensed',sans-serif;font-size:0.45rem;letter-spacing:4px;color:rgba(255,255,255,0.35);text-align:right}
+.home-label{font-family:'Barlow Condensed',sans-serif;font-size:0.45rem;letter-spacing:4px;color:rgba(255,255,255,0.55);text-align:right}
 
 #conn{position:fixed;top:4px;right:4px;width:5px;height:5px;border-radius:50%;background:#2ecc71;opacity:0.6}
 #conn.off{background:#e74c3c}
@@ -157,11 +157,28 @@ html,body{background:transparent;overflow:hidden;width:100vw;height:100vh}
 <div id="conn" class="off"></div>
 <script>
 const SERVER='https://baseball-scoreboard.onrender.com';
+function mixColor(hex,baseHex,ratio){
+  // Mezcla el color del equipo con un color base oscuro, manteniendo el tono identificable
+  hex=hex.replace('#','');baseHex=baseHex.replace('#','');
+  const c1=parseInt(hex,16),c2=parseInt(baseHex,16);
+  const r1=(c1>>16)&255,g1=(c1>>8)&255,b1=c1&255;
+  const r2=(c2>>16)&255,g2=(c2>>8)&255,b2=c2&255;
+  const r=Math.round(r1*ratio+r2*(1-ratio));
+  const g=Math.round(g1*ratio+g2*(1-ratio));
+  const b=Math.round(b1*ratio+b2*(1-ratio));
+  return '#'+(0x1000000+r*0x10000+g*0x100+b).toString(16).slice(1);
+}
 function render(s){
   document.getElementById('away-name').textContent=(s.away.name||'VIS').substring(0,8).toUpperCase();
   document.getElementById('home-name').textContent=(s.home.name||'LOC').substring(0,8).toUpperCase();
-  document.getElementById('away-color-bar').style.background=s.awayColor||'#c0392b';
-  document.getElementById('home-color-bar').style.background=s.homeColor||'#1a3a6b';
+  const ac=s.awayColor||'#c0392b';const hc=s.homeColor||'#1a3a6b';
+  document.getElementById('away-color-bar').style.background=ac;
+  document.getElementById('home-color-bar').style.background=hc;
+  // Mezcla 55% color del equipo + 45% gris-azul oscuro base, para que el color sea visible pero no muy brillante
+  const ac1=mixColor(ac,'#2a3142',0.6),ac2=mixColor(ac,'#1c2333',0.45);
+  const hc1=mixColor(hc,'#1c2333',0.45),hc2=mixColor(hc,'#2a3142',0.6);
+  document.querySelector('.away-blk').style.background='linear-gradient(90deg,'+ac1+','+ac2+')';
+  document.querySelector('.home-blk').style.background='linear-gradient(90deg,'+hc1+','+hc2+')';
   const ar=s.away.r,hr=s.home.r;
   const as=document.getElementById('away-score'),hs=document.getElementById('home-score');
   as.textContent=ar;hs.textContent=hr;

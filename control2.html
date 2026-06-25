@@ -55,6 +55,9 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
 .inp{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Oswald',sans-serif;font-size:0.9rem;letter-spacing:2px;padding:6px 8px}
 .inp:focus{outline:none;border-color:var(--accent)}
 .color-swatch{width:32px;height:32px;border-radius:6px;border:2px solid var(--border);cursor:pointer;flex-shrink:0;padding:0}
+.btn-foto{width:34px;height:34px;border-radius:6px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-size:1rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;}
+.btn-foto:active{background:var(--accent);}
+.btn-foto:disabled{opacity:0.4;cursor:wait;}
 
 /* ── BSO EN EL FIXED ── */
 .bso-fixed{padding:8px 12px;border-bottom:1px solid var(--border)}
@@ -483,6 +486,50 @@ function renderAll(){
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1400)}
 function autoAlert(msg){const a=document.getElementById('auto-alert');a.textContent=msg;a.classList.add('show');clearTimeout(a._t);a._t=setTimeout(()=>a.classList.remove('show'),2000)}
 
+
+// ── FOTO LINEUP ──
+const POS_MAP_C2={'1':'P','2':'C','3':'1B','4':'2B','5':'3B','6':'SS','7':'LF','8':'CF','9':'RF',
+  'p':'P','c':'C','1b':'1B','2b':'2B','3b':'3B','ss':'SS','lf':'LF','cf':'CF','rf':'RF',
+  'pitcher':'P','catcher':'C','primera base':'1B','segunda base':'2B','tercera base':'3B',
+  'campocorto':'SS','shortstop':'SS','jardinero izquierdo':'LF','jardinero central':'CF',
+  'jardinero derecho':'RF','left fielder':'LF','center fielder':'CF','right fielder':'RF',
+  'first baseman':'1B','second baseman':'2B','third baseman':'3B','bd':'DH','dh':'DH'
+};
+function fotoLineup(team){
+  const input=document.createElement('input');
+  input.type='file';input.accept='image/*';input.capture='environment';
+  input.onchange=async(e)=>{
+    const file=e.target.files[0];if(!file)return;
+    const btn=document.querySelector(`.btn-foto[onclick="fotoLineup('${team}')"]`);
+    const statusEl=document.getElementById('foto-status');
+    btn.disabled=true;btn.textContent='⏳';
+    statusEl.style.display='block';statusEl.textContent='Analizando foto...';
+    try{
+      const base64=await new Promise((res,rej)=>{
+        const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);
+      });
+      const resp=await fetch('/leer-lineup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imageBase64:base64,mediaType:file.type})});
+      const data=await resp.json();
+      if(data.error)throw new Error(data.error);
+      const lineup=data.lineup;
+      if(!lineup||!lineup.length)throw new Error('No se detectaron jugadores');
+      // Guardar lineup en el state y sincronizar
+      const key=team==='away'?'lineupAway':'lineupHome';
+      state[key]=lineup.map(p=>({
+        name:p.nombre||'',
+        num:p.numero||'',
+        pos:(()=>{const r=String(p.posicion||'').toLowerCase().trim();return POS_MAP_C2[r]||POS_MAP_C2[r.split(' ')[0]]||'';})()
+      }));
+      send();
+      statusEl.textContent=`✅ ${lineup.length} jugadores cargados (${team==='away'?'Visitante':'Local'})`;
+      setTimeout(()=>{statusEl.style.display='none';},3000);
+    }catch(err){
+      statusEl.textContent='❌ '+err.message;
+      setTimeout(()=>{statusEl.style.display='none';},4000);
+    }finally{btn.disabled=false;btn.textContent='📷';}
+  };
+  input.click();
+}
 renderAll();
 // Modo día/noche
 function toggleTheme(){

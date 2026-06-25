@@ -174,6 +174,17 @@ label.field-label {
   letter-spacing: 0.05em;
 }
 
+.btn-photo-lineup {
+  display: block; width: 100%; margin-bottom: 8px;
+  padding: 9px 12px; border-radius: 6px;
+  background: linear-gradient(135deg,#1a3a6b,#0d2040);
+  color: #e8b84b; border: 1.5px solid #e8b84b;
+  font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-photo-lineup:hover { background: #e8b84b; color: #0d2040; }
+.btn-photo-lineup:disabled { opacity:0.5; cursor:wait; }
+.photo-loading { text-align:center; padding:10px; color:#e8b84b; font-size:0.8rem; }
 .lineup-list {
   list-style: none;
   margin-top: 8px;
@@ -1484,6 +1495,7 @@ label.field-label {
       <label class="field-label">Nombre del equipo</label>
       <input type="text" class="text-input team-input team-name" data-team="away" value="Visitantes" placeholder="Nombre del equipo">
       <label class="field-label">Lineup (Orden al bate · Nombre · Posición · #)</label>
+      <button class="btn-photo-lineup" onclick="fotoLineup('away')">📷 Leer lineup desde foto</button>
       <ul class="lineup-list" id="lineup-away"></ul>
     </div>
 
@@ -1496,6 +1508,7 @@ label.field-label {
       <label class="field-label">Nombre del equipo</label>
       <input type="text" class="text-input team-input team-name" data-team="home" value="Locales" placeholder="Nombre del equipo">
       <label class="field-label">Lineup (Orden al bate · Nombre · Posición · #)</label>
+      <button class="btn-photo-lineup" onclick="fotoLineup('home')">📷 Leer lineup desde foto</button>
       <ul class="lineup-list" id="lineup-home"></ul>
     </div>
   </div>
@@ -2207,6 +2220,66 @@ function renderLineupForm(teamKey) {
     `;
     ul.appendChild(li);
   });
+}
+
+// ── LEER LINEUP DESDE FOTO ──
+const POS_MAP_FOTO = {'1':'P','2':'C','3':'1B','4':'2B','5':'3B','6':'SS','7':'LF','8':'CF','9':'RF',
+  'p':'P','c':'C','1b':'1B','2b':'2B','3b':'3B','ss':'SS','lf':'LF','cf':'CF','rf':'RF',
+  'pitcher':'P','catcher':'C','primera base':'1B','segunda base':'2B','tercera base':'3B',
+  'campocorto':'SS','shortstop':'SS','jardinero izquierdo':'LF','jardinero central':'CF',
+  'jardinero derecho':'RF','left fielder':'LF','center fielder':'CF','right fielder':'RF',
+  'first baseman':'1B','second baseman':'2B','third baseman':'3B','bd':'DH','dh':'DH'
+};
+
+function fotoLineup(team) {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.capture = 'environment'; // cámara trasera en móvil
+  input.onchange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const btn = document.querySelector(`.btn-photo-lineup[onclick="fotoLineup('${team}')"]`);
+    btn.disabled = true;
+    btn.textContent = '⏳ Analizando foto...';
+    try {
+      const base64 = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(r.result.split(',')[1]);
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+      const resp = await fetch('/leer-lineup', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({imageBase64: base64, mediaType: file.type})
+      });
+      const data = await resp.json();
+      if (data.error) throw new Error(data.error);
+      const lineup = data.lineup;
+      if (!lineup || !lineup.length) throw new Error('No se detectaron jugadores en la imagen');
+      // Aplicar al formulario
+      lineup.forEach((p, i) => {
+        if (i >= 9) return;
+        const nameEl = document.querySelector(`.lineup-name[data-team="${team}"][data-idx="${i}"]`);
+        const posEl  = document.querySelector(`.pos-select[data-team="${team}"][data-idx="${i}"]`);
+        const numEl  = document.querySelector(`.lineup-num[data-team="${team}"][data-idx="${i}"]`);
+        if (nameEl) nameEl.value = p.nombre || '';
+        if (numEl)  numEl.value  = p.numero  || '';
+        if (posEl) {
+          const rawPos = String(p.posicion || '').toLowerCase().trim();
+          const mappedPos = POS_MAP_FOTO[rawPos] || POS_MAP_FOTO[rawPos.split(' ')[0]] || '';
+          if (mappedPos) posEl.value = mappedPos;
+        }
+      });
+      btn.textContent = `✅ ${lineup.length} jugadores cargados`;
+      setTimeout(() => { btn.textContent = '📷 Leer lineup desde foto'; btn.disabled = false; }, 3000);
+    } catch(err) {
+      btn.textContent = '❌ Error: ' + err.message;
+      setTimeout(() => { btn.textContent = '📷 Leer lineup desde foto'; btn.disabled = false; }, 4000);
+    }
+  };
+  input.click();
 }
 
 function loadSampleData() {

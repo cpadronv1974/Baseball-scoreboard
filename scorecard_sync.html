@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
+<html lang="es"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Scorebook · Anotador Oficial de Béisbol</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="scorecard_sync_files/css2.css" rel="stylesheet">
 <style>
 :root {
   --ink: #1a0f08;
@@ -174,6 +174,9 @@ label.field-label {
   letter-spacing: 0.05em;
 }
 
+.sub-row .order-num { background: #3a3a5a; color: #aaa; font-size:0.65rem; }
+.sub-row input, .sub-row select { opacity: 0.85; }
+.pitcher-setup-label { font-size:0.7rem; letter-spacing:0.15em; color: var(--brass); margin: 8px 0 4px; display:block; }
 .btn-photo-lineup {
   display: block; width: 100%; margin-bottom: 8px;
   padding: 9px 12px; border-radius: 6px;
@@ -1490,33 +1493,197 @@ label.field-label {
     <div class="team-card away">
       <div class="team-card-header">
         <h2>Equipo Visitante</h2>
-        <span class="badge">AWAY · 9 BATEADORES</span>
+        <span class="badge">AWAY · 10 BATEADORES</span>
       </div>
       <label class="field-label">Nombre del equipo</label>
       <input type="text" class="text-input team-input team-name" data-team="away" value="Visitantes" placeholder="Nombre del equipo">
       <label class="field-label">Lineup (Orden al bate · Nombre · Posición · #)</label>
       <button class="btn-photo-lineup" onclick="fotoLineup('away')">📷 Leer lineup desde foto</button>
-      <ul class="lineup-list" id="lineup-away"></ul>
+      <ul class="lineup-list" id="lineup-away"><li class="lineup-row">
+      <div class="order-num">1</div>
+      <input type="text" class="lineup-name" data-team="away" data-idx="0" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="away" data-idx="0">
+        <option value="P">P</option><option value="C">C</option><option value="1B">1B</option><option value="2B">2B</option><option value="3B">3B</option><option value="SS">SS</option><option value="LF">LF</option><option value="CF" selected="selected">CF</option><option value="RF">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="away" data-idx="0" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">2</div>
+      <input type="text" class="lineup-name" data-team="away" data-idx="1" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="away" data-idx="1">
+        <option value="P">P</option><option value="C">C</option><option value="1B">1B</option><option value="2B">2B</option><option value="3B">3B</option><option value="SS" selected="selected">SS</option><option value="LF">LF</option><option value="CF">CF</option><option value="RF">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="away" data-idx="1" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">3</div>
+      <input type="text" class="lineup-name" data-team="away" data-idx="2" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="away" data-idx="2">
+        <option value="P">P</option><option value="C">C</option><option value="1B" selected="selected">1B</option><option value="2B">2B</option><option value="3B">3B</option><option value="SS">SS</option><option value="LF">LF</option><option value="CF">CF</option><option value="RF">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="away" data-idx="2" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">4</div>
+      <input type="text" class="lineup-name" data-team="away" data-idx="3" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="away" data-idx="3">
+        <option value="P">P</option><option value="C">C</option><option value="1B">1B</option><option value="2B">2B</option><option value="3B">3B</option><option value="SS">SS</option><option value="LF">LF</option><option value="CF">CF</option><option value="RF" selected="selected">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="away" data-idx="3" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">5</div>
+      <input type="text" class="lineup-name" data-team="away" data-idx="4" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="away" data-idx="4">
+        <option value="P">P</option><option value="C">C</option><option value="1B">1B</option><option value="2B">2B</option><option value="3B" selected="selected">3B</option><option value="SS">SS</option><option value="LF">LF</option><option value="CF">CF</option><option value="RF">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="away" data-idx="4" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">6</div>
+      <input type="text" class="lineup-name" data-team="away" data-idx="5" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="away" data-idx="5">
+        <option value="P">P</option><option value="C">C</option><option value="1B">1B</option><option value="2B">2B</option><option value="3B">3B</option><option value="SS">SS</option><option value="LF" selected="selected">LF</option><option value="CF">CF</option><option value="RF">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="away" data-idx="5" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">7</div>
+      <input type="text" class="lineup-name" data-team="away" data-idx="6" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="away" data-idx="6">
+        <option value="P">P</option><option value="C">C</option><option value="1B">1B</option><option value="2B" selected="selected">2B</option><option value="3B">3B</option><option value="SS">SS</option><option value="LF">LF</option><option value="CF">CF</option><option value="RF">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="away" data-idx="6" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">8</div>
+      <input type="text" class="lineup-name" data-team="away" data-idx="7" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="away" data-idx="7">
+        <option value="P">P</option><option value="C" selected="selected">C</option><option value="1B">1B</option><option value="2B">2B</option><option value="3B">3B</option><option value="SS">SS</option><option value="LF">LF</option><option value="CF">CF</option><option value="RF">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="away" data-idx="7" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">9</div>
+      <input type="text" class="lineup-name" data-team="away" data-idx="8" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="away" data-idx="8">
+        <option value="P" selected="selected">P</option><option value="C">C</option><option value="1B">1B</option><option value="2B">2B</option><option value="3B">3B</option><option value="SS">SS</option><option value="LF">LF</option><option value="CF">CF</option><option value="RF">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="away" data-idx="8" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">10</div>
+      <input type="text" class="lineup-name" data-team="away" data-idx="9" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="away" data-idx="9">
+        <option value="P">P</option><option value="C">C</option><option value="1B">1B</option><option value="2B">2B</option><option value="3B">3B</option><option value="SS">SS</option><option value="LF">LF</option><option value="CF">CF</option><option value="RF">RF</option><option value="DH" selected="selected">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="away" data-idx="9" placeholder="#" maxlength="3">
+    </li></ul>
+      <label class="field-label" style="margin-top:10px">Pitcher Titular</label>
+      <div class="lineup-row" style="margin-bottom:6px">
+        <div class="order-num">P</div>
+        <input type="text" class="lineup-name" id="pitcher-away" placeholder="Nombre del pitcher" style="flex:2">
+        <input type="text" class="num-input" id="pitcher-away-num" placeholder="#" maxlength="3" style="width:38px">
+      </div>
+      <label class="field-label" style="margin-top:8px">Sustituciones (opcional)</label>
+      <div id="subs-away">
+        <div class="lineup-row sub-row"><div class="order-num" style="background:#555">S1</div><input type="text" class="lineup-name sub-name" data-team="away" data-sub="0" placeholder="Nombre"><select class="pos-select sub-pos" data-team="away" data-sub="0"><option value="" selected="selected">—</option><option>P</option><option>C</option><option>1B</option><option>2B</option><option>3B</option><option>SS</option><option>LF</option><option>CF</option><option>RF</option><option>DH</option></select><input type="text" class="num-input sub-num" data-team="away" data-sub="0" placeholder="#" maxlength="3"></div>
+        <div class="lineup-row sub-row"><div class="order-num" style="background:#555">S2</div><input type="text" class="lineup-name sub-name" data-team="away" data-sub="1" placeholder="Nombre"><select class="pos-select sub-pos" data-team="away" data-sub="1"><option value="" selected="selected">—</option><option>P</option><option>C</option><option>1B</option><option>2B</option><option>3B</option><option>SS</option><option>LF</option><option>CF</option><option>RF</option><option>DH</option></select><input type="text" class="num-input sub-num" data-team="away" data-sub="1" placeholder="#" maxlength="3"></div>
+        <div class="lineup-row sub-row"><div class="order-num" style="background:#555">S3</div><input type="text" class="lineup-name sub-name" data-team="away" data-sub="2" placeholder="Nombre"><select class="pos-select sub-pos" data-team="away" data-sub="2"><option value="" selected="selected">—</option><option>P</option><option>C</option><option>1B</option><option>2B</option><option>3B</option><option>SS</option><option>LF</option><option>CF</option><option>RF</option><option>DH</option></select><input type="text" class="num-input sub-num" data-team="away" data-sub="2" placeholder="#" maxlength="3"></div>
+      </div>
     </div>
 
     <!-- HOME TEAM -->
     <div class="team-card home">
       <div class="team-card-header">
         <h2>Equipo Local</h2>
-        <span class="badge">HOME · 9 BATEADORES</span>
+        <span class="badge">HOME · 10 BATEADORES</span>
       </div>
       <label class="field-label">Nombre del equipo</label>
       <input type="text" class="text-input team-input team-name" data-team="home" value="Locales" placeholder="Nombre del equipo">
       <label class="field-label">Lineup (Orden al bate · Nombre · Posición · #)</label>
       <button class="btn-photo-lineup" onclick="fotoLineup('home')">📷 Leer lineup desde foto</button>
-      <ul class="lineup-list" id="lineup-home"></ul>
+      <ul class="lineup-list" id="lineup-home"><li class="lineup-row">
+      <div class="order-num">1</div>
+      <input type="text" class="lineup-name" data-team="home" data-idx="0" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="home" data-idx="0">
+        <option value="P">P</option><option value="C">C</option><option value="1B">1B</option><option value="2B">2B</option><option value="3B">3B</option><option value="SS">SS</option><option value="LF">LF</option><option value="CF" selected="selected">CF</option><option value="RF">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="home" data-idx="0" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">2</div>
+      <input type="text" class="lineup-name" data-team="home" data-idx="1" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="home" data-idx="1">
+        <option value="P">P</option><option value="C">C</option><option value="1B">1B</option><option value="2B">2B</option><option value="3B">3B</option><option value="SS" selected="selected">SS</option><option value="LF">LF</option><option value="CF">CF</option><option value="RF">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="home" data-idx="1" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">3</div>
+      <input type="text" class="lineup-name" data-team="home" data-idx="2" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="home" data-idx="2">
+        <option value="P">P</option><option value="C">C</option><option value="1B" selected="selected">1B</option><option value="2B">2B</option><option value="3B">3B</option><option value="SS">SS</option><option value="LF">LF</option><option value="CF">CF</option><option value="RF">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="home" data-idx="2" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">4</div>
+      <input type="text" class="lineup-name" data-team="home" data-idx="3" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="home" data-idx="3">
+        <option value="P">P</option><option value="C">C</option><option value="1B">1B</option><option value="2B">2B</option><option value="3B">3B</option><option value="SS">SS</option><option value="LF">LF</option><option value="CF">CF</option><option value="RF" selected="selected">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="home" data-idx="3" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">5</div>
+      <input type="text" class="lineup-name" data-team="home" data-idx="4" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="home" data-idx="4">
+        <option value="P">P</option><option value="C">C</option><option value="1B">1B</option><option value="2B">2B</option><option value="3B" selected="selected">3B</option><option value="SS">SS</option><option value="LF">LF</option><option value="CF">CF</option><option value="RF">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="home" data-idx="4" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">6</div>
+      <input type="text" class="lineup-name" data-team="home" data-idx="5" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="home" data-idx="5">
+        <option value="P">P</option><option value="C">C</option><option value="1B">1B</option><option value="2B">2B</option><option value="3B">3B</option><option value="SS">SS</option><option value="LF" selected="selected">LF</option><option value="CF">CF</option><option value="RF">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="home" data-idx="5" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">7</div>
+      <input type="text" class="lineup-name" data-team="home" data-idx="6" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="home" data-idx="6">
+        <option value="P">P</option><option value="C">C</option><option value="1B">1B</option><option value="2B" selected="selected">2B</option><option value="3B">3B</option><option value="SS">SS</option><option value="LF">LF</option><option value="CF">CF</option><option value="RF">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="home" data-idx="6" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">8</div>
+      <input type="text" class="lineup-name" data-team="home" data-idx="7" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="home" data-idx="7">
+        <option value="P">P</option><option value="C" selected="selected">C</option><option value="1B">1B</option><option value="2B">2B</option><option value="3B">3B</option><option value="SS">SS</option><option value="LF">LF</option><option value="CF">CF</option><option value="RF">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="home" data-idx="7" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">9</div>
+      <input type="text" class="lineup-name" data-team="home" data-idx="8" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="home" data-idx="8">
+        <option value="P" selected="selected">P</option><option value="C">C</option><option value="1B">1B</option><option value="2B">2B</option><option value="3B">3B</option><option value="SS">SS</option><option value="LF">LF</option><option value="CF">CF</option><option value="RF">RF</option><option value="DH">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="home" data-idx="8" placeholder="#" maxlength="3">
+    </li><li class="lineup-row">
+      <div class="order-num">10</div>
+      <input type="text" class="lineup-name" data-team="home" data-idx="9" placeholder="Nombre del jugador">
+      <select class="pos-select" data-team="home" data-idx="9">
+        <option value="P">P</option><option value="C">C</option><option value="1B">1B</option><option value="2B">2B</option><option value="3B">3B</option><option value="SS">SS</option><option value="LF">LF</option><option value="CF">CF</option><option value="RF">RF</option><option value="DH" selected="selected">DH</option>
+      </select>
+      <input type="text" class="num-input lineup-num" data-team="home" data-idx="9" placeholder="#" maxlength="3">
+    </li></ul>
+      <label class="field-label" style="margin-top:10px">Pitcher Titular</label>
+      <div class="lineup-row" style="margin-bottom:6px">
+        <div class="order-num">P</div>
+        <input type="text" class="lineup-name" id="pitcher-home" placeholder="Nombre del pitcher" style="flex:2">
+        <input type="text" class="num-input" id="pitcher-home-num" placeholder="#" maxlength="3" style="width:38px">
+      </div>
+      <label class="field-label" style="margin-top:8px">Sustituciones (opcional)</label>
+      <div id="subs-home">
+        <div class="lineup-row sub-row"><div class="order-num" style="background:#555">S1</div><input type="text" class="lineup-name sub-name" data-team="home" data-sub="0" placeholder="Nombre"><select class="pos-select sub-pos" data-team="home" data-sub="0"><option value="" selected="selected">—</option><option>P</option><option>C</option><option>1B</option><option>2B</option><option>3B</option><option>SS</option><option>LF</option><option>CF</option><option>RF</option><option>DH</option></select><input type="text" class="num-input sub-num" data-team="home" data-sub="2" placeholder="#" maxlength="3"></div>
+        <div class="lineup-row sub-row"><div class="order-num" style="background:#555">S2</div><input type="text" class="lineup-name sub-name" data-team="home" data-sub="1" placeholder="Nombre"><select class="pos-select sub-pos" data-team="home" data-sub="1"><option value="" selected="selected">—</option><option>P</option><option>C</option><option>1B</option><option>2B</option><option>3B</option><option>SS</option><option>LF</option><option>CF</option><option>RF</option><option>DH</option></select><input type="text" class="num-input sub-num" data-team="home" data-sub="1" placeholder="#" maxlength="3"></div>
+        <div class="lineup-row sub-row"><div class="order-num" style="background:#555">S3</div><input type="text" class="lineup-name sub-name" data-team="home" data-sub="2" placeholder="Nombre"><select class="pos-select sub-pos" data-team="home" data-sub="2"><option value="" selected="selected">—</option><option>P</option><option>C</option><option>1B</option><option>2B</option><option>3B</option><option>SS</option><option>LF</option><option>CF</option><option>RF</option><option>DH</option></select><input type="text" class="num-input sub-num" data-team="home" data-sub="2" placeholder="#" maxlength="3"></div>
+      </div>
     </div>
   </div>
 
   <div class="settings-row">
     <label class="field-label" style="font-size:13px;letter-spacing:0.25em;color:var(--brass);margin-bottom:4px">DURACIÓN DEL JUEGO</label>
     <div class="innings-toggle" id="innings-toggle">
-      <label class="active"><input type="radio" name="innings" value="9" checked> 9 INNINGS</label>
+      <label class="active"><input type="radio" name="innings" value="9" checked="checked"> 9 INNINGS</label>
       <label><input type="radio" name="innings" value="7"> 7 INNINGS</label>
     </div>
     <p style="font-size:11px;font-style:italic;color:var(--ink-faded);margin-top:8px">9 entradas es estándar profesional; 7 se usa en doubleheaders, juveniles y softbol.</p>
@@ -1542,7 +1709,7 @@ label.field-label {
       <div class="innings-display" id="innings-display"></div>
     </div>
     <div class="top-actions">
-      <span id="sync-badge" style="font-family:monospace;font-size:10px;letter-spacing:0.1em;color:#e74c3c;align-self:center;padding:0 8px">○ Sin conexión</span>
+      <span id="sync-badge" style="font-family: monospace; font-size: 10px; letter-spacing: 0.1em; color: rgb(46, 204, 113); align-self: center; padding: 0px 8px;">● MARCADOR EN VIVO</span>
       <button class="btn ghost" id="btn-sub">🔄 Cambios</button>
       <button class="btn ghost" id="btn-stats">📊 Stats</button>
       <button class="btn ghost" id="btn-manual">📖 Manual</button>
@@ -1566,18 +1733,18 @@ label.field-label {
       <!-- Diamond SVG with bases -->
       <svg class="diamond-svg" id="diamond-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
         <!-- Field area -->
-        <polygon points="100,30 170,100 100,170 30,100" fill="#0d3320" stroke="#1a5938" stroke-width="2"/>
+        <polygon points="100,30 170,100 100,170 30,100" fill="#0d3320" stroke="#1a5938" stroke-width="2"></polygon>
         <!-- Pitcher mound -->
-        <circle cx="100" cy="100" r="14" fill="#5e4023" stroke="#3d2818" stroke-width="1.5"/>
+        <circle cx="100" cy="100" r="14" fill="#5e4023" stroke="#3d2818" stroke-width="1.5"></circle>
         <text x="100" y="104" text-anchor="middle" fill="#f4e8d0" font-family="JetBrains Mono" font-size="10" font-weight="700">P</text>
         <!-- Home plate -->
-        <polygon id="home-plate" points="100,170 92,162 92,156 108,156 108,162" fill="#f4e8d0" stroke="#1a0f08" stroke-width="1.5"/>
+        <polygon id="home-plate" points="100,170 92,162 92,156 108,156 108,162" fill="#f4e8d0" stroke="#1a0f08" stroke-width="1.5"></polygon>
         <!-- First base -->
-        <rect id="base-1" x="160" y="92" width="16" height="16" fill="#f4e8d0" stroke="#1a0f08" stroke-width="1.5" transform="rotate(45 168 100)"/>
+        <rect id="base-1" x="160" y="92" width="16" height="16" fill="#f4e8d0" stroke="#1a0f08" stroke-width="1.5" transform="rotate(45 168 100)"></rect>
         <!-- Second base -->
-        <rect id="base-2" x="92" y="22" width="16" height="16" fill="#f4e8d0" stroke="#1a0f08" stroke-width="1.5" transform="rotate(45 100 30)"/>
+        <rect id="base-2" x="92" y="22" width="16" height="16" fill="#f4e8d0" stroke="#1a0f08" stroke-width="1.5" transform="rotate(45 100 30)"></rect>
         <!-- Third base -->
-        <rect id="base-3" x="24" y="92" width="16" height="16" fill="#f4e8d0" stroke="#1a0f08" stroke-width="1.5" transform="rotate(45 32 100)"/>
+        <rect id="base-3" x="24" y="92" width="16" height="16" fill="#f4e8d0" stroke="#1a0f08" stroke-width="1.5" transform="rotate(45 32 100)"></rect>
         <!-- Labels -->
         <text x="180" y="104" text-anchor="middle" fill="#c89c3f" font-family="JetBrains Mono" font-size="8">1B</text>
         <text x="100" y="14" text-anchor="middle" fill="#c89c3f" font-family="JetBrains Mono" font-size="8">2B</text>
@@ -1759,7 +1926,7 @@ label.field-label {
     <h2 class="modal-title">ATAJOS</h2>
     <div class="modal-subtitle">Para registrar jugadas a la velocidad del juego</div>
 
-    <h3 style="font-family:'Bebas Neue';letter-spacing:.15em;color:var(--crimson);font-size:14px;margin:16px 0 8px;">Hits & Boletos</h3>
+    <h3 style="font-family:'Bebas Neue';letter-spacing:.15em;color:var(--crimson);font-size:14px;margin:16px 0 8px;">Hits &amp; Boletos</h3>
     <div class="shortcuts-grid">
       <div class="shortcut"><span>Sencillo (1B)</span><span class="key-combo">1</span></div>
       <div class="shortcut"><span>Doble (2B)</span><span class="key-combo">2</span></div>
@@ -1800,7 +1967,7 @@ label.field-label {
       <div class="shortcut"><span>Indif. defensiva (DI)</span><span class="key-combo">Y</span></div>
     </div>
 
-    <h3 style="font-family:'Bebas Neue';letter-spacing:.15em;color:var(--crimson);font-size:14px;margin:16px 0 8px;">Conteo & Navegación</h3>
+    <h3 style="font-family:'Bebas Neue';letter-spacing:.15em;color:var(--crimson);font-size:14px;margin:16px 0 8px;">Conteo &amp; Navegación</h3>
     <div class="shortcuts-grid">
       <div class="shortcut"><span>Bola</span><span class="key-combo">,</span></div>
       <div class="shortcut"><span>Strike</span><span class="key-combo">.</span></div>
@@ -1813,7 +1980,8 @@ label.field-label {
     </div>
 
     <div style="text-align:center;margin-top:24px;padding-top:16px;border-top:1px dotted var(--rule-faint);font-size:12px;color:var(--ink-faded);font-style:italic">
-      Sugerencia: en outs de campo (F, L, G, P, E) se abre un selector de posición — presiona 1-9 directamente para fijar quién hizo la jugada.
+      Sugerencia: en outs de campo (F, L, G, P, E) se abre un selector 
+de posición — presiona 1-9 directamente para fijar quién hizo la jugada.
     </div>
   </div>
 </div>
@@ -1865,7 +2033,10 @@ label.field-label {
 
     <div class="callout" style="margin-top:20px">
       <strong>Cómo funciona</strong>
-      El nuevo jugador hereda el slot del lineup. Sus estadísticas se acumulan por separado del jugador reemplazado, pero el slot mantiene la suma total. Si el sustituido estaba en base, el nuevo jugador corre por él. El jugador reemplazado no puede regresar al juego.
+      El nuevo jugador hereda el slot del lineup. Sus estadísticas se 
+acumulan por separado del jugador reemplazado, pero el slot mantiene la 
+suma total. Si el sustituido estaba en base, el nuevo jugador corre por 
+él. El jugador reemplazado no puede regresar al juego.
     </div>
   </div>
 </div>
@@ -1909,7 +2080,10 @@ label.field-label {
         </ul>
         <div class="callout">
           <strong>Tip</strong>
-          La posición de cada jugador (CF, SS, P, etc.) se usa para llenar automáticamente la notación de las jugadas defensivas. Si dejas algún campo vacío, el sistema generará un nombre genérico ("Bateador 1", etc.).
+          La posición de cada jugador (CF, SS, P, etc.) se usa para 
+llenar automáticamente la notación de las jugadas defensivas. Si dejas 
+algún campo vacío, el sistema generará un nombre genérico ("Bateador 1",
+ etc.).
         </div>
       </section>
 
@@ -1917,9 +2091,17 @@ label.field-label {
         <h3><span class="step-num">2</span> Pantalla de juego</h3>
         <p>La pantalla se divide en tres paneles principales más el marcador superior:</p>
         <p><strong>Marcador superior:</strong> resultado inning-por-inning (R/H/E). El inning actual pulsa en rojo.</p>
-        <p><strong>Izquierda · Situación:</strong> diamante con corredores (rojo = base ocupada), conteo de bolas/strikes/outs, inning actual con flecha (▲ alta = batea visitante, ▼ baja = batea local), bateador al bate y pitcher actual.</p>
-        <p><strong>Centro · Hoja de anotaciones:</strong> grilla tradicional de scorebook, una fila por bateador y una columna por inning. Cada turno al bate dibuja un <em>mini-diamante</em> con las bases alcanzadas, la notación oficial (<kbd>1B</kbd>, <kbd>K</kbd>, <kbd>ꓘ</kbd>, <kbd>F8</kbd>, <kbd>6-3</kbd>, <kbd>E5</kbd>), un punto rojo si anotó carrera y los RBIs. Las pestañas alternan entre el lineup visitante y local. El play-by-play aparece debajo de la grilla.</p>
-        <p><strong>Derecha · Acciones:</strong> botones agrupados por categoría con el atajo de teclado visible en la esquina. Panel de corredores en base con controles individuales.</p>
+        <p><strong>Izquierda · Situación:</strong> diamante con 
+corredores (rojo = base ocupada), conteo de bolas/strikes/outs, inning 
+actual con flecha (▲ alta = batea visitante, ▼ baja = batea local), 
+bateador al bate y pitcher actual.</p>
+        <p><strong>Centro · Hoja de anotaciones:</strong> grilla tradicional de scorebook, una fila por bateador y una columna por inning. Cada turno al bate dibuja un <em>mini-diamante</em> con las bases alcanzadas, la notación oficial (<kbd>1B</kbd>, <kbd>K</kbd>, <kbd>ꓘ</kbd>, <kbd>F8</kbd>, <kbd>6-3</kbd>, <kbd>E5</kbd>),
+ un punto rojo si anotó carrera y los RBIs. Las pestañas alternan entre 
+el lineup visitante y local. El play-by-play aparece debajo de la 
+grilla.</p>
+        <p><strong>Derecha · Acciones:</strong> botones agrupados por 
+categoría con el atajo de teclado visible en la esquina. Panel de 
+corredores en base con controles individuales.</p>
       </section>
 
       <section id="m-record">
@@ -1927,23 +2109,23 @@ label.field-label {
         <p>Para cada turno al bate, presiona un botón o un atajo de teclado:</p>
         <p><strong>Hits y embases:</strong></p>
         <table class="notation-table">
-          <tr><td>1B · <kbd>1</kbd></td><td>Sencillo (una base)</td></tr>
+          <tbody><tr><td>1B · <kbd>1</kbd></td><td>Sencillo (una base)</td></tr>
           <tr><td>2B · <kbd>2</kbd></td><td>Doble (dos bases)</td></tr>
           <tr><td>3B · <kbd>3</kbd></td><td>Triple (tres bases)</td></tr>
           <tr><td>HR · <kbd>4</kbd></td><td>Jonrón (Home Run)</td></tr>
           <tr><td>BB · <kbd>B</kbd></td><td>Base por bolas (pasaporte)</td></tr>
           <tr><td>IBB · <kbd>I</kbd></td><td>Base por bolas intencional</td></tr>
           <tr><td>HBP · <kbd>H</kbd></td><td>Golpeado por el lanzador</td></tr>
-        </table>
+        </tbody></table>
         <p><strong>Outs:</strong></p>
         <table class="notation-table">
-          <tr><td>K · <kbd>K</kbd></td><td>Ponche cantado (sin abanicar)</td></tr>
+          <tbody><tr><td>K · <kbd>K</kbd></td><td>Ponche cantado (sin abanicar)</td></tr>
           <tr><td>ꓘ · <kbd>⇧+K</kbd></td><td>Ponche abanicando (K invertida)</td></tr>
           <tr><td>F · <kbd>F</kbd></td><td>Fly out (elevado capturado)</td></tr>
           <tr><td>L · <kbd>L</kbd></td><td>Línea out</td></tr>
           <tr><td>G · <kbd>G</kbd></td><td>Roleta out</td></tr>
           <tr><td>P · <kbd>O</kbd></td><td>Pop out</td></tr>
-        </table>
+        </tbody></table>
         <div class="callout">
           <strong>Selector de posición</strong>
           Cuando registres un out de campo (F, L, G, P) o un error (E), aparecerá un selector de posición. Presiona <kbd>1</kbd>–<kbd>9</kbd> directamente para indicar qué jugador hizo la atrapada o cometió el error. La notación final queda como <kbd>F8</kbd> (fly al jardinero central), <kbd>6-3</kbd> (roleta del SS al primera base), <kbd>E5</kbd> (error del tercera base), etc.
@@ -1953,26 +2135,26 @@ label.field-label {
       <section id="m-special">
         <h3><span class="step-num">4</span> Jugadas especiales</h3>
         <table class="notation-table">
-          <tr><td>E · <kbd>E</kbd></td><td>Error (pide la posición del defensor responsable)</td></tr>
+          <tbody><tr><td>E · <kbd>E</kbd></td><td>Error (pide la posición del defensor responsable)</td></tr>
           <tr><td>FC · <kbd>C</kbd></td><td>Fielder's Choice (jugada de selección)</td></tr>
           <tr><td>DP · <kbd>D</kbd></td><td>Doble matanza — out al bateador y al corredor forzado</td></tr>
           <tr><td>TP · <kbd>T</kbd></td><td>Triple matanza — tres outs en una jugada, limpia las bases</td></tr>
           <tr><td>SF · <kbd>S</kbd></td><td>Fly de sacrificio — out, pero el corredor de 3ra anota</td></tr>
           <tr><td>SH · <kbd>Q</kbd></td><td>Toque de sacrificio (bunt) — out, todos los corredores avanzan</td></tr>
-        </table>
+        </tbody></table>
         <p>SF y SH <em>no</em> cuentan como turno al bate (AB), por lo tanto no afectan el promedio del bateador.</p>
       </section>
 
       <section id="m-bases">
         <h3><span class="step-num">5</span> Corrido de bases</h3>
         <table class="notation-table">
-          <tr><td>SB · <kbd>V</kbd></td><td>Base robada — pregunta qué corredor robó</td></tr>
+          <tbody><tr><td>SB · <kbd>V</kbd></td><td>Base robada — pregunta qué corredor robó</td></tr>
           <tr><td>CS · <kbd>X</kbd></td><td>Atrapado robando — pregunta qué corredor y suma un out</td></tr>
           <tr><td>WP · <kbd>W</kbd></td><td>Wild Pitch — todos los corredores avanzan una base</td></tr>
           <tr><td>PB · <kbd>M</kbd></td><td>Passed Ball — corredores avanzan</td></tr>
           <tr><td>BK · <kbd>A</kbd></td><td>Balk — corredores avanzan por movimiento ilegal del pitcher</td></tr>
           <tr><td>DI · <kbd>Y</kbd></td><td>Indiferencia defensiva — el corredor avanza sin intento de out</td></tr>
-        </table>
+        </tbody></table>
         <p>El <strong>panel de corredores</strong> (derecha) permite operar a cada corredor individualmente:</p>
         <ul>
           <li><kbd>+1</kbd> — avanzar una base</li>
@@ -1985,10 +2167,10 @@ label.field-label {
         <h3><span class="step-num">6</span> Conteo manual</h3>
         <p>Si quieres llevar el conteo de bolas y strikes pitch por pitch:</p>
         <table class="notation-table">
-          <tr><td><kbd>,</kbd></td><td>Suma una bola</td></tr>
+          <tbody><tr><td><kbd>,</kbd></td><td>Suma una bola</td></tr>
           <tr><td><kbd>.</kbd></td><td>Suma un strike</td></tr>
           <tr><td><kbd>/</kbd></td><td>Foul (suma strike hasta 2)</td></tr>
-        </table>
+        </tbody></table>
         <p>A 4 bolas se registra automáticamente <kbd>BB</kbd>. A 3 strikes se registra automáticamente <kbd>K</kbd>. El conteo se reinicia al pasar al siguiente bateador.</p>
         <p><em>Llevar el conteo es opcional</em> — puedes ir directo al resultado del turno con los botones de hits/outs sin preocuparte por bolas y strikes.</p>
       </section>
@@ -2005,20 +2187,23 @@ label.field-label {
         <p>En la hoja de anotaciones, el slot muestra ambos jugadores con una flecha (<em>"García → Pérez"</em>). En las estadísticas finales, cada jugador aparece con sus números individuales pero agrupado bajo el mismo slot.</p>
         <div class="callout warn">
           <strong>Importante</strong>
-          Las jugadas previas al cambio mantienen su atribución al jugador original. Por ejemplo, si García conectó hits en innings 1-5 y Pérez entró como PH en el 6to, García conserva esos hits en sus estadísticas.
+          Las jugadas previas al cambio mantienen su atribución al 
+jugador original. Por ejemplo, si García conectó hits en innings 1-5 y 
+Pérez entró como PH en el 6to, García conserva esos hits en sus 
+estadísticas.
         </div>
       </section>
 
       <section id="m-control">
         <h3><span class="step-num">8</span> Control del juego</h3>
         <table class="notation-table">
-          <tr><td><kbd>Espacio</kbd></td><td>Forzar siguiente bateador (sin registrar jugada)</td></tr>
+          <tbody><tr><td><kbd>Espacio</kbd></td><td>Forzar siguiente bateador (sin registrar jugada)</td></tr>
           <tr><td><kbd>Ctrl+Z</kbd></td><td>Deshacer la última acción</td></tr>
           <tr><td>◀ / ▶</td><td>Botones <em>Anterior / Siguiente</em> en la barra del scorecard</td></tr>
           <tr><td>Click</td><td>Click en el nombre de un bateador para saltar a su turno</td></tr>
           <tr><td><kbd>?</kbd></td><td>Abrir la ventana de estadísticas</td></tr>
           <tr><td><kbd>Esc</kbd></td><td>Cerrar el modal abierto</td></tr>
-        </table>
+        </tbody></table>
         <p>Los outs y cambios de inning son <strong>automáticos</strong>: al llegar a 3 outs, el sistema cambia el lado del inning, limpia las bases, reinicia el conteo y avanza al siguiente.</p>
       </section>
 
@@ -2052,7 +2237,9 @@ label.field-label {
           <li><strong>Ver Box Score</strong> — abrir las estadísticas finales</li>
           <li><strong>Juego Nuevo</strong> — empezar de cero (pide confirmación)</li>
         </ul>
-        <p>El sistema <em>no</em> termina automáticamente al llegar al inning final — esto permite entradas extra en caso de empate. Tú decides cuándo cerrar el juego.</p>
+        <p>El sistema <em>no</em> termina automáticamente al llegar al 
+inning final — esto permite entradas extra en caso de empate. Tú decides
+ cuándo cerrar el juego.</p>
       </section>
 
       <section id="m-notation">
@@ -2071,13 +2258,13 @@ label.field-label {
         </div>
         <p><strong>Outs de roleta</strong> se anotan con la ruta del balón. Ejemplos:</p>
         <table class="notation-table">
-          <tr><td>6-3</td><td>Roleta del SS, tira a 1ra base</td></tr>
+          <tbody><tr><td>6-3</td><td>Roleta del SS, tira a 1ra base</td></tr>
           <tr><td>4-3</td><td>Roleta a 2da, tira a 1ra</td></tr>
           <tr><td>5-3</td><td>Roleta a 3ra, tira a 1ra</td></tr>
           <tr><td>1-6-3</td><td>Doble matanza: pitcher a SS a 1ra</td></tr>
           <tr><td>F8</td><td>Fly al jardinero central</td></tr>
           <tr><td>L4</td><td>Línea al segunda base</td></tr>
-        </table>
+        </tbody></table>
         <div class="callout">
           <strong>Atribución de carreras</strong>
           Todas las carreras anotadas en hits se cuentan como RBIs. Los errores generan carreras <em>no limpias</em> que se anotan al equipo pero no como RBI. La aplicación distingue automáticamente estos casos en las estadísticas.
@@ -2136,7 +2323,8 @@ const DEFAULT_LINEUP = [
   { name: '', pos: 'LF', num: '' },
   { name: '', pos: '2B', num: '' },
   { name: '', pos: 'C',  num: '' },
-  { name: '', pos: 'P',  num: '' }
+  { name: '', pos: 'P',  num: '' },
+  { name: '', pos: 'DH', num: '' }
 ];
 
 const SAMPLE_AWAY = [
@@ -2148,7 +2336,8 @@ const SAMPLE_AWAY = [
   { name: 'D. Hernández',pos: 'LF',num: '11' },
   { name: 'F. Torres',  pos: '2B', num: '9'  },
   { name: 'L. Ramírez', pos: 'C',  num: '21' },
-  { name: 'P. Vega',    pos: 'P',  num: '28' }
+  { name: 'P. Vega',    pos: 'P',  num: '28' },
+  { name: 'K. Fuentes', pos: 'DH', num: '15' }
 ];
 const SAMPLE_HOME = [
   { name: 'E. Castillo',pos: 'CF', num: '22' },
@@ -2159,7 +2348,8 @@ const SAMPLE_HOME = [
   { name: 'R. Cruz',    pos: 'SS', num: '2'  },
   { name: 'B. Ortiz',   pos: 'LF', num: '13' },
   { name: 'S. Reyes',   pos: 'C',  num: '8'  },
-  { name: 'T. Aguilar', pos: 'P',  num: '31' }
+  { name: 'T. Aguilar', pos: 'P',  num: '31' },
+  { name: 'H. Delgado', pos: 'DH', num: '19' }
 ];
 
 /* ====================== STATE ====================== */
@@ -2301,6 +2491,17 @@ function loadSampleData() {
 function collectSetupData() {
   ['away','home'].forEach(team => {
     state.teams[team].name = document.querySelector(`input.team-name[data-team="${team}"]`).value.trim() || (team==='away'?'Visitantes':'Locales');
+    // Guardar pitcher y sustituciones
+    ['away','home'].forEach(t => {
+      const pName = document.getElementById('pitcher-'+t)?.value || '';
+      const pNum  = document.getElementById('pitcher-'+t+'-num')?.value || '';
+      state.teams[t].pitcher = { name: pName, num: pNum };
+      state.teams[t].subs = [0,1,2].map(si => ({
+        name: document.querySelector(`.sub-name[data-team="${t}"][data-sub="${si}"]`)?.value || '',
+        pos:  document.querySelector(`.sub-pos[data-team="${t}"][data-sub="${si}"]`)?.value || '',
+        num:  document.querySelector(`.sub-num[data-team="${t}"][data-sub="${si}"]`)?.value || ''
+      })).filter(s => s.name);
+    });
     state.teams[team].players = DEFAULT_LINEUP.map((_, i) => {
       const name = document.querySelector(`.lineup-name[data-team="${team}"][data-idx="${i}"]`).value.trim() || `Bateador ${i+1}`;
       const pos = document.querySelector(`.pos-select[data-team="${team}"][data-idx="${i}"]`).value;
@@ -2909,7 +3110,7 @@ const WS_URL = `wss://${SERVER_IP}`;
   function syncState(s) {
     if (!ws || ws.readyState !== 1) return;
     // Construir innings array (9 entradas)
-    const toArr = (obj) => Array.from({length:9}, (_,i) => obj[i] !== undefined ? obj[i] : '-');
+    const toArr = (obj) => Array.from({length:10}, (_,i) => obj[i] !== undefined ? obj[i] : '-');
     const payload = {
       away: {
         name:    s.teams.away.name,
@@ -3063,7 +3264,7 @@ function renderScorecard() {
   // player rows (one per slot)
   const activeIdx = state.currentBatterIdx[team];
   const isBatting = currentBattingTeam() === team;
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 10; i++) {
     const slotHist = slotPlayerHistory(team, i);
     const current = slotHist[slotHist.length - 1];
     const isActive = isBatting && i === activeIdx;
@@ -3401,7 +3602,7 @@ function renderBatterTable(team) {
       </tr>
     </thead><tbody>`;
   // For each slot, list all players who batted there
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 10; i++) {
     const slotHist = slotPlayerHistory(team, i);
     slotHist.forEach((p, ix) => {
       const s = computePlayerStats(team, p.id);
@@ -3671,7 +3872,7 @@ function renderPitcherTableFromData(data, team) {
 function exportStatsJSON() {
   const buildTeamPlayerStats = (team) => {
     const out = [];
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 10; i++) {
       slotPlayerHistory(team, i).forEach(p => {
         out.push({ slot: i+1, player: p, stats: computePlayerStats(team, p.id) });
       });
@@ -3739,7 +3940,7 @@ function exportStatsText() {
     txt += `\n${state.teams[team].name.toUpperCase()} — BATEADORES\n`;
     txt += '─'.repeat(80) + '\n';
     txt += pad('Jugador', 22) + ' PA AB  R  H 2B 3B HR RBI BB  K   AVG   OBP   SLG   OPS\n';
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 10; i++) {
       slotPlayerHistory(team, i).forEach((p, ix) => {
         const s = computePlayerStats(team, p.id);
         const prefix = ix === 0 ? `${i+1}.` : '  ↳';
@@ -3850,7 +4051,7 @@ function refreshSubModalUI() {
   // Populate slot select with current players in that team
   const slotSel = document.getElementById('sub-slot');
   slotSel.innerHTML = '';
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 10; i++) {
     const cur = currentPlayerInSlot(subPickedTeam, i);
     const opt = document.createElement('option');
     opt.value = i;
@@ -4169,5 +4370,6 @@ function cssEscape(s) {
 
 document.addEventListener('DOMContentLoaded', init);
 </script>
-</body>
-</html>
+
+
+</body></html>

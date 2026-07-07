@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
+<html lang="es"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Control Simple</title>
@@ -126,6 +126,8 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
 .bso-strike{color:#f5c518;border-color:#f5c518}.bso-strike:active{background:#f5c518;color:#000}
 .bso-out{color:#e74c3c;border-color:#e74c3c}.bso-out:active{background:#e74c3c;color:#fff}
 .bso-foul{color:#ff8c42;border-color:#ff8c42}.bso-foul:active{background:#ff8c42;color:#000}
+.bso-hit{color:#2ecc71;border-color:#2ecc71}.bso-hit:active{background:#2ecc71;color:#000}
+.bso-undohit{color:#888;border-color:#888}.bso-undohit:active{background:#888;color:#000}
 #toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:2px;padding:7px 18px;border-radius:8px;opacity:0;transition:all 0.2s;pointer-events:none;z-index:999;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 #auto-alert{position:fixed;top:56px;left:50%;transform:translateX(-50%);background:#e74c3c;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:2px;padding:9px 22px;border-radius:8px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:1000;white-space:nowrap}
@@ -139,7 +141,7 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
   <h1>⚾ CONTROL SIMPLE</h1>
   <div style="display:flex;align-items:center;gap:10px">
     <button id="theme-toggle" onclick="toggleTheme()" style="background:transparent;border:1.5px solid var(--accent);color:var(--accent);border-radius:20px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:1px;cursor:pointer;-webkit-tap-highlight-color:transparent">🌙 NOCHE</button>
-    <div class="conn"><div class="cdot" id="cdot"></div><span id="ctext">Conectando...</span></div>
+    <div class="conn"><div class="cdot ok" id="cdot"></div><span id="ctext">Conectado</span></div>
   </div>
 </header>
 
@@ -181,19 +183,20 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
     <div class="fix-sh">EQUIPOS</div>
     <div class="inp-row">
       <input type="color" class="color-swatch" id="away-color" value="#c0392b" oninput="updateColor()">
-      <input class="inp" id="inp-away" placeholder="VISITANTE" maxlength="8" oninput="setName('away',this.value)">
+      <input class="inp" id="inp-away" placeholder="VISITANTE" maxlength="8" oninput="setName('away',this.value)" value="VISITANTE">
     </div>
     <div class="inp-row">
       <input type="color" class="color-swatch" id="home-color" value="#1a3a6b" oninput="updateColor()">
-      <input class="inp" id="inp-home" placeholder="LOCAL" maxlength="8" oninput="setName('home',this.value)">
+      <input class="inp" id="inp-home" placeholder="LOCAL" maxlength="8" oninput="setName('home',this.value)" value="LOCAL">
     </div>
   </div>
 
   <!-- CONTEO BSO -->
   <div class="bso-fixed">
     <div class="fix-sh">CONTEO B-S-O</div>
-    <div class="bso-main" style="flex-direction:column;gap:8px">
-      <div class="bso-indicators">
+    <div class="bso-main" style="flex-direction:row;align-items:center;gap:8px">
+      <button class="btn gr sm" style="flex-shrink:0;padding:10px 8px;font-size:0.7rem" onclick="resetBSO()">⟳ LIMPIAR</button>
+      <div class="bso-indicators" style="flex:1">
         <div class="bso-ind-row">
           <span class="bso-ind-lbl">B</span>
           <div class="big-dots">
@@ -216,17 +219,19 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
       </div>
       <div class="bso-btns"></div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:6px">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:8px;margin-bottom:4px">
       <button class="bso-big-btn bso-ball" onclick="dbc(addBall)">+ BOLA</button>
       <button class="bso-big-btn bso-strike" onclick="dbc(addStrike)">+ STRIKE</button>
       <button class="bso-big-btn bso-foul" onclick="dbc(addFoul)">FOUL</button>
+      <button class="bso-big-btn bso-hit" onclick="dbc(addHit)">HIT</button>
       <button class="bso-big-btn bso-out" onclick="dbc(addOut)">+ OUT</button>
     </div>
-    <div class="bso-undo">
-      <button class="btn gr sm" style="flex:1" onclick="resetBSO()">⟳ LIMPIAR</button>
-      <button class="btn gr sm" style="flex:1" onclick="undoBall()">−B</button>
-      <button class="btn gr sm" style="flex:1" onclick="undoStrike()">−S</button>
-      <button class="btn gr sm" style="flex:1" onclick="undoOut()">−O</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:8px;margin-bottom:6px">
+      <button class="bso-big-btn bso-ball" style="opacity:0.5;font-size:0.8rem;padding:8px 4px" onclick="undoBall()">− BOLA</button>
+      <button class="bso-big-btn bso-strike" style="opacity:0.5;font-size:0.8rem;padding:8px 4px" onclick="undoStrike()">− STRIKE</button>
+      <button class="bso-big-btn bso-foul" style="opacity:0.5;font-size:0.8rem;padding:8px 4px" onclick="undoFoul()">− FOUL</button>
+      <button class="bso-big-btn bso-hit" style="opacity:0.5;font-size:0.8rem;padding:8px 4px" onclick="undoHit()">− HIT</button>
+      <button class="bso-big-btn bso-out" style="opacity:0.5;font-size:0.8rem;padding:8px 4px" onclick="undoOut()">− OUT</button>
     </div>
     <p style="font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;color:var(--muted);text-align:center;margin-top:4px">4B→BB · 3S→K+OUT · 3O→siguiente entrada · FOUL con 2S no agrega strike</p>
   </div>
@@ -425,6 +430,34 @@ function addFoul(){
     send();
   }
 }
+function addHit(){
+  // Hit: limpia el conteo BSO, suma H al bateador actual, avanza al siguiente
+  state.balls=0; state.strikes=0;
+  const t = state.battingTeam||'away';
+  if(!state.currentBatterIdx) state.currentBatterIdx={away:0,home:0};
+  const idx = state.currentBatterIdx[t]||0;
+  if(!state.statsAway) state.statsAway=[];
+  if(!state.statsHome) state.statsHome=[];
+  const arr = t==='away'?state.statsAway:state.statsHome;
+  if(arr[idx]){arr[idx].AB=(arr[idx].AB||0)+1;arr[idx].H=(arr[idx].H||0)+1;}
+  state.currentBatterIdx[t]=(idx+1)%10;
+  toast('HIT ✔');
+  send();
+}
+function undoHit(){
+  const t = state.battingTeam||'away';
+  if(!state.currentBatterIdx) state.currentBatterIdx={away:0,home:0};
+  // Retroceder al bateador anterior
+  const idx = ((state.currentBatterIdx[t]||0) - 1 + 10) % 10;
+  state.currentBatterIdx[t] = idx;
+  const arr = t==='away'?state.statsAway:state.statsHome;
+  if(arr[idx]){
+    arr[idx].AB = Math.max(0,(arr[idx].AB||0)-1);
+    arr[idx].H  = Math.max(0,(arr[idx].H||0)-1);
+  }
+  toast('HIT eliminado');
+  send();
+}
 function addOut(){
   state.balls=0;state.strikes=0;
   state.outs=Math.min(3,state.outs+1);
@@ -432,6 +465,7 @@ function addOut(){
   send();
 }
 function undoBall(){state.balls=Math.max(0,state.balls-1);send()}
+function undoFoul(){state.strikes=Math.max(0,state.strikes-1);send()}
 function undoStrike(){state.strikes=Math.max(0,state.strikes-1);send()}
 function undoOut(){state.outs=Math.max(0,state.outs-1);send()}
 function resetBSO(){state.balls=0;state.strikes=0;state.outs=0;send();toast('CONTEO LIMPIADO')}
@@ -545,5 +579,6 @@ function toggleTheme(){
 })();
 
 </script>
-</body>
-</html>
+
+
+</body></html>

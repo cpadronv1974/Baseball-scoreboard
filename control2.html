@@ -152,7 +152,7 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
   <div id="preview">
     <div class="pv-team">
       <div class="pv-name" id="pv-away-name">VISITANTE</div>
-      <div class="pv-score" id="pv-away-r">0</div>
+      <div class="pv-score" id="pv-away-r">2</div>
     </div>
     <div class="pv-mid">
       <div class="pv-inn" id="pv-inn">1</div>
@@ -167,9 +167,9 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
     <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.5rem;letter-spacing:2px;color:var(--muted)">BASES</div>
       <div style="position:relative;width:70px;height:70px">
-        <button class="base-btn base-btn-2 occ" id="base-btn-2" onclick="toggleBase(2)"></button>
+        <button class="base-btn base-btn-2" id="base-btn-2" onclick="toggleBase(2)"></button>
         <button class="base-btn base-btn-3" id="base-btn-3" onclick="toggleBase(3)"></button>
-        <button class="base-btn base-btn-1 occ" id="base-btn-1" onclick="toggleBase(1)"></button>
+        <button class="base-btn base-btn-1" id="base-btn-1" onclick="toggleBase(1)"></button>
       </div>
     </div>
     <div class="pv-team">
@@ -214,11 +214,11 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
       <button class="bso-big-btn bso-out" onclick="dbc(addOut)">+ OUT</button>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:8px;margin-bottom:6px">
-      <button class="bso-big-btn bso-ball" style="opacity:0.5;font-size:0.8rem;padding:8px 4px" onclick="undoBall()">− BOLA</button>
-      <button class="bso-big-btn bso-strike" style="opacity:0.5;font-size:0.8rem;padding:8px 4px" onclick="undoStrike()">− STRIKE</button>
-      <button class="bso-big-btn bso-foul" style="opacity:0.5;font-size:0.8rem;padding:8px 4px" onclick="undoFoul()">− FOUL</button>
-      <button class="bso-big-btn bso-hit" style="opacity:0.5;font-size:0.8rem;padding:8px 4px" onclick="undoHit()">− HIT</button>
-      <button class="bso-big-btn bso-out" style="opacity:0.5;font-size:0.8rem;padding:8px 4px" onclick="undoOut()">− OUT</button>
+      <button class="btn gr sm" style="flex:1;font-size:0.75rem" onclick="undoBall()">− BOLA</button>
+      <button class="btn gr sm" style="flex:1;font-size:0.75rem" onclick="undoStrike()">− STRIKE</button>
+      <button class="btn gr sm" style="flex:1;font-size:0.75rem" onclick="undoFoul()">− FOUL</button>
+      <button class="btn gr sm" style="flex:1;font-size:0.75rem" onclick="undoHit()">− HIT</button>
+      <button class="btn gr sm" style="flex:1;font-size:0.75rem" onclick="undoOut()">− OUT</button>
     </div>
     <p style="font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;color:var(--muted);text-align:center;margin-top:4px">4B→BB · 3S→K+OUT · 3O→siguiente entrada · FOUL con 2S no agrega strike</p>
   </div>
@@ -286,7 +286,7 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
           <button class="btn a sm" onclick="setActivePitcher(1)" style="padding:4px 10px">ACTIVO</button>
         </div>
         <input class="inp" id="p1-name" placeholder="Nombre pitcher 1" maxlength="20" oninput="updatePitcher()" style="margin-bottom:6px">
-        <div class="pitcher-count" id="p1-count-display">11</div>
+        <div class="pitcher-count" id="p1-count-display">4</div>
         <div class="pitcher-lbl">LANZAMIENTOS</div>
         <div class="bg" style="margin-top:7px">
           <button class="btn a" onclick="addPitch(1,1)">+1</button>

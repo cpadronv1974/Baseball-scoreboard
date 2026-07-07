@@ -167,27 +167,14 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
     <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.5rem;letter-spacing:2px;color:var(--muted)">BASES</div>
       <div style="position:relative;width:70px;height:70px">
-        <button class="base-btn base-btn-2" id="base-btn-2" onclick="toggleBase(2)"></button>
+        <button class="base-btn base-btn-2 occ" id="base-btn-2" onclick="toggleBase(2)"></button>
         <button class="base-btn base-btn-3" id="base-btn-3" onclick="toggleBase(3)"></button>
-        <button class="base-btn base-btn-1" id="base-btn-1" onclick="toggleBase(1)"></button>
+        <button class="base-btn base-btn-1 occ" id="base-btn-1" onclick="toggleBase(1)"></button>
       </div>
     </div>
     <div class="pv-team">
       <div class="pv-name" id="pv-home-name">LOCAL</div>
       <div class="pv-score" id="pv-home-r">0</div>
-    </div>
-  </div>
-
-  <!-- EQUIPOS -->
-  <div class="fix-sec">
-    <div class="fix-sh">EQUIPOS</div>
-    <div class="inp-row">
-      <input type="color" class="color-swatch" id="away-color" value="#c0392b" oninput="updateColor()">
-      <input class="inp" id="inp-away" placeholder="VISITANTE" maxlength="8" oninput="setName('away',this.value)" value="VISITANTE">
-    </div>
-    <div class="inp-row">
-      <input type="color" class="color-swatch" id="home-color" value="#1a3a6b" oninput="updateColor()">
-      <input class="inp" id="inp-home" placeholder="LOCAL" maxlength="8" oninput="setName('home',this.value)" value="LOCAL">
     </div>
   </div>
 
@@ -299,7 +286,7 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
           <button class="btn a sm" onclick="setActivePitcher(1)" style="padding:4px 10px">ACTIVO</button>
         </div>
         <input class="inp" id="p1-name" placeholder="Nombre pitcher 1" maxlength="20" oninput="updatePitcher()" style="margin-bottom:6px">
-        <div class="pitcher-count" id="p1-count-display">0</div>
+        <div class="pitcher-count" id="p1-count-display">11</div>
         <div class="pitcher-lbl">LANZAMIENTOS</div>
         <div class="bg" style="margin-top:7px">
           <button class="btn a" onclick="addPitch(1,1)">+1</button>
@@ -332,6 +319,21 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
   <!-- RESET -->
   <div style="margin:7px 12px">
     <button class="btn r full big" onclick="resetGame()">↺ REINICIAR JUEGO COMPLETO</button>
+  </div>
+
+  <!-- EQUIPOS -->
+  <div class="sec">
+    <div class="sh">EQUIPOS</div>
+    <div class="sb">
+      <div class="inp-row">
+        <input type="color" class="color-swatch" id="away-color" value="#c0392b" oninput="updateColor()">
+        <input class="inp" id="inp-away" placeholder="VISITANTE" maxlength="8" oninput="setName('away',this.value)" value="VISITANTE">
+      </div>
+      <div class="inp-row">
+        <input type="color" class="color-swatch" id="home-color" value="#1a3a6b" oninput="updateColor()">
+        <input class="inp" id="inp-home" placeholder="LOCAL" maxlength="8" oninput="setName('home',this.value)" value="LOCAL">
+      </div>
+    </div>
   </div>
 
 </div><!-- /scroll-area -->

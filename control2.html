@@ -140,6 +140,7 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
 <header>
   <h1>⚾ CONTROL SIMPLE</h1>
   <div style="display:flex;align-items:center;gap:10px">
+    <button onclick="speak('Strike')" style="background:transparent;border:1.5px solid var(--accent);color:var(--accent);border-radius:20px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:1px;cursor:pointer;-webkit-tap-highlight-color:transparent">🔊 VOZ</button>
     <button id="theme-toggle" onclick="toggleTheme()" style="background:transparent;border:1.5px solid var(--accent);color:var(--accent);border-radius:20px;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:1px;cursor:pointer;-webkit-tap-highlight-color:transparent">🌙 NOCHE</button>
     <div class="conn"><div class="cdot ok" id="cdot"></div><span id="ctext">Conectado</span></div>
   </div>
@@ -152,15 +153,15 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
   <div id="preview">
     <div class="pv-team">
       <div class="pv-name" id="pv-away-name">VISITANTE</div>
-      <div class="pv-score" id="pv-away-r">2</div>
+      <div class="pv-score" id="pv-away-r">0</div>
     </div>
     <div class="pv-mid">
       <div class="pv-inn" id="pv-inn">1</div>
       <div class="pv-half" id="pv-half">▲ ALTA</div>
       <div class="pv-bso">
-        <div class="pv-bso-g">B<div class="pd" id="pd-b0"></div><div class="pd" id="pd-b1"></div><div class="pd" id="pd-b2"></div><div class="pd" id="pd-b3"></div></div>
-        <div class="pv-bso-g">S<div class="pd" id="pd-s0"></div><div class="pd" id="pd-s1"></div></div>
-        <div class="pv-bso-g">O<div class="pd" id="pd-o0"></div><div class="pd" id="pd-o1"></div></div>
+        <div class="pv-bso-g">B<div class="pd b" id="pd-b0"></div><div class="pd b" id="pd-b1"></div><div class="pd" id="pd-b2"></div><div class="pd" id="pd-b3"></div></div>
+        <div class="pv-bso-g">S<div class="pd s" id="pd-s0"></div><div class="pd" id="pd-s1"></div></div>
+        <div class="pv-bso-g">O<div class="pd o" id="pd-o0"></div><div class="pd" id="pd-o1"></div></div>
       </div>
     </div>
     <!-- BASES en el preview -->
@@ -187,20 +188,20 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
         <div class="bso-ind-row">
           <span class="bso-ind-lbl">B</span>
           <div class="big-dots">
-            <div class="big-dot" id="bd-b0"></div><div class="big-dot" id="bd-b1"></div>
+            <div class="big-dot ball" id="bd-b0"></div><div class="big-dot ball" id="bd-b1"></div>
             <div class="big-dot" id="bd-b2"></div><div class="big-dot" id="bd-b3"></div>
           </div>
         </div>
         <div class="bso-ind-row">
           <span class="bso-ind-lbl">S</span>
           <div class="big-dots">
-            <div class="big-dot" id="bd-s0"></div><div class="big-dot" id="bd-s1"></div>
+            <div class="big-dot strike" id="bd-s0"></div><div class="big-dot" id="bd-s1"></div>
           </div>
         </div>
         <div class="bso-ind-row">
           <span class="bso-ind-lbl">O</span>
           <div class="big-dots">
-            <div class="big-dot" id="bd-o0"></div><div class="big-dot" id="bd-o1"></div>
+            <div class="big-dot out" id="bd-o0"></div><div class="big-dot" id="bd-o1"></div>
           </div>
         </div>
       </div>
@@ -286,7 +287,7 @@ header h1{font-size:0.95rem;letter-spacing:3px;color:var(--accent)}
           <button class="btn a sm" onclick="setActivePitcher(1)" style="padding:4px 10px">ACTIVO</button>
         </div>
         <input class="inp" id="p1-name" placeholder="Nombre pitcher 1" maxlength="20" oninput="updatePitcher()" style="margin-bottom:6px">
-        <div class="pitcher-count" id="p1-count-display">4</div>
+        <div class="pitcher-count" id="p1-count-display">9</div>
         <div class="pitcher-lbl">LANZAMIENTOS</div>
         <div class="bg" style="margin-top:7px">
           <button class="btn a" onclick="addPitch(1,1)">+1</button>
@@ -404,12 +405,14 @@ function nextInning(){
 }
 
 function addBall(){
+  speak("Ball");
   addActivePitch();
   state.balls=Math.min(4,state.balls+1);
   if(state.balls>=4){autoAlert('BASE POR BOLAS');setTimeout(()=>{state.balls=0;state.strikes=0;send()},800);return;}
   send();
 }
 function addStrike(){
+  speak("Strike");
   addActivePitch();
   state.strikes=Math.min(3,state.strikes+1);
   if(state.strikes>=3){
@@ -421,6 +424,7 @@ function addStrike(){
   send();
 }
 function addFoul(){
+  speak("Foul");
   addActivePitch();
   // Foul solo suma strike si hay menos de 2; con 2 strikes el foul no agrega strike (regla oficial)
   if(state.strikes<2){
@@ -433,6 +437,7 @@ function addFoul(){
   }
 }
 function addHit(){
+  speak("Hit");
   // Hit: limpia el conteo BSO, suma H al bateador actual, avanza al siguiente
   state.balls=0; state.strikes=0;
   const t = state.battingTeam||'away';
@@ -461,6 +466,7 @@ function undoHit(){
   send();
 }
 function addOut(){
+  speak("Out");
   state.balls=0;state.strikes=0;
   state.outs=Math.min(3,state.outs+1);
   if(state.outs>=3){autoAlert('3 OUTS — CAMBIO DE ENTRADA');setTimeout(()=>nextInning(),1200);return;}
@@ -580,6 +586,39 @@ function toggleTheme(){
   }catch(e){}
 })();
 
+
+// ── VOZ ──
+let _preferredVoice = null;
+
+function loadVoice(){
+  const voices = window.speechSynthesis.getVoices();
+  if(!voices.length) return;
+  const preferred = ['Google US English','Microsoft Guy','Alex','Daniel','Fred','Ralph'];
+  for(const name of preferred){
+    const v = voices.find(v => v.name.includes(name) && v.lang.startsWith('en'));
+    if(v){ _preferredVoice = v; break; }
+  }
+  if(!_preferredVoice) _preferredVoice = voices.find(v => v.lang.startsWith('en')) || voices[0];
+}
+
+window.speechSynthesis.onvoiceschanged = loadVoice;
+setTimeout(loadVoice, 500);
+
+function speak(text){
+  if(!window.speechSynthesis){ toast('Voz no disponible'); return; }
+  // En Android hay que cancelar y esperar un tick
+  window.speechSynthesis.cancel();
+  setTimeout(() => {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    u.rate = 0.85;
+    u.pitch = 0.6;
+    u.volume = 1.0;
+    if(_preferredVoice) u.voice = _preferredVoice;
+    u.onerror = (e) => console.warn('Speech error:', e.error);
+    window.speechSynthesis.speak(u);
+  }, 50);
+}
 </script>
 
 
